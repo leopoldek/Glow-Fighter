@@ -19,7 +19,7 @@ public class Core extends ApplicationAdapter {
 	public void create () {
 		graphics = new GraphicsManager();
 		entities = new Array<>(false, 16);
-		entities.add(new TestEntity(new Vector2(100, 100), 0f));
+		entities.add(new TestEntity(new Vector2(0, 0), 0f));
 	}
 
 	@Override
@@ -36,6 +36,11 @@ public class Core extends ApplicationAdapter {
 			entity.draw();
 		}
 		graphics.end();
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		graphics.resize(width, height);
 	}
 	
 	@Override
