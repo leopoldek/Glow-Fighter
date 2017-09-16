@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class TestEntity extends Entity{
 	
-	public TestEntity(Vector2 pos, float rot){
-		super(pos, rot, createParts());
+	public TestEntity(Vector2 pos, float rot, Color color){
+		super(pos, rot, createParts(color));
 	}
 	
 	@Override
@@ -15,12 +15,12 @@ public class TestEntity extends Entity{
 		rot += Gdx.graphics.getDeltaTime() * 10;
 	}
 	
-	private static LinePart[] createParts(){
+	private static LinePart[] createParts(Color color){
 		return new LinePart[]{
-			new LinePart(new Vector2(-100, 100), new Vector2(100, 100), 10, Color.GREEN),//top
-			new LinePart(new Vector2(-100, -100), new Vector2(-100, 100), 10, Color.GREEN),//left
-			new LinePart(new Vector2(100, -100), new Vector2(100, 100), 10, Color.GREEN),//right
-			new LinePart(new Vector2(-100, -100), new Vector2(100, -100), 10, Color.GREEN)//bot
+			new LinePart(new Vector2(-100, 100), new Vector2(100, 100), 5, color),//top
+			new LinePart(new Vector2(-100, -100), new Vector2(-100, 100), 5, color),//left
+			new LinePart(new Vector2(100, -100), new Vector2(100, 100), 5, color),//right
+			new LinePart(new Vector2(-100, -100), new Vector2(100, -100), 5, color)//bot
 		};
 	}
 }
