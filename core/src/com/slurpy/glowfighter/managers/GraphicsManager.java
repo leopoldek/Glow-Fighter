@@ -58,17 +58,38 @@ public class GraphicsManager implements Disposable{
 		batch.begin();
 	}
 	
+	private Vector2 temp = new Vector2();
 	public void drawLine(Vector2 start, Vector2 end, float width, Color color){
 		float halfWidth = width / 2;
-		//Set color
 		batch.setColor(color);
 		//Draw start circle
 		batch.draw(circle, start.x - halfWidth, start.y - halfWidth, width, width);
 		//Draw end circle
 		batch.draw(circle, end.x - halfWidth, end.y - halfWidth, width, width);
 		//Draw rectangle between circles.
-		end.sub(start);
-		batch.draw(square, start.x, start.y - halfWidth, 0, halfWidth, end.len(), width, 1, 1, end.angle());
+		temp.x = end.x - start.x;
+		temp.y = end.y - start.y;
+		batch.draw(square, start.x, start.y - halfWidth, 0, halfWidth, temp.len(), width, 1, 1, temp.angle());
+	}
+	
+	public void drawPolygon(Vector2[] points, float width, Color color){
+		float halfWidth = width / 2;
+		int last = points.length - 1;
+		batch.setColor(color);
+		for(int i = 0; i < last; i++){
+			//Draw start circle
+			batch.draw(circle, points[i].x - halfWidth, points[i].y - halfWidth, width, width);
+			//Draw end circle
+			batch.draw(circle, points[i+1].x - halfWidth, points[i+1].y - halfWidth, width, width);
+			//Draw rectangle between circles.
+			temp.x = points[i+1].x - points[i].x;
+			temp.y = points[i+1].y - points[i].y;
+			batch.draw(square, points[i].x, points[i].y - halfWidth, 0, halfWidth, temp.len(), width, 1, 1, temp.angle());
+		}
+		//Draw last edge.
+		temp.x = points[0].x - points[last].x;
+		temp.y = points[0].y - points[last].y;
+		batch.draw(square, points[last].x, points[last].y - halfWidth, 0, halfWidth, temp.len(), width, 1, 1, temp.angle());
 	}
 	
 	public void end(){
@@ -113,7 +134,7 @@ public class GraphicsManager implements Disposable{
 	}
 	
 	public void resize(int width, int height){
-		System.out.println("RESIZED");
+		//System.out.println("RESIZED");
 		viewport.update(width, height);
 		fboProj = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		if(screenFBO != null){
