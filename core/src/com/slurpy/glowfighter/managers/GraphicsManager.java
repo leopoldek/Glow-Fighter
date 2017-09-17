@@ -129,14 +129,14 @@ public class GraphicsManager implements Disposable{
 	
 	public void look(Vector2 look){
 		Camera cam = viewport.getCamera();
-		cam.position.add(look.x, look.y, 0);
+		cam.position.set(look, 0);
 		cam.update();
 	}
 	
 	public void resize(int width, int height){
 		//System.out.println("RESIZED");
 		viewport.update(width, height);
-		fboProj = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		fboProj = new Matrix4().setToOrtho2D(0, 0, width, height);
 		if(screenFBO != null){
 			screenFBO.dispose();
 			pingFBO.dispose();

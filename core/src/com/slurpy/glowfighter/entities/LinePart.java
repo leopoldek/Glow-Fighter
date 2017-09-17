@@ -6,10 +6,10 @@ import com.slurpy.glowfighter.Core;
 
 class LinePart implements Part {
 	
-	private Vector2 start;
-	private Vector2 end;
-	private float width;
-	private Color color;
+	public Vector2 start;
+	public Vector2 end;
+	public float width;
+	public Color color;
 	
 	private Vector2 startPos = new Vector2();
 	private Vector2 endPos = new Vector2();

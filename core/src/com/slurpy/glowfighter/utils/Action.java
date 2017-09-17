@@ -1,5 +1,5 @@
 package com.slurpy.glowfighter.utils;
 
 public enum Action {
-	
+	moveUp, moveLeft, moveRight, moveDown, moveSlow
 }

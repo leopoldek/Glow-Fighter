@@ -17,10 +17,10 @@ public class TestEntity extends Entity{
 	
 	private static LinePart[] createParts(Color color){
 		return new LinePart[]{
-			new LinePart(new Vector2(-100, 100), new Vector2(100, 100), 5, color),//top
-			new LinePart(new Vector2(-100, -100), new Vector2(-100, 100), 5, color),//left
-			new LinePart(new Vector2(100, -100), new Vector2(100, 100), 5, color),//right
-			new LinePart(new Vector2(-100, -100), new Vector2(100, -100), 5, color)//bot
+				new LinePart(new Vector2(-100, 100), new Vector2(100, 100), 5, color),//top
+				new LinePart(new Vector2(-100, -100), new Vector2(-100, 100), 5, color),//left
+				new LinePart(new Vector2(100, -100), new Vector2(100, 100), 5, color),//right
+				new LinePart(new Vector2(-100, -100), new Vector2(100, -100), 5, color)//bot
 		};
 	}
 }
