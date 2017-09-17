@@ -20,6 +20,7 @@ public class Core extends ApplicationAdapter {
 		entities = new Array<>(false, 16);
 		entities.add(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
 		entities.add(new TestEntity(new Vector2(100, 0), 10f, Color.RED));
+		entities.add(new TestEntity(new Vector2(-100, -100), 60f, Color.BLUE));
 		//graphics.look(new Vector2(100, 100));
 	}
 
