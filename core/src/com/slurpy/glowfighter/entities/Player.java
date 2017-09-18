@@ -35,7 +35,7 @@ public class Player extends Entity {
 	
 	private static Part[] createParts(){
 		return new Part[]{
-				new PolygonPart(new Vector2[]{new Vector2(60, 0), new Vector2(-60, -60), new Vector2(-60, 60)}, 6, Color.WHITE),
+				new TrailPolygonPart(new Vector2[]{new Vector2(30, 0), new Vector2(-30, -30), new Vector2(-30, 30)}, 6, Color.WHITE, 1.0f, 50),
 				new LinePart(new Vector2(0, 0), new Vector2(10, 0), 4, Color.WHITE)
 		};
 	}
