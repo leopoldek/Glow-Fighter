@@ -1,6 +1,6 @@
 package com.slurpy.glowfighter.managers;
 
-import static com.badlogic.gdx.math.MathUtils.*;
+import static com.badlogic.gdx.math.MathUtils.sinDeg;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
@@ -75,29 +74,27 @@ public class GraphicsManager implements Disposable{
 		shapeBatch.setColor(color);
 		shapeBatch.rectLine(start, end, width);
 		temp.set(end).sub(start);
-		
+		shapeBatch.arc(start.x, start.y, width/2, temp.angle()+90, 180);
+		temp.set(start).sub(end);
+		shapeBatch.arc(end.x, end.y, width/2, temp.angle()+90, 180);
 	}
 	
 	public void drawPolygon(Vector2[] points, float w, Color color){
-		w *= 6;
 		shapeBatch.setColor(color);
-		//shapeBatch.polygon(new float[]{points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y});
-		
-		float w2 = w/2;
 		len = points.length;
 		
 		for(int i = 0; i < points.length; i++){
 			float a1 = new Vector2(points[wrap(i-1)]).sub(points[i]).angle();
 			float a2 = new Vector2(points[wrap(i+1)]).sub(points[i]).angle();
-			float a = a2 - a1;
-			if(a < 0)a += 360;
-			float l = w2 / sinDeg(a/2);
 			
-			Vector2 p3 = new Vector2(l, 0);
-			p3.rotate(a1+a/2).add(points[i]);
+			float start = a2 + 90;
+			if(start >= 360)start -= 360;
+			float degrees = a1 - 90 - start;
+			if(degrees < 0)degrees += 360;
 			
 			//shapeBatch.arc(p3.x, p3.y, w, a1-180, 180-a);
-			shapeBatch.arc(p3.x, p3.y, w, a2+90, 180-a);
+			shapeBatch.arc(points[i].x, points[i].y, w, start, degrees);
+			shapeBatch.rect(points[i].x, points[i].y, 0, 0, Vector2.dst(points[i].x, points[i].y, points[wrap(i+1)].x, points[wrap(i+1)].y), w, 1, 1, a2);
 		}
 	}
 	
