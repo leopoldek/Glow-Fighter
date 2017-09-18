@@ -27,6 +27,7 @@ public class Player extends Entity {
 			move.add(0, -400);
 		if(Core.bindings.isActionPressed(Action.moveRight))
 			move.add(400, 0);
+		if(Core.bindings.isActionPressed(Action.moveSlow))move.scl(0.4f);
 		pos.add(move.scl(Gdx.graphics.getDeltaTime()));
 		
 		Core.graphics.look(pos);
@@ -34,8 +35,8 @@ public class Player extends Entity {
 	
 	private static Part[] createParts(){
 		return new Part[]{
-				new PolygonPart(new Vector2[]{new Vector2(30, 0), new Vector2(-30, 30), new Vector2(-30, -30)}, 6, Color.WHITE),
-				new LinePart(new Vector2(-10, 0), new Vector2(10, 0), 4, Color.WHITE)
+				new PolygonPart(new Vector2[]{new Vector2(60, 0), new Vector2(-60, -60), new Vector2(-60, 60)}, 6, Color.WHITE),
+				new LinePart(new Vector2(0, 0), new Vector2(10, 0), 4, Color.WHITE)
 		};
 	}
 }

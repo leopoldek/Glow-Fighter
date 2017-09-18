@@ -105,7 +105,7 @@ public class KeyBindings extends InputAdapter{
 		throw new UnsupportedOperationException("File/json loading not available yet.");
 	}
 	
-	public static KeyBindings createnewBinding(){
+	public static KeyBindings createNewBinding(){
 		return new KeyBindings();
 	}
 }

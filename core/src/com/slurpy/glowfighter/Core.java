@@ -8,12 +8,14 @@ import com.badlogic.gdx.utils.Array;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.TestEntity;
+import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
 import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.KeyBindings;
 
 public class Core extends ApplicationAdapter {
 	
+	public static AssetManager assets;
 	public static GraphicsManager graphics;
 	public static KeyBindings bindings;
 	
@@ -21,13 +23,15 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-		graphics = new GraphicsManager();
+		assets = AssetManager.getAssetManager();
+		graphics = GraphicsManager.getGraphicsManager();
 		
-		bindings = KeyBindings.createnewBinding();
+		bindings = KeyBindings.createNewBinding();
 		bindings.addBinding(Action.moveUp, Keys.W);
 		bindings.addBinding(Action.moveLeft, Keys.A);
 		bindings.addBinding(Action.moveDown, Keys.S);
 		bindings.addBinding(Action.moveRight, Keys.D);
+		bindings.addBinding(Action.moveSlow, Keys.SHIFT_LEFT);
 		
 		entities = new Array<>(false, 16);
 		entities.add(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
@@ -58,5 +62,6 @@ public class Core extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		graphics.dispose();
+		assets.dispose();
 	}
 }
