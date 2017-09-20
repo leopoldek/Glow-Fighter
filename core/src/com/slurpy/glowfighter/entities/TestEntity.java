@@ -15,12 +15,20 @@ public class TestEntity extends Entity{
 		rot += Gdx.graphics.getDeltaTime() * 10;
 	}
 	
-	private static LinePart[] createParts(Color color){
-		return new LinePart[]{
-				new LinePart(new Vector2(-100, 100), new Vector2(100, 100), 5, color),//top
-				new LinePart(new Vector2(-100, -100), new Vector2(-100, 100), 5, color),//left
-				new LinePart(new Vector2(100, -100), new Vector2(100, 100), 5, color),//right
-				new LinePart(new Vector2(-100, -100), new Vector2(100, -100), 5, color)//bot
+	private static Part[] createParts(Color color){
+		return new Part[]{
+				new PolygonPart(new Vector2[]{
+						new Vector2(-100, -100),
+						new Vector2(-100, 100),
+						new Vector2(100, 100),
+						new Vector2(100, -100)
+				}, 5, color),
+				new PulsatingPolygonPart(new Vector2[]{
+						new Vector2(-50, -50),
+						new Vector2(-50, 50),
+						new Vector2(50, 50),
+						new Vector2(50, -50)
+				}, 5, color.cpy().set(1 - color.r, 1 - color.g, 1 - color.b, color.a), 2.5f, 0, 1)
 		};
 	}
 }

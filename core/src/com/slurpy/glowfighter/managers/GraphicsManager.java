@@ -1,7 +1,5 @@
 package com.slurpy.glowfighter.managers;
 
-import static com.badlogic.gdx.math.MathUtils.sinDeg;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -9,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -18,7 +15,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.utils.Constants;
 
 public class GraphicsManager implements Disposable{
@@ -40,13 +36,7 @@ public class GraphicsManager implements Disposable{
 	private FrameBuffer pongFBO;
 	private final ShaderProgram glowShader;
 	
-	private final Texture circle;
-	private final TextureRegion square;
-	
 	private GraphicsManager(){
-		circle = Core.assets.get("WhiteCircle.png", Texture.class);
-		square = new TextureRegion(circle, 254, 254, 4, 4);
-		
 		batch = new SpriteBatch();
 		shapeBatch = new ShapeRenderer();
 		//batch.setBlendFunction(-1, -1);
@@ -98,6 +88,10 @@ public class GraphicsManager implements Disposable{
 			shapeBatch.arc(points[i].x, points[i].y, w, start, degrees);
 			shapeBatch.rect(points[i].x, points[i].y, 0, 0, Vector2.dst(points[i].x, points[i].y, points[wrap(i+1)].x, points[wrap(i+1)].y), w, 1, 1, a2);
 		}
+	}
+	
+	public void drawGradientPolygon(Vector2[] points, float w, Color[] color){
+		
 	}
 	
 	private int len;

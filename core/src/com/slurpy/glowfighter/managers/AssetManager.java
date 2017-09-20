@@ -1,6 +1,5 @@
 package com.slurpy.glowfighter.managers;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Disposable;
 
 public class AssetManager implements Disposable{
@@ -16,7 +15,7 @@ public class AssetManager implements Disposable{
 	
 	private AssetManager(){
 		assets = new com.badlogic.gdx.assets.AssetManager();
-		assets.load("WhiteCircle.png", Texture.class);
+		//assets.load("WhiteCircle.png", Texture.class);
 		assets.finishLoading();
 	}
 	

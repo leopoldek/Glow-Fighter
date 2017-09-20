@@ -46,7 +46,7 @@ class TrailPolygonPart implements Part {
 			Vector3 past = pastPos.get(i);
 			part.color.a = alphas.get(i);
 			part.draw(tempPos.set(past.x, past.y), past.z);
-			alphas.set(i, alphas.get(i) - (Gdx.graphics.getDeltaTime() / stayTime));
+			alphas.set(i, alphas.get(i) - (Gdx.graphics.getRawDeltaTime() / stayTime));
 			if(alphas.get(i) <= 0){
 				pastPos.removeIndex(i);
 				alphas.removeIndex(i);
