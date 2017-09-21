@@ -23,12 +23,12 @@ public class TestEntity extends Entity{
 						new Vector2(100, 100),
 						new Vector2(100, -100)
 				}, 5, color),
-				new PulsatingPolygonPart(new Vector2[]{
+				new DeceptivePolygonPart(new Vector2[]{
 						new Vector2(-50, -50),
 						new Vector2(-50, 50),
 						new Vector2(50, 50),
 						new Vector2(50, -50)
-				}, 5, color.cpy().set(1 - color.r, 1 - color.g, 1 - color.b, color.a), 2.5f, 0, 1)
+				}, 5, color.cpy().set(1 - color.r, 1 - color.g, 1 - color.b, color.a), 12, 1.5f, 100, false)
 		};
 	}
 }

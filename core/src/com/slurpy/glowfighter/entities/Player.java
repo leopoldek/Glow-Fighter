@@ -8,6 +8,11 @@ import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.utils.Action;
 
 public class Player extends Entity {
+	
+	private static final float speed = 2000;
+	private static final float maxSpeed = 1250;
+	
+	private Vector2 vel = new Vector2();
 
 	public Player(Vector2 pos, float rot) {
 		super(pos, rot, createParts());
@@ -17,19 +22,37 @@ public class Player extends Entity {
 	@Override
 	public void update() {
 		rot = MathUtils.atan2(-(Gdx.input.getY() - Gdx.graphics.getHeight()/2), Gdx.input.getX() - Gdx.graphics.getWidth()/2) * MathUtils.radiansToDegrees;
+		float delta = Gdx.graphics.getDeltaTime();
 		
 		Vector2 move = new Vector2();
-		if(Core.bindings.isActionPressed(Action.moveUp))
-			move.add(0, 400);
-		if(Core.bindings.isActionPressed(Action.moveLeft))
-			move.add(-400, 0);
-		if(Core.bindings.isActionPressed(Action.moveDown))
-			move.add(0, -400);
-		if(Core.bindings.isActionPressed(Action.moveRight))
-			move.add(400, 0);
+		if(Core.bindings.isActionPressed(Action.moveUp)){
+			move.add(0, speed);
+		}
+		if(Core.bindings.isActionPressed(Action.moveDown)){
+			move.add(0, -speed);
+		}
+		if(Core.bindings.isActionPressed(Action.moveLeft)){
+			move.add(-speed, 0);
+		}
+		if(Core.bindings.isActionPressed(Action.moveRight)){
+			move.add(speed, 0);
+		}
 		if(Core.bindings.isActionPressed(Action.moveSlow))move.scl(0.4f);
-		pos.add(move.scl(Gdx.graphics.getDeltaTime()));
 		
+		if(move.isZero()){
+			if(vel.len() < speed * delta){
+				vel.setZero();
+			}else{
+				move.set(speed, 0);
+				move.setAngle(vel.angle() + 180);
+				vel.add(move.scl(delta));
+			}
+		}else{
+			vel.add(move.scl(delta));
+			if(vel.len() > maxSpeed)vel.setLength(maxSpeed);
+		}
+		
+		pos.add(vel.x * delta, vel.y * delta);
 		Core.graphics.look(pos);
 	}
 	

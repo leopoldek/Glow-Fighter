@@ -8,7 +8,8 @@ varying vec2 v_texCoords;
 uniform sampler2D u_texture;
 
 void main(){             
-    /*vec2 tex_offset = 1.0 / textureSize(u_texture, 0); // gets size of single texel
+    /*
+    vec2 tex_offset = 1.0 / textureSize(u_texture, 0); // gets size of single texel
     vec3 result = texture(u_texture, v_texCoords).rgb * weight[0]; // current fragment's contribution
     if(horizontal){
         for(int i = 1; i < 6; ++i){
@@ -21,7 +22,8 @@ void main(){
             result += texture(u_texture, v_texCoords - vec2(0.0, tex_offset.y * i)).rgb * weight[i];
         }
     }
-    gl_FragColor = v_color * vec4(result, 1.0);*/
+    gl_FragColor = v_color * vec4(result, 1.0);
+    */
 	
 	
 	

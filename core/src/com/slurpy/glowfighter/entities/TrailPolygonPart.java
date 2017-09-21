@@ -6,12 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-class TrailPolygonPart implements Part {
+class TrailPolygonPart implements Part {//TODO Make generic extending a ColorPart (Part with color parameter)
 	
 	public PolygonPart part;
 	public float stayTime;
 	public float length;
-	public Color color;
+	public float alpha;
 	
 	private Array<Vector3> pastPos;//Change to linked queue later.
 	private Array<Float> alphas;
@@ -24,7 +24,7 @@ class TrailPolygonPart implements Part {
 		part = new PolygonPart(points, width, new Color(color));
 		this.stayTime = stayTime;
 		this.length = length;
-		this.color = color;
+		this.alpha = color.a;
 		pastPos = new Array<>();
 		alphas = new Array<>();
 	}
@@ -33,6 +33,7 @@ class TrailPolygonPart implements Part {
 	public void draw(Vector2 pos, float rot) {
 		if(last == null){
 			last = new Vector3(pos, rot);
+			part.draw(pos, rot);
 			return;
 		}
 		
@@ -54,7 +55,7 @@ class TrailPolygonPart implements Part {
 			}
 		}
 		
-		part.color.set(color);
+		part.color.a = alpha;
 		part.draw(pos, rot);
 	}
 }

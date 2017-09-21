@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -90,8 +89,21 @@ public class GraphicsManager implements Disposable{
 		}
 	}
 	
+	public void drawPolyline(Vector2[] points, float w, Color color){
+		
+	}
+	
+	public void drawGradientPolyline(Vector2[] points, float w, Color[] color){
+		
+	}
+	
 	public void drawGradientPolygon(Vector2[] points, float w, Color[] color){
 		
+	}
+	
+	public void drawCircle(Vector2 pos, float radius, Color color){
+		shapeBatch.setColor(color);
+		shapeBatch.circle(pos.x, pos.y, radius);
 	}
 	
 	private int len;
@@ -127,12 +139,12 @@ public class GraphicsManager implements Disposable{
 		batch.setShader(null);
 		renderFBO(pongFBO);
 		renderFBO(screenFBO);
+		//TODO Draw pictures n' stuff
 		batch.end();
 	}
 	
 	private void renderFBO(FrameBuffer fbo){
-		Texture tex = fbo.getColorBufferTexture();
-		batch.draw(tex, 0, tex.getHeight(), tex.getWidth(), -tex.getHeight());
+		batch.draw(fbo.getColorBufferTexture(), 0, Gdx.graphics.getHeight(), Gdx.graphics.getWidth(), -Gdx.graphics.getHeight());
 	}
 	
 	public void look(Vector2 look){
