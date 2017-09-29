@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.Core;
 
-class LinePart implements Part {
+public class LinePart implements Part {
 	
 	public Vector2 start;
 	public Vector2 end;
@@ -25,8 +25,8 @@ class LinePart implements Part {
 	public void draw(Vector2 pos, float rot) {
 		startPos.set(start);
 		endPos.set(end);
-		startPos.rotate(rot);
-		endPos.rotate(rot);
+		startPos.rotateRad(rot);
+		endPos.rotateRad(rot);
 		startPos.add(pos);
 		endPos.add(pos);
 		

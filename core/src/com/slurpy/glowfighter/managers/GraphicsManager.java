@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -30,7 +31,8 @@ public class GraphicsManager implements Disposable{
 	private Matrix4 fboProj;
 	private ShapeRenderer shapeBatch;
 	
-	private FrameBuffer screenFBO;
+	private FrameBuffer screenFBO;//TODO MSAA does not work on FBO. Must use "GL_EXT_framebuffer_multisample" extension or create a FXAA shader.
+	//Another solution but not recommended is to draw to default buffer and then copy it to a texture and clear the buffer.
 	private FrameBuffer pingFBO;
 	private FrameBuffer pongFBO;
 	private final ShaderProgram glowShader;
@@ -42,7 +44,7 @@ public class GraphicsManager implements Disposable{
 		//Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		
 		viewport = new ScreenViewport();
-		//viewport.setUnitsPerPixel(1 / 100f);
+		viewport.setUnitsPerPixel(Constants.MPP);
 		
 		glowShader = new ShaderProgram(Gdx.files.internal("shaders/Vertex.glsl"), Gdx.files.internal("shaders/GlowFragment.glsl"));
 		//glowShader.pedantic = false;
@@ -53,7 +55,10 @@ public class GraphicsManager implements Disposable{
 		screenFBO.begin();
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 		Gdx.gl.glEnable(GL20.GL_BLEND);
+		//Gdx.gl.glHint(GL20.GL_PO, GL20.GL_NICEST);
+		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		shapeBatch.setProjectionMatrix(viewport.getCamera().combined);
 		//shapeBatch.setAutoShapeType(true);
@@ -65,9 +70,10 @@ public class GraphicsManager implements Disposable{
 		shapeBatch.setColor(color);
 		shapeBatch.rectLine(start, end, width);
 		temp.set(end).sub(start);
-		shapeBatch.arc(start.x, start.y, width/2, temp.angle()+90, 180);
+		float angle = temp.angle() + 90;
+		shapeBatch.arc(start.x, start.y, width/2, angle, 180, Math.max(1, (int)((float)Math.cbrt(width) * angle * (5 / 3))));
 		temp.set(start).sub(end);
-		shapeBatch.arc(end.x, end.y, width/2, temp.angle()+90, 180);
+		shapeBatch.arc(end.x, end.y, width/2, angle - 180, 180, Math.max(1, (int)((float)Math.cbrt(width) * angle * (5 / 3))));
 	}
 	
 	public void drawPolygon(Vector2[] points, float w, Color color){
@@ -84,7 +90,7 @@ public class GraphicsManager implements Disposable{
 			if(degrees < 0)degrees += 360;
 			
 			//shapeBatch.arc(p3.x, p3.y, w, a1-180, 180-a);
-			shapeBatch.arc(points[i].x, points[i].y, w, start, degrees);
+			shapeBatch.arc(points[i].x, points[i].y, w, start, degrees, Math.max(1, (int)((float)Math.cbrt(w) * degrees * (5 / 3))));
 			shapeBatch.rect(points[i].x, points[i].y, 0, 0, Vector2.dst(points[i].x, points[i].y, points[wrap(i+1)].x, points[wrap(i+1)].y), w, 1, 1, a2);
 		}
 	}
@@ -114,10 +120,12 @@ public class GraphicsManager implements Disposable{
 	
 	public void end(){
 		shapeBatch.end();
+		batch.setProjectionMatrix(viewport.getCamera().combined);
+		batch.begin();
+		//TODO Draw glowing images
 		screenFBO.end();
 		batch.setShader(glowShader);
 		batch.setProjectionMatrix(fboProj);
-		batch.begin();
 		
 		for(int i = 0; i < Constants.BLUR_PASSES; i++){
 			pingFBO.begin();
@@ -139,7 +147,7 @@ public class GraphicsManager implements Disposable{
 		batch.setShader(null);
 		renderFBO(pongFBO);
 		renderFBO(screenFBO);
-		//TODO Draw pictures n' stuff
+		//TODO Draw gui pictures n' stuff
 		batch.end();
 	}
 	

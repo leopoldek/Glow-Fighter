@@ -11,6 +11,7 @@ public class DesktopLauncher {
 		//config.addIcon(path, fileType);
 		
 		config.vSyncEnabled = true;
+		//config.samples = 8;
 		//config.useGL30 = true;//Don't use! Crashes due to shader errors. Fix maybe?
 		
 		//config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;

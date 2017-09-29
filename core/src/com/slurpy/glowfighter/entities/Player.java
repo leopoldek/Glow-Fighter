@@ -4,62 +4,78 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.utils.Action;
 
 public class Player extends Entity {
 	
-	private static final float speed = 2000;
-	private static final float maxSpeed = 1250;
-	
-	private Vector2 vel = new Vector2();
+	private static final float speed = 60;
+	private static final float maxSpeed = 20;
 
 	public Player(Vector2 pos, float rot) {
-		super(pos, rot, createParts());
-		//Bind keys
+		super(createBodyDef(pos, rot), createParts());
+		
+		PolygonShape shape = new PolygonShape();
+		shape.set(polygon);
+		
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		//fixtureDef.density = 0.001f;
+		body.createFixture(fixtureDef);
+		
+		shape.dispose();
 	}
 
 	@Override
 	public void update() {
-		rot = MathUtils.atan2(-(Gdx.input.getY() - Gdx.graphics.getHeight()/2), Gdx.input.getX() - Gdx.graphics.getWidth()/2) * MathUtils.radiansToDegrees;
-		float delta = Gdx.graphics.getDeltaTime();
+		body.setTransform(body.getPosition(), MathUtils.atan2(-(Gdx.input.getY() - Gdx.graphics.getHeight()/2), Gdx.input.getX() - Gdx.graphics.getWidth()/2));
 		
-		Vector2 move = new Vector2();
+		//if(Core.bindings.isActionPressed(Action.moveSlow))move.scl(0.4f);
 		if(Core.bindings.isActionPressed(Action.moveUp)){
-			move.add(0, speed);
+			body.applyForceToCenter(0, speed, true);
 		}
 		if(Core.bindings.isActionPressed(Action.moveDown)){
-			move.add(0, -speed);
+			body.applyForceToCenter(0, -speed, true);
 		}
 		if(Core.bindings.isActionPressed(Action.moveLeft)){
-			move.add(-speed, 0);
+			body.applyForceToCenter(-speed, 0, true);
 		}
 		if(Core.bindings.isActionPressed(Action.moveRight)){
-			move.add(speed, 0);
-		}
-		if(Core.bindings.isActionPressed(Action.moveSlow))move.scl(0.4f);
-		
-		if(move.isZero()){
-			if(vel.len() < speed * delta){
-				vel.setZero();
-			}else{
-				move.set(speed, 0);
-				move.setAngle(vel.angle() + 180);
-				vel.add(move.scl(delta));
-			}
-		}else{
-			vel.add(move.scl(delta));
-			if(vel.len() > maxSpeed)vel.setLength(maxSpeed);
+			body.applyForceToCenter(speed, 0, true);
 		}
 		
-		pos.add(vel.x * delta, vel.y * delta);
-		Core.graphics.look(pos);
+		if(Core.bindings.isActionPressed(Action.primary)){
+			//Core.entities.addEntity(new Bullet(pos.cpy(), new Vector2(2000, 0).rotate(rot + MathUtils.random(-10, 10))));
+		}
+	}
+	
+	public void postUpdate(){
+		Core.graphics.look(body.getPosition());
+		Vector2 vel = body.getLinearVelocity();
+		body.setLinearVelocity(vel.len2() <= maxSpeed * maxSpeed ? vel : vel.clamp(0, maxSpeed));
 	}
 	
 	private static Part[] createParts(){
 		return new Part[]{
-				new TrailPolygonPart(new Vector2[]{new Vector2(30, 0), new Vector2(-30, -30), new Vector2(-30, 30)}, 6, Color.WHITE, 1.0f, 50),
-				new LinePart(new Vector2(0, 0), new Vector2(10, 0), 4, Color.WHITE)
+				new TrailPolygonPart(polygon, 0.2f, Color.WHITE, 1f, 0.5f)
+				//new LinePart(new Vector2(0, 0), new Vector2(1f, 0), 0.2f, Color.WHITE)
 		};
 	}
+	
+	private static BodyDef createBodyDef(Vector2 pos, float rot){
+		BodyDef def = new BodyDef();
+		def.type = BodyType.DynamicBody;
+		def.active = true;
+		def.position.set(pos);
+		def.angle = rot;
+		def.fixedRotation = true;
+		def.linearDamping = 2f;
+		return def;
+	}
+	
+	private static Vector2[] polygon = new Vector2[]{new Vector2(0.5f, 0), new Vector2(-0.5f, -0.5f), new Vector2(-0.5f, 0.5f)};
 }

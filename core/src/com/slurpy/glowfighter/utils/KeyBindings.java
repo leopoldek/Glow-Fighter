@@ -53,7 +53,11 @@ public class KeyBindings extends InputAdapter{
 	public boolean isActionPressed(Action action){
 		if(!actionBindings.containsKey(action))return false;
 		for(int bind : actionBindings.get(action)){
-			if(Gdx.input.isKeyPressed(bind))return true;
+			if(bind < -5){//Scroll
+				
+			}else if(bind < 0){//Button
+				if(Gdx.input.isButtonPressed(-bind - 1))return true;
+			}else if(Gdx.input.isKeyPressed(bind))return true;
 		}
 		return false;
 	}
