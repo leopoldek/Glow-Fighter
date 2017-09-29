@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.slurpy.glowfighter.Core;
+import com.slurpy.glowfighter.parts.Part;
+import com.slurpy.glowfighter.parts.TrailPolygonPart;
 import com.slurpy.glowfighter.utils.Action;
 
 public class Player extends Entity {
@@ -34,6 +36,8 @@ public class Player extends Entity {
 	public void update() {
 		body.setTransform(body.getPosition(), MathUtils.atan2(-(Gdx.input.getY() - Gdx.graphics.getHeight()/2), Gdx.input.getX() - Gdx.graphics.getWidth()/2));
 		
+		
+		Vector2 move = new Vector2();
 		//if(Core.bindings.isActionPressed(Action.moveSlow))move.scl(0.4f);
 		if(Core.bindings.isActionPressed(Action.moveUp)){
 			body.applyForceToCenter(0, speed, true);
@@ -64,17 +68,6 @@ public class Player extends Entity {
 				new TrailPolygonPart(polygon, 0.2f, Color.WHITE, 1f, 0.5f)
 				//new LinePart(new Vector2(0, 0), new Vector2(1f, 0), 0.2f, Color.WHITE)
 		};
-	}
-	
-	private static BodyDef createBodyDef(Vector2 pos, float rot){
-		BodyDef def = new BodyDef();
-		def.type = BodyType.DynamicBody;
-		def.active = true;
-		def.position.set(pos);
-		def.angle = rot;
-		def.fixedRotation = true;
-		def.linearDamping = 2f;
-		return def;
 	}
 	
 	private static Vector2[] polygon = new Vector2[]{new Vector2(0.5f, 0), new Vector2(-0.5f, -0.5f), new Vector2(-0.5f, 0.5f)};

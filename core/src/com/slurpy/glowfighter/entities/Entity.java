@@ -1,24 +1,21 @@
 package com.slurpy.glowfighter.entities;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.slurpy.glowfighter.Core;
+import com.slurpy.glowfighter.parts.Part;
 
 public abstract class Entity {
 	
-	protected Body body;
-	
 	protected Part[] parts;
+	protected Body body;
+	protected Color color;
 	
-	public Entity(BodyDef bodyDef, Part[] parts){
+	public Entity(Part[] parts, Vector2 body, Color color){
 		this.parts = parts;
 		
-		body = Core.physics.registerBody(this, bodyDef);
 	}
 	
 	public abstract void update();
-	
-	public void postUpdate(){}
 	
 	public void draw(){
 		for(Part part : parts){
@@ -26,5 +23,5 @@ public abstract class Entity {
 		}
 	}
 	
-	public void hit(Entity other){}
+	public abstract void hit(Entity other);
 }

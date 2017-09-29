@@ -1,4 +1,4 @@
-package com.slurpy.glowfighter.entities;
+package com.slurpy.glowfighter.parts;
 
 import static com.badlogic.gdx.math.MathUtils.PI2;
 import static com.badlogic.gdx.math.MathUtils.cos;
@@ -10,19 +10,22 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-public class DeceptivePolygonPart extends PolygonPart{
+public class DeceptivePart extends Part{
 	
-	public int amount;
-	public float stayTime;
-	public float range;
-	public boolean drawReal;
+	protected Part part;
+	protected int amount;
+	protected float stayTime;
+	protected float range;
+	protected boolean drawReal;
 	
 	private Array<Vector2> pastPos;//Change to linked queue later.
 	private Array<Float> pastRot;
 	private Array<Float> alphas;
 	
-	public DeceptivePolygonPart(Vector2[] points, float width, Color color, int amount, float stayTime, float range, boolean drawReal) {
-		super(points, width, color);
+	private Color tempColor = new Color();
+	
+	public DeceptivePart(Part part, int amount, float stayTime, float range, boolean drawReal) {
+		this.part = part;
 		this.amount = amount;
 		this.stayTime = stayTime;
 		this.range = range;
@@ -32,7 +35,7 @@ public class DeceptivePolygonPart extends PolygonPart{
 		alphas = new Array<>();
 	}
 	
-	public void draw(Vector2 pos, float rot){
+	public void draw(Vector2 pos, float rot, Color color){
 		if(pastPos.size < Math.min(random(amount), random(amount))){//TODO Could be improved
 			float random = random(PI2);
 			float randomRange = random(range);
@@ -41,10 +44,10 @@ public class DeceptivePolygonPart extends PolygonPart{
 			alphas.add(1f);
 		}
 		
-		float temp = color.a;
+		tempColor.set(color);
 		for(int i = 0; i < pastPos.size; i++){
-			color.a = alphas.get(i);
-			super.draw(pastPos.get(i), pastRot.get(i));
+			tempColor.a = alphas.get(i) * color.a;
+			part.draw(pastPos.get(i), pastRot.get(i), tempColor);
 			alphas.set(i, alphas.get(i) - (Gdx.graphics.getRawDeltaTime() / stayTime));
 			
 			if(alphas.get(i) <= 0){
@@ -55,8 +58,7 @@ public class DeceptivePolygonPart extends PolygonPart{
 			}
 		}
 		
-		color.a = temp;
 		if(drawReal)
-			super.draw(pos, rot);
+			part.draw(pos, rot, color);
 	}
 }

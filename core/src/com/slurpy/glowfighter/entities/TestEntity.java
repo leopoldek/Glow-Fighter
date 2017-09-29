@@ -3,6 +3,9 @@ package com.slurpy.glowfighter.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.slurpy.glowfighter.parts.DeceptivePolygonPart;
+import com.slurpy.glowfighter.parts.Part;
+import com.slurpy.glowfighter.parts.PolygonPart;
 
 public class TestEntity extends Entity{
 	

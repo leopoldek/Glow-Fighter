@@ -45,7 +45,6 @@ public class Core extends ApplicationAdapter {
 	public void render () {
 		entities.update();
 		physics.update();
-		entities.postUpdate();
 		graphics.begin();
 		entities.draw();
 		graphics.end();

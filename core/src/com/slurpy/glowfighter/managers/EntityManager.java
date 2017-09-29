@@ -24,12 +24,6 @@ public class EntityManager {
 		}
 	}
 	
-	public void postUpdate(){
-		for(Entity entity : entities){
-			entity.postUpdate();
-		}
-	}
-	
 	public void draw(){
 		for(Entity entity : entities){
 			entity.draw();

@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
+import com.slurpy.glowfighter.parts.LinePart;
+import com.slurpy.glowfighter.parts.Part;
 
 public class Bullet extends Entity {
 	
