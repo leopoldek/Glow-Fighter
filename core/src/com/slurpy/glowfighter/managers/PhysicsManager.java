@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.utils.Constants;
 
@@ -46,18 +45,9 @@ public class PhysicsManager {
 		});
 	}
 	
-	public Body createEntityBody(Entity entity, Vector2[] points, boolean bullet){
-		BodyDef def = new BodyDef();
-		def.type = BodyType.DynamicBody;
-		def.active = true;
-		//def.position.set(pos);
-		//def.angle = rot;
-		def.fixedRotation = true;
-		def.linearDamping = 1f;
-		
-		Body body = world.createBody(def);
+	public Body createEntityBody(Entity entity, BodyDef bodyDef){
+		Body body = world.createBody(bodyDef);
 		body.setUserData(entity);
-		
 		return body;
 	}
 	
