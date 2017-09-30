@@ -34,7 +34,7 @@ public class Bullet extends Entity {//TODO Make abstract class for all bullets l
 	};
 	private static Part[] createParts(){
 		return new Part[]{
-				new LinePart(new Vector2(depth * 20, 0), new Vector2(height, 0), width)
+				new LinePart(new Vector2(depth * 10, 0), new Vector2(height, 0), width)
 		};
 	}
 }

@@ -17,6 +17,8 @@ public abstract class Entity {
 	
 	protected final Body body;
 	
+	private boolean deleted = false;
+	
 	public Entity(Vector2 pos, float rot, Color color, Part[] parts, Vector2[] polygon){
 		this.parts = parts;
 		this.color = new Color[parts.length];
@@ -63,7 +65,9 @@ public abstract class Entity {
 	}
 	
 	public final void delete(){
+		if(deleted)return;
 		Core.physics.queueDestroy(body);
 		Core.entities.removeEntity(this);
+		deleted = true;
 	}
 }

@@ -10,8 +10,10 @@ public class DesktopLauncher {
 		config.title = "Glow Fighter";
 		//config.addIcon(path, fileType);
 		
-		config.vSyncEnabled = true;
-		//config.samples = 8;
+		config.vSyncEnabled = false;
+		config.foregroundFPS = 120;
+		config.backgroundFPS = -1;
+		//config.samples = 8;//DOES NOT AFFECT FBO
 		//config.useGL30 = true;//Don't use! Crashes due to shader errors. Fix maybe?
 		
 		//config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;

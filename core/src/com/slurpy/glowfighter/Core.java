@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.TestEntity;
+import com.slurpy.glowfighter.entities.Wall;
 import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.EntityManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
 import com.slurpy.glowfighter.managers.PhysicsManager;
 import com.slurpy.glowfighter.utils.Action;
+import com.slurpy.glowfighter.utils.FPSCounter;
 import com.slurpy.glowfighter.utils.KeyBindings;
 
 public class Core extends ApplicationAdapter {
@@ -22,11 +24,14 @@ public class Core extends ApplicationAdapter {
 	public static KeyBindings bindings;
 	public static EntityManager entities;
 	
+	private FPSCounter fps = new FPSCounter(1);
+	
 	@Override
 	public void create () {
 		assets = AssetManager.getAssetManager();
 		graphics = GraphicsManager.getGraphicsManager();
 		physics = PhysicsManager.getPhysicsManager();
+		entities = EntityManager.getEntityManager();
 		
 		bindings = KeyBindings.createNewBinding();
 		Gdx.input.setInputProcessor(bindings);
@@ -37,18 +42,28 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.moveSlow, Keys.SHIFT_LEFT);
 		bindings.addBinding(Action.primary, KeyBindings.LEFT);
 		
-		entities = EntityManager.getEntityManager();
 		entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
 		entities.addEntity(new TestEntity(new Vector2(10, 0), 10f, Color.RED));
 		entities.addEntity(new TestEntity(new Vector2(-10, -10), 60f, Color.BLUE));
+		
+		//Walls
+		float length = 50;
+		float height = 25;
+		float width = 3;
+		entities.addEntity(new Wall(new Vector2(0, height), new Vector2(length * 2 - width, width), 0f, Color.WHITE));//Top
+		entities.addEntity(new Wall(new Vector2(0, -height), new Vector2(length * 2 - width, width), 0f, Color.WHITE));//Bot
+		entities.addEntity(new Wall(new Vector2(length, 0), new Vector2(width, height * 2 + width), 0f, Color.WHITE));//Right
+		entities.addEntity(new Wall(new Vector2(-length, 0), new Vector2(width, height * 2 + width), 0f, Color.WHITE));//Left
+		
 		Player player = new Player(new Vector2(), 0);
 		entities.addEntity(player);
 		graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
 	}
-
+	
 	@Override
 	public void render () {
+		fps.update(Gdx.graphics.getDeltaTime());
 		entities.update();
 		physics.update();
 		graphics.begin();
