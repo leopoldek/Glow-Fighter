@@ -1,9 +1,12 @@
 package com.slurpy.glowfighter;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.entities.Player;
+import com.slurpy.glowfighter.entities.TestEntity;
 import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.EntityManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
@@ -26,6 +29,7 @@ public class Core extends ApplicationAdapter {
 		physics = PhysicsManager.getPhysicsManager();
 		
 		bindings = KeyBindings.createNewBinding();
+		Gdx.input.setInputProcessor(bindings);
 		bindings.addBinding(Action.moveUp, Keys.W);
 		bindings.addBinding(Action.moveLeft, Keys.A);
 		bindings.addBinding(Action.moveDown, Keys.S);
@@ -34,10 +38,12 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.primary, KeyBindings.LEFT);
 		
 		entities = EntityManager.getEntityManager();
-		//entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
-		//entities.addEntity(new TestEntity(new Vector2(100, 0), 10f, Color.RED));
-		//entities.addEntity(new TestEntity(new Vector2(-100, -100), 60f, Color.BLUE));
-		entities.addEntity(new Player(new Vector2(), 0));
+		entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
+		entities.addEntity(new TestEntity(new Vector2(10, 0), 10f, Color.RED));
+		entities.addEntity(new TestEntity(new Vector2(-10, -10), 60f, Color.BLUE));
+		Player player = new Player(new Vector2(), 0);
+		entities.addEntity(player);
+		graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
 	}
 

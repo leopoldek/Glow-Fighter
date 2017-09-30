@@ -13,7 +13,7 @@ public class LinePart extends Part{
 	private Vector2 startPos = new Vector2();
 	private Vector2 endPos = new Vector2();
 	
-	public LinePart(Vector2 start, Vector2 end, float width, Color color) {
+	public LinePart(Vector2 start, Vector2 end, float width) {
 		this.start = start;
 		this.end = end;
 		this.width = width;

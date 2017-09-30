@@ -2,22 +2,15 @@ package com.slurpy.glowfighter.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 
-public class Bullet extends Entity {
+public class Bullet extends Entity {//TODO Make abstract class for all bullets later.
 	
 	public Bullet(Vector2 pos, Vector2 vel, Color color) {
-		super(createBodyDef(pos, vel.angleRad()), createParts(color));
+		super(pos, vel.angleRad(), color, createParts(), polygon);
 		body.setLinearVelocity(vel);
-		
-	}
-	
-	public Bullet(BodyDef def, Part[] parts){
-		super(def, parts);
+		body.setBullet(true);
 	}
 
 	@Override
@@ -27,23 +20,21 @@ public class Bullet extends Entity {
 	
 	@Override
 	public void hit(Entity other){
-		Core.physics.queueDestroy(body);
+		delete();
 	}
 	
-	private static Part[] createParts(Color color){
+	private static float height = 0.05f;
+	private static float depth = -0.1f;
+	private static float width = 0.1f;
+	private static Vector2[] polygon = new Vector2[]{
+			new Vector2(height, width),
+			new Vector2(height, -width),
+			new Vector2(depth, -width),
+			new Vector2(depth, width)
+	};
+	private static Part[] createParts(){
 		return new Part[]{
-				new LinePart(new Vector2(-0.1f, 0), new Vector2(0.05f, 0), 5, color)
+				new LinePart(new Vector2(depth * 20, 0), new Vector2(height, 0), width)
 		};
-	}
-	
-	private static BodyDef createBodyDef(Vector2 pos, float rot){
-		BodyDef def = new BodyDef();
-		def.type = BodyType.DynamicBody;
-		def.active = true;
-		def.position.set(pos);
-		def.angle = rot;
-		def.bullet = true;
-		def.fixedRotation = true;
-		return def;
 	}
 }

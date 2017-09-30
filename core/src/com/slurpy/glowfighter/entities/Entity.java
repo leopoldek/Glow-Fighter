@@ -29,7 +29,7 @@ public abstract class Entity {
 		bodyDef.angle = rot;
 		bodyDef.fixedRotation = true;
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.linearDamping = 1f;
+		//bodyDef.linearDamping = 1f;//Let entity handle this.
 		bodyDef.active = true;
 		
 		body = Core.physics.createEntityBody(this, bodyDef);
@@ -57,4 +57,13 @@ public abstract class Entity {
 	}
 	
 	public abstract void hit(Entity other);
+	
+	public Vector2 getPosition(){
+		return body.getPosition();
+	}
+	
+	public final void delete(){
+		Core.physics.queueDestroy(body);
+		Core.entities.removeEntity(this);
+	}
 }

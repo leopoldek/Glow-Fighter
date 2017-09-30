@@ -1,5 +1,6 @@
 package com.slurpy.glowfighter.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.parts.DeceptivePart;
@@ -14,24 +15,25 @@ public class TestEntity extends Entity{
 	
 	@Override
 	public void update(){
-		//rot += Gdx.graphics.getDeltaTime() * 10;
+		body.setTransform(body.getPosition(), body.getAngle() + Gdx.graphics.getDeltaTime() * 0.1f);
 	}
-	
-	private static Part[] createParts(){
-		return new Part[]{
-				new DeceptivePart(new PolygonPart(polygon, 5), 12, 1.5f, 100, true)
-		};
-	}
-	
-	private static Vector2[] polygon = new Vector2[]{
-			new Vector2(-100, -100),
-			new Vector2(-100, 100),
-			new Vector2(100, 100),
-			new Vector2(100, -100)
-	};
 
 	@Override
 	public void hit(Entity other) {
 		
 	}
+	
+	private static Part[] createParts(){
+		return new Part[]{
+				new DeceptivePart(new PolygonPart(polygon, 0.2f), 12, 1.5f, 6f, true)
+		};
+	}
+	
+	private static float size = 1;
+	private static Vector2[] polygon = new Vector2[]{
+			new Vector2(-size, -size),
+			new Vector2(-size, size),
+			new Vector2(size, size),
+			new Vector2(size, -size)
+	};
 }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.utils.Constants;
 
 public class GraphicsManager implements Disposable{
@@ -35,6 +36,8 @@ public class GraphicsManager implements Disposable{
 	private FrameBuffer pingFBO;
 	private FrameBuffer pongFBO;
 	private final ShaderProgram glowShader;
+	
+	private Entity follow;
 	
 	private GraphicsManager(){
 		batch = new SpriteBatch();
@@ -59,6 +62,11 @@ public class GraphicsManager implements Disposable{
 		//Gdx.gl.glHint(GL20.GL_PO, GL20.GL_NICEST);
 		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		if(follow != null){
+			Camera cam = viewport.getCamera();
+			cam.position.set(follow.getPosition(), 0);
+			cam.update();
+		}
 		shapeBatch.setProjectionMatrix(viewport.getCamera().combined);
 		//shapeBatch.setAutoShapeType(true);
 		shapeBatch.begin(ShapeType.Filled);
@@ -155,9 +163,14 @@ public class GraphicsManager implements Disposable{
 	}
 	
 	public void look(Vector2 look){
+		follow = null;
 		Camera cam = viewport.getCamera();
 		cam.position.set(look, 0);
 		cam.update();
+	}
+	
+	public void follow(Entity entity){
+		follow = entity;
 	}
 	
 	public void resize(int width, int height){

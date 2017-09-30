@@ -1,5 +1,7 @@
 package com.slurpy.glowfighter.entities;
 
+import static com.badlogic.gdx.math.MathUtils.*;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,16 +16,18 @@ import com.slurpy.glowfighter.utils.Action;
 public class Player extends Entity {
 	
 	private static final float speed = 60;
-	private static final float maxSpeed = 20;
+	private static final float maxSpeed = 15;
 
 	public Player(Vector2 pos, float rot) {
 		super(pos, rot, Color.WHITE.cpy(), createParts(), polygon);
+		body.setBullet(true);
+		body.setSleepingAllowed(false);
 	}
 
 	@Override
 	public void update() {
-		body.setTransform(body.getPosition(), MathUtils.atan2(-(Gdx.input.getY() - Gdx.graphics.getHeight()/2), Gdx.input.getX() - Gdx.graphics.getWidth()/2));
-		
+		body.setTransform(body.getPosition(), atan2(-(Gdx.input.getY() - Gdx.graphics.getHeight()/2), Gdx.input.getX() - Gdx.graphics.getWidth()/2));
+		float delta = Gdx.graphics.getDeltaTime();
 		
 		Vector2 move = new Vector2();
 		if(Core.bindings.isActionPressed(Action.moveUp)){
@@ -41,24 +45,40 @@ public class Player extends Entity {
 		
 		if(Core.bindings.isActionPressed(Action.moveSlow))move.scl(0.4f);
 		
-		body.setLinearVelocity(move);
+		Vector2 vel = body.getLinearVelocity();
+		if(move.isZero()){
+			if(vel.len() < speed * delta){
+				vel.setZero();
+			}else{
+				move.set(speed, 0);
+				move.setAngle(vel.angle() + 180);
+				vel.add(move.scl(delta));
+			}
+		}else{
+			vel.add(move.scl(delta));
+			if(vel.len2() > maxSpeed * maxSpeed)vel.setLength(maxSpeed);
+		}
+		body.setLinearVelocity(vel);
 		
 		if(Core.bindings.isActionPressed(Action.primary)){
-			//Core.entities.addEntity(new Bullet(pos.cpy(), new Vector2(2000, 0).rotate(rot + MathUtils.random(-10, 10))));
+			float angle = body.getAngle();
+			Core.entities.addEntity(new Bullet(body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2),
+					new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD));
 		}
 	}
 	
 	@Override
-	public void hit(Entity other) {
-		
+	public void hit(Entity other){
+		System.out.println("Hit entity!");
 	}
 	
 	private static Part[] createParts(){
 		return new Part[]{
-				new TrailPart(new PolygonPart(polygon, 5f), 1f, 0.5f),
-				new LinePart(new Vector2(0, 0), new Vector2(1f, 0), 0.2f, Color.WHITE)
+				new TrailPart(new PolygonPart(polygon, 0.1f), 1f, 0.65f),
+				new LinePart(new Vector2(0, 0), new Vector2(-0.3f, 0), 0.1f)
 		};
 	}
 	
-	private static Vector2[] polygon = new Vector2[]{new Vector2(0.5f, 0), new Vector2(-0.5f, -0.5f), new Vector2(-0.5f, 0.5f)};
+	private static float size = 0.4f;
+	private static Vector2[] polygon = new Vector2[]{new Vector2(size, 0), new Vector2(-size, -size), new Vector2(-size, size)};
 }

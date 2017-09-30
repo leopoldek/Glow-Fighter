@@ -86,19 +86,15 @@ public class KeyBindings extends InputAdapter{
 
 	@Override
 	public boolean scrolled(int amount) {
-		//TODO use contains(key)
 		if(amount < 0){
-			System.out.println("SCROLL < 0");
-			Action action = keyBindings.get(SCROLLED_DOWN);
-			if(action == null)return false;
-			ActionListener listener = listeners.get(action);
+			if(!keyBindings.containsKey(SCROLLED_DOWN))return false;
+			ActionListener listener = listeners.get(keyBindings.get(SCROLLED_DOWN));
 			if(listener == null)return false;
 			listener.actionPressed();
 			return true;
 		}else{
-			Action action = keyBindings.get(SCROLLED_UP);
-			if(action == null)return false;
-			ActionListener listener = listeners.get(action);
+			if(!keyBindings.containsKey(SCROLLED_UP))return false;
+			ActionListener listener = listeners.get(keyBindings.get(SCROLLED_UP));
 			if(listener == null)return false;
 			listener.actionPressed();
 			return true;

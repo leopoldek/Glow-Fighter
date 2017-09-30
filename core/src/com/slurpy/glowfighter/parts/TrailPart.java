@@ -2,7 +2,6 @@ package com.slurpy.glowfighter.parts;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -17,7 +16,6 @@ public class TrailPart extends Part{
 	private Array<Float> alphas;
 	
 	private Vector2 lastPos;
-	private float lastRot;
 	
 	private Color tempColor = new Color();
 	
@@ -34,14 +32,12 @@ public class TrailPart extends Part{
 	public void draw(Vector2 pos, float rot, Color color) {
 		if(lastPos == null){
 			lastPos = new Vector2(pos);
-			lastRot = rot;
 			part.draw(pos, rot, color);
 			return;
 		}
 		
-		if(lastPos.dst2(pos) > length || Math.abs(lastRot - rot) > MathUtils.PI/6){
+		if(lastPos.dst2(pos) > length){
 			lastPos.set(pos);
-			lastRot = rot;
 			pastPos.add(new Vector2(pos));
 			pastRot.add(rot);
 			alphas.add(1.0f);

@@ -32,15 +32,15 @@ void main(){
 	vec2 tex_offset = 1.0 / textureSize(u_texture, 0); // gets size of single texel
     vec3 result = texture(u_texture, v_texCoords).rgb; // current fragment's contribution
     if(horizontal){
-        for(int i = 1; i < 10; ++i){
+        for(int i = 1; i < 20; ++i){
             result += texture(u_texture, v_texCoords + vec2(tex_offset.x * i, 0.0)).rgb;
             result += texture(u_texture, v_texCoords - vec2(tex_offset.x * i, 0.0)).rgb;
         }
     }else{
-        for(int i = 1; i < 10; ++i){
+        for(int i = 1; i < 20; ++i){
             result += texture(u_texture, v_texCoords + vec2(0.0, tex_offset.y * i)).rgb;
             result += texture(u_texture, v_texCoords - vec2(0.0, tex_offset.y * i)).rgb;
         }
     }
-    gl_FragColor = v_color * vec4(result/19.0, 1.0);
+    gl_FragColor = v_color * vec4(result/39.0, 1.0);
 }
