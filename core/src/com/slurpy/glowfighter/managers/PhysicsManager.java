@@ -28,7 +28,7 @@ public class PhysicsManager {
 	private Array<Body> queuedDelete = new Array<>(false, 8);
 	
 	public PhysicsManager(){
-		world = new World(new Vector2(), true);
+		world = new World(new Vector2(), false);
 		world.setContactListener(new ContactListener() {
 			@Override
 			public void preSolve(Contact contact, Manifold oldManifold) {}
@@ -40,6 +40,7 @@ public class PhysicsManager {
 			public void beginContact(Contact contact) {
 				Entity entityA = (Entity)contact.getFixtureA().getBody().getUserData();
 				Entity entityB = (Entity)contact.getFixtureB().getBody().getUserData();
+				//TODO KNOCKBACK
 				entityA.hit(entityB);
 				entityB.hit(entityA);
 				

@@ -12,7 +12,8 @@ public class DesktopLauncher {
 		
 		config.vSyncEnabled = false;
 		config.foregroundFPS = 120;
-		config.backgroundFPS = -1;
+		config.backgroundFPS = 120;
+		//config.backgroundFPS = -1;
 		//config.samples = 8;//DOES NOT AFFECT FBO
 		//config.useGL30 = true;//Don't use! Crashes due to shader errors. Fix maybe?
 		
