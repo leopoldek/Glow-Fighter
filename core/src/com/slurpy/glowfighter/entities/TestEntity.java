@@ -10,7 +10,7 @@ import com.slurpy.glowfighter.parts.PolygonPart;
 public class TestEntity extends Entity{
 	
 	public TestEntity(Vector2 pos, float rot, Color color){
-		super(pos, rot, color, createParts(), polygon);
+		super(getEntityDef(pos, rot, color));
 	}
 	
 	@Override
@@ -23,17 +23,28 @@ public class TestEntity extends Entity{
 		
 	}
 	
-	private static Part[] createParts(){
-		return new Part[]{
-				new DeceptivePart(new PolygonPart(polygon, 0.2f), 12, 1.5f, 6f, true)
-		};
+	private static EntityDef entityDef = new EntityDef();
+	
+	private static EntityDef getEntityDef(Vector2 pos, float rot, Color color){
+		entityDef.pos.set(pos);
+		entityDef.rot = rot;
+		entityDef.parts = new Part[]{new DeceptivePart(new PolygonPart(polygon, 0.2f), 12, 3f, 6f, true)};
+		entityDef.setColor(color);
+		return entityDef;
 	}
 	
-	private static float size = 1;
+	private static final float size = 1;
 	private static Vector2[] polygon = new Vector2[]{
 			new Vector2(-size, -size),
 			new Vector2(-size, size),
 			new Vector2(size, size),
 			new Vector2(size, -size)
 	};
+	
+	static{
+		entityDef.polygon = polygon;
+		entityDef.category = Category.ENTITY;
+		entityDef.team = 0;
+		entityDef.bullet = false;
+	}
 }

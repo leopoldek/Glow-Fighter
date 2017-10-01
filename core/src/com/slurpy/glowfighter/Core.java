@@ -50,10 +50,10 @@ public class Core extends ApplicationAdapter {
 		float length = 50;
 		float height = 25;
 		float width = 3;
-		entities.addEntity(new Wall(new Vector2(0, height), new Vector2(length * 2 - width, width), 0f, Color.WHITE));//Top
-		entities.addEntity(new Wall(new Vector2(0, -height), new Vector2(length * 2 - width, width), 0f, Color.WHITE));//Bot
-		entities.addEntity(new Wall(new Vector2(length, 0), new Vector2(width, height * 2 + width), 0f, Color.WHITE));//Right
-		entities.addEntity(new Wall(new Vector2(-length, 0), new Vector2(width, height * 2 + width), 0f, Color.WHITE));//Left
+		entities.addEntity(new Wall(new Vector2(0, height), new Vector2(length - width, width), 0f, Color.WHITE));//Top
+		entities.addEntity(new Wall(new Vector2(0, -height), new Vector2(length - width, width), 0f, Color.WHITE));//Bot
+		entities.addEntity(new Wall(new Vector2(length, 0), new Vector2(width, height + width), 0f, Color.WHITE));//Right
+		entities.addEntity(new Wall(new Vector2(-length, 0), new Vector2(width, height + width), 0f, Color.WHITE));//Left
 		
 		Player player = new Player(new Vector2(), 0);
 		entities.addEntity(player);

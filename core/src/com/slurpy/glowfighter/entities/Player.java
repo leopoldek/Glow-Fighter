@@ -1,6 +1,8 @@
 package com.slurpy.glowfighter.entities;
 
-import static com.badlogic.gdx.math.MathUtils.*;
+import static com.badlogic.gdx.math.MathUtils.atan2;
+import static com.badlogic.gdx.math.MathUtils.cos;
+import static com.badlogic.gdx.math.MathUtils.sin;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -19,9 +21,7 @@ public class Player extends Entity {
 	private static final float maxSpeed = 15;
 
 	public Player(Vector2 pos, float rot) {
-		super(pos, rot, Color.WHITE.cpy(), createParts(), polygon);
-		body.setBullet(true);
-		body.setSleepingAllowed(false);
+		super(getEntityDef(pos, rot));
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class Player extends Entity {
 		if(Core.bindings.isActionPressed(Action.primary)){
 			float angle = body.getAngle();
 			Core.entities.addEntity(new Bullet(body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2),
-					new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD));
+					new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD, (short)1));
 		}
 	}
 	
@@ -72,13 +72,27 @@ public class Player extends Entity {
 		System.out.println("Hit entity!");
 	}
 	
-	private static Part[] createParts(){
-		return new Part[]{
+	private static EntityDef entityDef = new EntityDef();
+	
+	private static EntityDef getEntityDef(Vector2 pos, float rot){
+		entityDef.pos.set(pos);
+		entityDef.rot = rot;
+		entityDef.parts = new Part[]{
 				new TrailPart(new PolygonPart(polygon, 0.1f), 1f, 0.65f),
 				new LinePart(new Vector2(0, 0), new Vector2(-0.3f, 0), 0.1f)
 		};
+		return entityDef;
 	}
 	
 	private static float size = 0.4f;
 	private static Vector2[] polygon = new Vector2[]{new Vector2(size, 0), new Vector2(-size, -size), new Vector2(-size, size)};
+	
+	static{
+		entityDef.polygon = polygon;
+		entityDef.parts = new Part[2];
+		entityDef.category = Category.ENTITY;
+		entityDef.team = 1;
+		entityDef.bullet = true;
+		entityDef.setColor(Color.WHITE);
+	}
 }

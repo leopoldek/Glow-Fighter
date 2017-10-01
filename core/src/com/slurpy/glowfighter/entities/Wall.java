@@ -8,7 +8,7 @@ import com.slurpy.glowfighter.parts.PolygonPart;
 public class Wall extends Entity {
 	
 	public Wall(Vector2 pos, Vector2 size, float rot, Color color) {
-		super(pos, rot, color, createParts(size), createPolygon(size));
+		super(getEntityDef(pos, size, rot, color));
 	}
 
 	@Override
@@ -21,20 +21,25 @@ public class Wall extends Entity {
 		
 	}
 	
-	private static Part[] createParts(Vector2 size){
-		return new Part[]{
-				new PolygonPart(createPolygon(size), 0.5f)
+	private static EntityDef entityDef = new EntityDef();
+	
+	private static EntityDef getEntityDef(Vector2 pos, Vector2 size, float rot, Color color){
+		entityDef.pos.set(pos);
+		entityDef.rot = rot;
+		entityDef.polygon = new Vector2[]{
+				new Vector2(-size.x, -size.y),
+				new Vector2(-size.x, size.y),
+				new Vector2(size.x, size.y),
+				new Vector2(size.x, -size.y)
 		};
+		entityDef.parts = new Part[]{new PolygonPart(entityDef.polygon, 0.5f)};
+		entityDef.setColor(color);
+		return entityDef;
 	}
 	
-	private static Vector2[] createPolygon(Vector2 size){
-		float x = size.x / 2;
-		float y = size.y / 2;
-		return new Vector2[]{
-				new Vector2(x, y), 
-				new Vector2(x, -y),
-				new Vector2(-x, -y),
-				new Vector2(-x, y)
-		};
+	static{
+		entityDef.category = Category.WALL;
+		entityDef.team = 0;
+		entityDef.bullet = false;
 	}
 }

@@ -13,35 +13,37 @@ import com.slurpy.glowfighter.parts.Part;
 public abstract class Entity {
 	
 	protected Part[] parts;
-	protected Color[] color;
+	protected Color[] colors;
 	
 	protected final Body body;
+	public final Category category;
 	
 	private boolean deleted = false;
 	
-	public Entity(Vector2 pos, float rot, Color color, Part[] parts, Vector2[] polygon){
-		this.parts = parts;
-		this.color = new Color[parts.length];
-		for(int i = 0; i < this.color.length; i++){
-			this.color[i] = color;
-		}
+	public Entity(EntityDef entityDef){
+		parts = entityDef.parts;
+		colors = entityDef.colors;
+		category = entityDef.category;
 		
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.position.set(pos);
-		bodyDef.angle = rot;
+		bodyDef.position.set(entityDef.pos);
+		bodyDef.angle = entityDef.rot;
 		bodyDef.fixedRotation = true;
 		bodyDef.type = BodyType.DynamicBody;
-		//bodyDef.linearDamping = 1f;//Let entity handle this.
 		bodyDef.active = true;
+		bodyDef.bullet = entityDef.bullet;
 		
 		body = Core.physics.createEntityBody(this, bodyDef);
 		
 		PolygonShape shape = new PolygonShape();
-		shape.set(polygon);
+		shape.set(entityDef.polygon);
 		
 		FixtureDef fixDef = new FixtureDef();
 		fixDef.isSensor = true;
 		fixDef.shape = shape;
+		fixDef.filter.categoryBits = entityDef.category.categoryBits;
+		fixDef.filter.maskBits = entityDef.category.maskBits;
+		fixDef.filter.groupIndex = (short) -entityDef.team;
 		
 		body.createFixture(fixDef);
 		
@@ -54,7 +56,7 @@ public abstract class Entity {
 		for(int i = 0; i < parts.length; i++){
 			Part part = parts[i];
 			if(part.visible)
-				part.draw(body.getPosition(), body.getAngle(), color[i]);
+				part.draw(body.getPosition(), body.getAngle(), colors[i]);
 		}
 	}
 	

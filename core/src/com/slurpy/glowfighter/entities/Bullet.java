@@ -7,10 +7,9 @@ import com.slurpy.glowfighter.parts.Part;
 
 public class Bullet extends Entity {//TODO Make abstract class for all bullets later.
 	
-	public Bullet(Vector2 pos, Vector2 vel, Color color) {
-		super(pos, vel.angleRad(), color, createParts(), polygon);
+	public Bullet(Vector2 pos, Vector2 vel, Color color, short team) {
+		super(getEntityDef(pos, vel.angleRad(), color, team));
 		body.setLinearVelocity(vel);
-		body.setBullet(true);
 	}
 
 	@Override
@@ -23,6 +22,17 @@ public class Bullet extends Entity {//TODO Make abstract class for all bullets l
 		delete();
 	}
 	
+	private static EntityDef entityDef = new EntityDef();
+	
+	private static EntityDef getEntityDef(Vector2 pos, float rot, Color color, short team){
+		entityDef.pos.set(pos);
+		entityDef.rot = rot;
+		entityDef.parts = new Part[]{new LinePart(new Vector2(depth * 10, 0), new Vector2(height, 0), width)};
+		entityDef.setColor(color);
+		entityDef.team = team;
+		return entityDef;
+	}
+	
 	private static float height = 0.05f;
 	private static float depth = -0.1f;
 	private static float width = 0.1f;
@@ -32,9 +42,10 @@ public class Bullet extends Entity {//TODO Make abstract class for all bullets l
 			new Vector2(depth, -width),
 			new Vector2(depth, width)
 	};
-	private static Part[] createParts(){
-		return new Part[]{
-				new LinePart(new Vector2(depth * 10, 0), new Vector2(height, 0), width)
-		};
+	
+	static{
+		entityDef.polygon = polygon;
+		entityDef.category = Category.BULLET;
+		entityDef.bullet = true;
 	}
 }
