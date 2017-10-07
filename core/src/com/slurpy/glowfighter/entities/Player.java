@@ -11,27 +11,30 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.traits.Health;
+import com.slurpy.glowfighter.entities.traits.Knockback;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 import com.slurpy.glowfighter.parts.TrailPart;
 import com.slurpy.glowfighter.utils.Action;
 
-public class Player extends Entity implements Health{
+public class Player extends Entity implements Health, Knockback{
 	
-	private static final float speed = 60;
-	private static final float maxSpeed = 15;
+	private static final float speed = 200;
+	private static final float maxSpeed = 40f;
+	private static final float slowMaxSpeed = maxSpeed * 0.2f;
+	private static final float maxHealth = 100;
 	
-	private float health = 100;
+	private float health = maxHealth;
 
 	public Player(Vector2 pos, float rot) {
 		super(getEntityDef(pos, rot));
+		body.setLinearDamping(5f);
 	}
 
 	@Override
 	public void update() {
 		body.setTransform(body.getPosition(), atan2(-(Gdx.input.getY() - Gdx.graphics.getHeight()/2), Gdx.input.getX() - Gdx.graphics.getWidth()/2));
-		float delta = Gdx.graphics.getDeltaTime();
 		
 		Vector2 move = new Vector2();
 		if(Core.bindings.isActionPressed(Action.moveUp)){
@@ -47,20 +50,13 @@ public class Player extends Entity implements Health{
 			move.add(speed, 0);
 		}
 		
-		if(Core.bindings.isActionPressed(Action.moveSlow))move.scl(0.4f);
+		body.applyForceToCenter(move, true);
 		
 		Vector2 vel = body.getLinearVelocity();
-		if(move.isZero()){
-			if(vel.len() < speed * delta){
-				vel.setZero();
-			}else{
-				move.set(speed, 0);
-				move.setAngle(vel.angle() + 180);
-				vel.add(move.scl(delta));
-			}
+		if(Core.bindings.isActionPressed(Action.moveSlow)){
+			if(vel.len2() > slowMaxSpeed * slowMaxSpeed)vel.setLength2(slowMaxSpeed * slowMaxSpeed);
 		}else{
-			vel.add(move.scl(delta));
-			if(vel.len2() > maxSpeed * maxSpeed)vel.setLength(maxSpeed);
+			if(vel.len2() > maxSpeed * maxSpeed)vel.setLength2(maxSpeed * maxSpeed);
 		}
 		body.setLinearVelocity(vel);
 		
@@ -69,6 +65,11 @@ public class Player extends Entity implements Health{
 			Core.entities.addEntity(new Bullet(body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2),
 					new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD, Team.FRIENDLY));
 		}
+		
+		health += 5f * Gdx.graphics.getDeltaTime();
+		if(health > maxHealth)health = maxHealth;
+		float color = health / maxHealth;
+		colors[0].set(1, color, color, 1);
 	}
 	
 	@Override
@@ -79,8 +80,12 @@ public class Player extends Entity implements Health{
 	@Override
 	public void takeDamage(float dmg) {
 		health -= dmg;
-		float color = health / 100;
-		colors[0].set(1, color, color, 1);
+		if(health < 0)health = 0;
+	}
+	
+	@Override
+	public float getKnockback() {
+		return 50;
 	}
 	
 	private static EntityDef entityDef = new EntityDef();

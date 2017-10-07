@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.Health;
+import com.slurpy.glowfighter.entities.traits.Knockback;
 import com.slurpy.glowfighter.utils.Constants;
 
 public class PhysicsManager {
@@ -46,7 +47,18 @@ public class PhysicsManager {
 				entityA.hit(entityB);
 				entityB.hit(entityA);
 				
-				//TODO KNOCKBACK
+				Vector2 normal = contact.getWorldManifold().getNormal();
+				normal.nor();
+				if(entityA instanceof Knockback){
+					Vector2 pos = entityA.getPosition();
+					float knockback = ((Knockback)entityA).getKnockback();
+					entityA.body.applyLinearImpulse(-normal.x * knockback, -normal.y * knockback, pos.x, pos.y, true);
+				}
+				if(entityB instanceof Knockback){
+					Vector2 pos = entityB.getPosition();
+					float knockback = ((Knockback)entityB).getKnockback();
+					entityB.body.applyLinearImpulse(normal.x * knockback, normal.y * knockback, pos.x, pos.y, true);
+				}
 				
 				if(entityA instanceof Health && entityB instanceof Damage)((Health)entityA).takeDamage(((Damage)entityB).getDamage());
 				if(entityB instanceof Health && entityA instanceof Damage)((Health)entityB).takeDamage(((Damage)entityA).getDamage());
