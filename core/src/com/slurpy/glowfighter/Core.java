@@ -15,6 +15,7 @@ import com.slurpy.glowfighter.managers.PhysicsManager;
 import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.FPSCounter;
 import com.slurpy.glowfighter.utils.KeyBindings;
+import com.slurpy.glowfighter.utils.Spawner;
 
 public class Core extends ApplicationAdapter {
 	
@@ -25,6 +26,7 @@ public class Core extends ApplicationAdapter {
 	public static EntityManager entities;
 	
 	private FPSCounter fps = new FPSCounter(1);
+	private Spawner spawner = new Spawner(0.05f);
 	
 	@Override
 	public void create () {
@@ -56,13 +58,14 @@ public class Core extends ApplicationAdapter {
 		entities.addEntity(new Wall(new Vector2(-length, 0), new Vector2(width, height + width), 0f, Color.WHITE));//Left
 		
 		Player player = new Player(new Vector2(), 0);
-		entities.addEntity(player);
+		entities.addEntity(player, "player");
 		graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
 	}
 	
 	@Override
 	public void render () {
+		spawner.spawn(Gdx.graphics.getDeltaTime());
 		fps.update(Gdx.graphics.getDeltaTime());
 		entities.update();
 		physics.update();

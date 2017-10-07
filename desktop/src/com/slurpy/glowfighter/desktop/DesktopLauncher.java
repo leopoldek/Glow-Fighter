@@ -17,6 +17,8 @@ public class DesktopLauncher {
 		//config.samples = 8;//DOES NOT AFFECT FBO
 		//config.useGL30 = true;//Don't use! Crashes due to shader errors. Fix maybe?
 		
+		config.width = 900;
+		config.height = 600;
 		//config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
 		//config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
 		//config.fullscreen = true
