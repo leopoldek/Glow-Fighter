@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.slurpy.glowfighter.Core;
@@ -29,7 +28,7 @@ public abstract class Entity {
 		bodyDef.position.set(entityDef.pos);
 		bodyDef.angle = entityDef.rot;
 		bodyDef.fixedRotation = true;
-		bodyDef.type = BodyType.DynamicBody;
+		bodyDef.type = entityDef.bodyType;
 		bodyDef.active = true;
 		bodyDef.bullet = entityDef.bullet;
 		
@@ -39,7 +38,7 @@ public abstract class Entity {
 		shape.set(entityDef.polygon);
 		
 		FixtureDef fixDef = new FixtureDef();
-		fixDef.isSensor = true;
+		//fixDef.isSensor = true;
 		fixDef.shape = shape;
 		fixDef.filter.categoryBits = entityDef.category.categoryBits;
 		fixDef.filter.maskBits = entityDef.category.maskBits;

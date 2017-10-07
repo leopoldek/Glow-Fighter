@@ -3,6 +3,7 @@ package com.slurpy.glowfighter.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.parts.DeceptivePart;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
@@ -46,5 +47,6 @@ public class TestEntity extends Entity{
 		entityDef.category = Category.ENTITY;
 		entityDef.team = Team.NEUTRAL;
 		entityDef.bullet = false;
+		entityDef.bodyType = BodyType.KinematicBody;
 	}
 }

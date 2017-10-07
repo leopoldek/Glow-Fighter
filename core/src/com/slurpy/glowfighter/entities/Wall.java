@@ -2,6 +2,7 @@ package com.slurpy.glowfighter.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 
@@ -41,5 +42,6 @@ public class Wall extends Entity {
 		entityDef.category = Category.WALL;
 		entityDef.team = Team.NEUTRAL;
 		entityDef.bullet = false;
+		entityDef.bodyType = BodyType.StaticBody;
 	}
 }

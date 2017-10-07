@@ -2,6 +2,7 @@ package com.slurpy.glowfighter.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.parts.Part;
 
 public class EntityDef {
@@ -13,6 +14,7 @@ public class EntityDef {
 	public Category category = Category.ENTITY;
 	public Team team = Team.NEUTRAL;
 	public boolean bullet = false;
+	public BodyType bodyType = BodyType.DynamicBody;
 	
 	public void setColor(Color color){
 		colors = new Color[parts.length];

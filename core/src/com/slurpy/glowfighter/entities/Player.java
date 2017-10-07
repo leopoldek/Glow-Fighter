@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
@@ -94,5 +95,6 @@ public class Player extends Entity {
 		entityDef.team = Team.FRIENDLY;
 		entityDef.bullet = true;
 		entityDef.setColor(Color.WHITE);
+		entityDef.bodyType = BodyType.DynamicBody;
 	}
 }

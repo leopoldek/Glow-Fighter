@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.Category;
 import com.slurpy.glowfighter.entities.Entity;
@@ -14,7 +15,7 @@ import com.slurpy.glowfighter.parts.PolygonPart;
 
 public class MissileEnemy extends Entity{
 	
-	private static final float SPEED = 4f;
+	private static final float SPEED = 10f;
 
 	public MissileEnemy(Vector2 pos, float rot) {
 		super(getEntityDef(pos, rot));
@@ -25,7 +26,6 @@ public class MissileEnemy extends Entity{
 	public void update() {
 		Vector2 playerPos = Core.entities.getGroup("player").iterator().next().getPosition();
 		float angle = playerPos.sub(getPosition()).angleRad();
-		if(angle < 0)angle += MathUtils.PI2;
 		angle -= body.getAngle();
 		if(angle > MathUtils.PI)angle -= MathUtils.PI2;
 		float clamp = 2f * Gdx.graphics.getDeltaTime();
@@ -63,6 +63,7 @@ public class MissileEnemy extends Entity{
 		entityDef.category = Category.ENTITY;
 		entityDef.team = Team.ENEMY;
 		entityDef.bullet = false;
+		entityDef.bodyType = BodyType.DynamicBody;
 		entityDef.parts = new Part[]{
 				new PolygonPart(polygon, 0.04f)
 		};
