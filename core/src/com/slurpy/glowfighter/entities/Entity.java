@@ -15,7 +15,7 @@ public abstract class Entity {
 	protected Part[] parts;
 	protected Color[] colors;
 	
-	protected final Body body;
+	public final Body body;
 	public final Category category;
 	
 	private boolean deleted = false;
@@ -66,10 +66,15 @@ public abstract class Entity {
 		return body.getPosition();
 	}
 	
+	public float getRotation(){
+		return body.getAngle();
+	}
+	
 	public final void delete(){
-		if(deleted)return;
-		Core.physics.queueDestroy(body);
-		Core.entities.removeEntity(this);
 		deleted = true;
+	}
+	
+	public boolean isDeleted(){
+		return deleted;
 	}
 }

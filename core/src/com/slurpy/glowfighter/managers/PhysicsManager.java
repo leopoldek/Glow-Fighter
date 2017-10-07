@@ -59,6 +59,10 @@ public class PhysicsManager {
 		queuedDelete.add(body);
 	}
 	
+	public void destroy(Body body){
+		world.destroyBody(body);
+	}
+	
 	public void update(){
 		//Destroy bodies.
 		while(queuedDelete.size != 0){
