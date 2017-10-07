@@ -21,7 +21,7 @@ public class Spawner {
 		accumulator += delta;
 		while(accumulator > timer){
 			Core.entities.addEntity(new MissileEnemy(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), MathUtils.random(MathUtils.PI2)));
-			accumulator = 0;
+			accumulator -= timer;
 		}
 	}
 }
