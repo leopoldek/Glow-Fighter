@@ -43,7 +43,7 @@ public abstract class Entity {
 		fixDef.shape = shape;
 		fixDef.filter.categoryBits = entityDef.category.categoryBits;
 		fixDef.filter.maskBits = entityDef.category.maskBits;
-		fixDef.filter.groupIndex = (short) -entityDef.team;
+		fixDef.filter.groupIndex = (short) -entityDef.team.ordinal();
 		
 		body.createFixture(fixDef);
 		

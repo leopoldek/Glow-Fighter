@@ -39,7 +39,7 @@ public class Wall extends Entity {
 	
 	static{
 		entityDef.category = Category.WALL;
-		entityDef.team = 0;
+		entityDef.team = Team.NEUTRAL;
 		entityDef.bullet = false;
 	}
 }

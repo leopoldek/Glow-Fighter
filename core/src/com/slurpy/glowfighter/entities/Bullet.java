@@ -7,7 +7,7 @@ import com.slurpy.glowfighter.parts.Part;
 
 public class Bullet extends Entity {//TODO Make abstract class for all bullets later.
 	
-	public Bullet(Vector2 pos, Vector2 vel, Color color, short team) {
+	public Bullet(Vector2 pos, Vector2 vel, Color color, Team team) {
 		super(getEntityDef(pos, vel.angleRad(), color, team));
 		body.setLinearVelocity(vel);
 	}
@@ -24,7 +24,7 @@ public class Bullet extends Entity {//TODO Make abstract class for all bullets l
 	
 	private static EntityDef entityDef = new EntityDef();
 	
-	private static EntityDef getEntityDef(Vector2 pos, float rot, Color color, short team){
+	private static EntityDef getEntityDef(Vector2 pos, float rot, Color color, Team team){
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
 		entityDef.parts = new Part[]{new LinePart(new Vector2(depth * 10, 0), new Vector2(height, 0), width)};

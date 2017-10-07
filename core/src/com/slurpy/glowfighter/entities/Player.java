@@ -63,7 +63,7 @@ public class Player extends Entity {
 		if(Core.bindings.isActionPressed(Action.primary)){
 			float angle = body.getAngle();
 			Core.entities.addEntity(new Bullet(body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2),
-					new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD, (short)1));
+					new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD, Team.FRIENDLY));
 		}
 	}
 	
@@ -91,7 +91,7 @@ public class Player extends Entity {
 		entityDef.polygon = polygon;
 		entityDef.parts = new Part[2];
 		entityDef.category = Category.ENTITY;
-		entityDef.team = 1;
+		entityDef.team = Team.FRIENDLY;
 		entityDef.bullet = true;
 		entityDef.setColor(Color.WHITE);
 	}

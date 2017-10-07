@@ -11,7 +11,7 @@ public class EntityDef {
 	public final Vector2 pos = new Vector2();
 	public float rot = 0;
 	public Category category = Category.ENTITY;
-	public short team = 0;
+	public Team team = Team.NEUTRAL;
 	public boolean bullet = false;
 	
 	public void setColor(Color color){

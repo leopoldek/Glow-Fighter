@@ -44,7 +44,7 @@ public class TestEntity extends Entity{
 	static{
 		entityDef.polygon = polygon;
 		entityDef.category = Category.ENTITY;
-		entityDef.team = 0;
+		entityDef.team = Team.NEUTRAL;
 		entityDef.bullet = false;
 	}
 }
