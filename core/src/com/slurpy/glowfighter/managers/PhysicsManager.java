@@ -11,6 +11,8 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.slurpy.glowfighter.entities.Entity;
+import com.slurpy.glowfighter.entities.traits.Damage;
+import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.utils.Constants;
 
 public class PhysicsManager {
@@ -40,11 +42,14 @@ public class PhysicsManager {
 			public void beginContact(Contact contact) {
 				Entity entityA = (Entity)contact.getFixtureA().getBody().getUserData();
 				Entity entityB = (Entity)contact.getFixtureB().getBody().getUserData();
-				//TODO KNOCKBACK
+				
 				entityA.hit(entityB);
 				entityB.hit(entityA);
 				
-				//contact.getFixtureA().getBody().applyLinearImpulse(contact.getWorldManifold().getNormal(), contact.getWorldManifold().get, wake);
+				//TODO KNOCKBACK
+				
+				if(entityA instanceof Health && entityB instanceof Damage)((Health)entityA).takeDamage(((Damage)entityB).getDamage());
+				if(entityB instanceof Health && entityA instanceof Damage)((Health)entityB).takeDamage(((Damage)entityA).getDamage());
 			}
 		});
 	}

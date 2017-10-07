@@ -10,16 +10,19 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
+import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 import com.slurpy.glowfighter.parts.TrailPart;
 import com.slurpy.glowfighter.utils.Action;
 
-public class Player extends Entity {
+public class Player extends Entity implements Health{
 	
 	private static final float speed = 60;
 	private static final float maxSpeed = 15;
+	
+	private float health = 100;
 
 	public Player(Vector2 pos, float rot) {
 		super(getEntityDef(pos, rot));
@@ -73,6 +76,13 @@ public class Player extends Entity {
 		System.out.println("Hit entity!");
 	}
 	
+	@Override
+	public void takeDamage(float dmg) {
+		health -= dmg;
+		float color = health / 100;
+		colors[0].set(1, color, color, 1);
+	}
+	
 	private static EntityDef entityDef = new EntityDef();
 	
 	private static EntityDef getEntityDef(Vector2 pos, float rot){
@@ -94,7 +104,7 @@ public class Player extends Entity {
 		entityDef.category = Category.ENTITY;
 		entityDef.team = Team.FRIENDLY;
 		entityDef.bullet = true;
-		entityDef.setColor(Color.WHITE);
+		entityDef.setColor(Color.WHITE.cpy());
 		entityDef.bodyType = BodyType.DynamicBody;
 	}
 }

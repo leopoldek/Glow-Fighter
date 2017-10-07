@@ -10,10 +10,11 @@ import com.slurpy.glowfighter.entities.Category;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.EntityDef;
 import com.slurpy.glowfighter.entities.Team;
+import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 
-public class MissileEnemy extends Entity{
+public class MissileEnemy extends Entity implements Damage{
 	
 	private static final float SPEED = 10f;
 
@@ -43,6 +44,11 @@ public class MissileEnemy extends Entity{
 	@Override
 	public void hit(Entity other) {
 		delete();
+	}
+	
+	@Override
+	public float getDamage() {
+		return 0.5f;
 	}
 	
 	private static EntityDef entityDef = new EntityDef();
