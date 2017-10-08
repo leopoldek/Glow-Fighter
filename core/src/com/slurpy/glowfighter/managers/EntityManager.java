@@ -63,4 +63,8 @@ public class EntityManager {
 				entity.draw();
 		}
 	}
+	
+	public int amount(){
+		return entities.size;
+	}
 }

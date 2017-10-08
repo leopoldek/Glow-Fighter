@@ -1,6 +1,8 @@
 package com.slurpy.glowfighter.managers;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Disposable;
+import com.slurpy.glowfighter.utils.Constants;
 
 public class AssetManager implements Disposable{
 	
@@ -16,11 +18,12 @@ public class AssetManager implements Disposable{
 	private AssetManager(){
 		assets = new com.badlogic.gdx.assets.AssetManager();
 		//assets.load("WhiteCircle.png", Texture.class);
+		assets.load(Constants.FONT_FILE, BitmapFont.class);
 		assets.finishLoading();
 	}
 	
 	public <T> T get(String name, Class<T> type){
-		return assets.get(name);
+		return assets.get(name, type);
 	}
 
 	@Override

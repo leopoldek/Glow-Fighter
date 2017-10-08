@@ -54,7 +54,7 @@ public class Player extends Entity implements Health, Knockback{
 		if(Core.bindings.isActionPressed(Action.moveRight)){
 			move.add(speed, 0);
 		}
-		move.scl(Gdx.graphics.getDeltaTime() * 150);
+		move.scl(Gdx.graphics.getDeltaTime() * 30);
 		
 		body.applyForceToCenter(move, true);
 		

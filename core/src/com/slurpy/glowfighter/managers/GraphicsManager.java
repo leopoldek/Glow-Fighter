@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -13,7 +14,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.utils.Constants;
 
@@ -39,6 +42,9 @@ public class GraphicsManager implements Disposable{
 	
 	private Entity follow;
 	
+	private final BitmapFont font;
+	private Queue<Text> drawTextQueue = new Queue<>();
+	
 	private GraphicsManager(){
 		batch = new SpriteBatch();
 		shapeBatch = new ShapeRenderer();
@@ -51,6 +57,11 @@ public class GraphicsManager implements Disposable{
 		glowShader = new ShaderProgram(Gdx.files.internal("shaders/Vertex.glsl"), Gdx.files.internal("shaders/GlowFragment.glsl"));
 		//glowShader.pedantic = false;
 		if(!glowShader.isCompiled())System.out.println(glowShader.getLog());
+		
+		//Create BitMapFont
+		font = Core.assets.get(Constants.FONT_FILE, BitmapFont.class);
+		font.setColor(Color.WHITE);
+		font.setUseIntegerPositions(false);
 	}
 	
 	public void begin(){
@@ -125,11 +136,21 @@ public class GraphicsManager implements Disposable{
 		return i%len;
 	}
 	
+	public void drawText(String text, Vector2 pos, float size){
+		drawTextQueue.addLast(new Text(text, pos.x, pos.y, size));
+	}
+	
 	public void end(){
 		shapeBatch.end();
 		batch.setProjectionMatrix(viewport.getCamera().combined);
 		batch.begin();
+		while(drawTextQueue.size != 0){
+			Text text = drawTextQueue.removeFirst();
+			font.getData().setScale(text.size * Constants.MPP);//Constant is the font size
+			font.draw(batch, text.text, text.x, text.y);
+		}
 		//TODO Draw glowing images
+		batch.flush();
 		screenFBO.end();
 		batch.setShader(glowShader);
 		batch.setProjectionMatrix(fboProj);
@@ -194,5 +215,18 @@ public class GraphicsManager implements Disposable{
 		screenFBO.dispose();
 		pingFBO.dispose();
 		pongFBO.dispose();
+	}
+	
+	private class Text{
+		private final String text;
+		private final float x;
+		private final float y;
+		private final float size;
+		private Text(String text, float x, float y, float size){
+			this.text = text;
+			this.x = x;
+			this.y = y;
+			this.size = size;
+		}
 	}
 }
