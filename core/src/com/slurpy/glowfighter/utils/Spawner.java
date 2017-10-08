@@ -9,7 +9,7 @@ public class Spawner {
 	
 	private static final float spawnRange = 20f;
 	
-	private final float timer;
+	private float timer;
 	
 	private float accumulator = 0;
 	
@@ -23,5 +23,6 @@ public class Spawner {
 			Core.entities.addEntity(new MissileEnemy(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), MathUtils.random(MathUtils.PI2)));
 			accumulator -= timer;
 		}
+		timer = 1 / (1 / timer + 0.00001f / delta);
 	}
 }

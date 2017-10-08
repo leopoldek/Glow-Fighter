@@ -26,6 +26,7 @@ public class Player extends Entity implements Health, Knockback{
 	private static final float maxHealth = 100;
 	
 	private float health = maxHealth;
+	private boolean dead = false;
 
 	public Player(Vector2 pos, float rot) {
 		super(getEntityDef(pos, rot));
@@ -34,6 +35,10 @@ public class Player extends Entity implements Health, Knockback{
 
 	@Override
 	public void update() {
+		if(dead){
+			colors[0].set(Color.DARK_GRAY);
+			return;
+		}
 		body.setTransform(body.getPosition(), atan2(-(Gdx.input.getY() - Gdx.graphics.getHeight()/2), Gdx.input.getX() - Gdx.graphics.getWidth()/2));
 		
 		Vector2 move = new Vector2();
@@ -80,12 +85,12 @@ public class Player extends Entity implements Health, Knockback{
 	@Override
 	public void takeDamage(float dmg) {
 		health -= dmg;
-		if(health < 0)health = 0;
+		if(health < 0)dead = true;
 	}
 	
 	@Override
 	public float getKnockback() {
-		return 50;
+		return 40;
 	}
 	
 	private static EntityDef entityDef = new EntityDef();

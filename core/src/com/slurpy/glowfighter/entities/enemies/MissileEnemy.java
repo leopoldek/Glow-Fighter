@@ -48,7 +48,7 @@ public class MissileEnemy extends Entity implements Damage{
 	
 	@Override
 	public float getDamage() {
-		return 0.5f;
+		return 5f;
 	}
 	
 	private static EntityDef entityDef = new EntityDef();
