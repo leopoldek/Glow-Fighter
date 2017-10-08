@@ -12,6 +12,7 @@ public class DesktopLauncher {
 		
 		config.vSyncEnabled = false;
 		config.foregroundFPS = 120;
+		//config.foregroundFPS = 0;
 		//config.backgroundFPS = 120;
 		config.backgroundFPS = -1;
 		//config.samples = 8;//DOES NOT AFFECT FBO
@@ -21,7 +22,7 @@ public class DesktopLauncher {
 		config.height = 600;
 		//config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
 		//config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
-		//config.fullscreen = true
+		//config.fullscreen = true;
 		
 		new LwjglApplication(new Core(), config);
 	}
