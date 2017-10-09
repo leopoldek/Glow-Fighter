@@ -4,10 +4,11 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.slurpy.glowfighter.entities.LineWall;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.TestEntity;
-import com.slurpy.glowfighter.entities.Wall;
 import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.EntityManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
@@ -42,7 +43,7 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.moveDown, Keys.S);
 		bindings.addBinding(Action.moveRight, Keys.D);
 		bindings.addBinding(Action.moveSlow, Keys.SHIFT_LEFT);
-		bindings.addBinding(Action.primary, KeyBindings.LEFT);
+		bindings.addBinding(Action.primary, Keys.SPACE);
 		
 		entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
 		entities.addEntity(new TestEntity(new Vector2(10, 0), 10f, Color.RED));
@@ -52,10 +53,14 @@ public class Core extends ApplicationAdapter {
 		float length = 50;
 		float height = 25;
 		float width = 3;
-		entities.addEntity(new Wall(new Vector2(0, height), new Vector2(length - width, width), 0f, Color.WHITE));//Top
-		entities.addEntity(new Wall(new Vector2(0, -height), new Vector2(length - width, width), 0f, Color.WHITE));//Bot
-		entities.addEntity(new Wall(new Vector2(length, 0), new Vector2(width, height + width), 0f, Color.WHITE));//Right
-		entities.addEntity(new Wall(new Vector2(-length, 0), new Vector2(width, height + width), 0f, Color.WHITE));//Left
+		//entities.addEntity(new Wall(new Vector2(0, height), new Vector2(length - width, width), 0f, Color.WHITE));//Top
+		//entities.addEntity(new Wall(new Vector2(0, -height), new Vector2(length - width, width), 0f, Color.WHITE));//Bot
+		//entities.addEntity(new Wall(new Vector2(length, 0), new Vector2(width, height + width), 0f, Color.WHITE));//Right
+		//entities.addEntity(new Wall(new Vector2(-length, 0), new Vector2(width, height + width), 0f, Color.WHITE));//Left
+		entities.addEntity(new LineWall(new Vector2(0, height), length, width, 0f, Color.WHITE));
+		entities.addEntity(new LineWall(new Vector2(0, -height), length, width, 0f, Color.WHITE));
+		entities.addEntity(new LineWall(new Vector2(-length, 0), height, width, MathUtils.PI / 2, Color.WHITE));
+		entities.addEntity(new LineWall(new Vector2(length, 0), height, width, MathUtils.PI / 2, Color.WHITE));
 		
 		Player player = new Player(new Vector2(), 0);
 		entities.addEntity(player, "player");
