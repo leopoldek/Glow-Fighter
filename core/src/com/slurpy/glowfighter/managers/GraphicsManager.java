@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -13,12 +14,16 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.Entity;
+import com.slurpy.glowfighter.managers.AssetManager.Effect;
+import com.slurpy.glowfighter.managers.AssetManager.Font;
 import com.slurpy.glowfighter.utils.Constants;
+import com.slurpy.glowfighter.utils.Util;
 
 public class GraphicsManager implements Disposable{
 	
@@ -43,7 +48,8 @@ public class GraphicsManager implements Disposable{
 	private Entity follow;
 	
 	private final BitmapFont font;
-	private Queue<Text> drawTextQueue = new Queue<>();
+	private Queue<TextDraw> drawTextQueue = new Queue<>();
+	private Array<PooledEffect> effectArray = new Array<>(false, 16);
 	
 	private GraphicsManager(){
 		batch = new SpriteBatch();
@@ -59,7 +65,7 @@ public class GraphicsManager implements Disposable{
 		if(!glowShader.isCompiled())System.out.println(glowShader.getLog());
 		
 		//Create BitMapFont
-		font = Core.assets.get(Constants.FONT_FILE, BitmapFont.class);
+		font = Core.assets.getFont(Font.CatV);
 		font.setColor(Color.WHITE);
 		font.setUseIntegerPositions(false);
 	}
@@ -131,13 +137,33 @@ public class GraphicsManager implements Disposable{
 	}
 	
 	private int len;
-	private int wrap(int i){
+	private int wrap(int i){//TODO Get rid of this soon
 		if(i < 0)i += len;
 		return i%len;
 	}
 	
 	public void drawText(String text, Vector2 pos, float size){
-		drawTextQueue.addLast(new Text(text, pos.x, pos.y, size));
+		drawTextQueue.addLast(new TextDraw(text, pos.x, pos.y, size));
+	}
+	
+	public void drawParticle(Effect effect, Vector2 pos, float rot, float scl){
+		PooledEffect pooledEffect = Core.assets.getEffect(effect);
+		pooledEffect.setEmittersCleanUpBlendFunction(false);
+		pooledEffect.setPosition(pos.x, pos.y);
+		Util.rotateEffect(pooledEffect, rot);
+		pooledEffect.scaleEffect(scl);
+		effectArray.add(pooledEffect);
+	}
+	
+	public void drawParticle(Effect effect, Vector2 pos){
+		PooledEffect pooledEffect = Core.assets.getEffect(effect);
+		pooledEffect.setEmittersCleanUpBlendFunction(false);
+		pooledEffect.setPosition(pos.x, pos.y);
+		effectArray.add(pooledEffect);
+	}
+	
+	public void drawTexture(){
+		throw new UnsupportedOperationException("Texture drawing is not supported yet!");
 	}
 	
 	public void end(){
@@ -145,10 +171,19 @@ public class GraphicsManager implements Disposable{
 		batch.setProjectionMatrix(viewport.getCamera().combined);
 		batch.begin();
 		while(drawTextQueue.size != 0){
-			Text text = drawTextQueue.removeFirst();
-			font.getData().setScale(text.size * Constants.MPP);//Constant is the font size
+			TextDraw text = drawTextQueue.removeFirst();
+			font.getData().setScale(text.size * Constants.MPP);//Font size is 48 for CatV
 			font.draw(batch, text.text, text.x, text.y);
 		}
+		for (int i = effectArray.size - 1; i >= 0; i--) {
+			PooledEffect effect = effectArray.get(i);
+			effect.draw(batch, Gdx.graphics.getDeltaTime());
+			if (effect.isComplete()) {
+				effect.free();
+				effectArray.removeIndex(i);
+			}
+		}
+		//TODO Make separate draw loop for additive particle effects
 		//TODO Draw glowing images
 		batch.flush();
 		screenFBO.end();
@@ -217,12 +252,12 @@ public class GraphicsManager implements Disposable{
 		pongFBO.dispose();
 	}
 	
-	private class Text{
+	private class TextDraw{
 		private final String text;
 		private final float x;
 		private final float y;
 		private final float size;
-		private Text(String text, float x, float y, float size){
+		private TextDraw(String text, float x, float y, float size){
 			this.text = text;
 			this.x = x;
 			this.y = y;
