@@ -48,7 +48,9 @@ public class GraphicsManager implements Disposable{
 	private Entity follow;
 	
 	private final BitmapFont font;
+	
 	private Queue<TextDraw> drawTextQueue = new Queue<>();
+	private Queue<PooledEffect> drawEffectQueue = new Queue<>();
 	private Array<PooledEffect> effectArray = new Array<>(false, 16);
 	
 	private GraphicsManager(){
@@ -162,6 +164,10 @@ public class GraphicsManager implements Disposable{
 		effectArray.add(pooledEffect);
 	}
 	
+	public void drawParticle(PooledEffect effect){
+		drawEffectQueue.addLast(effect);
+	}
+	
 	public void drawTexture(){
 		throw new UnsupportedOperationException("Texture drawing is not supported yet!");
 	}
@@ -174,6 +180,9 @@ public class GraphicsManager implements Disposable{
 			TextDraw text = drawTextQueue.removeFirst();
 			font.getData().setScale(text.size * Constants.MPP);//Font size is 48 for CatV
 			font.draw(batch, text.text, text.x, text.y);
+		}
+		while(drawEffectQueue.size != 0){
+			drawEffectQueue.removeFirst().draw(batch, Gdx.graphics.getDeltaTime());
 		}
 		for (int i = effectArray.size - 1; i >= 0; i--) {
 			PooledEffect effect = effectArray.get(i);
