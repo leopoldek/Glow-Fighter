@@ -3,6 +3,8 @@ package com.slurpy.glowfighter.utils;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter.ScaledNumericValue;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class Util{
 	
@@ -23,5 +25,9 @@ public class Util{
 			float spanLowHalf = (angle.getLowMax() - angle.getLowMin()) / 2f;
 			angle.setLow(targetAngle - spanLowHalf, targetAngle + spanLowHalf);
 		}
+	}
+	
+	public static Vector2 setVector2(Vector2 vector2, Vector3 vector3){
+		return vector2.set(vector3.x, vector3.y);
 	}
 }

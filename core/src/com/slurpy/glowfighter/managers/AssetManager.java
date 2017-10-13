@@ -1,5 +1,7 @@
 package com.slurpy.glowfighter.managers;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
@@ -18,16 +20,22 @@ public class AssetManager implements Disposable{
 	
 	private final com.badlogic.gdx.assets.AssetManager assets;
 	
-	private final ObjectMap<Effect, ParticleEffectPool> effectPools = new ObjectMap<>();
+	private final ObjectMap<EffectAsset, ParticleEffectPool> effectPools = new ObjectMap<>();
 	
 	private AssetManager(){
 		assets = new com.badlogic.gdx.assets.AssetManager();
 		//assets.load("WhiteCircle.png", Texture.class);
-		for(Font font : Font.values()){
+		for(FontAsset font : FontAsset.values()){
 			assets.load(font.file, BitmapFont.class);
 		}
-		for(Effect effect : Effect.values()){
+		for(EffectAsset effect : EffectAsset.values()){
 			assets.load(effect.file, ParticleEffect.class);
+		}
+		for(MusicAsset music : MusicAsset.values()){
+			assets.load(music.file, Music.class);
+		}
+		for(SoundAsset sound : SoundAsset.values()){
+			assets.load(sound.file, Sound.class);
 		}
 		assets.finishLoading();
 	}
@@ -36,13 +44,21 @@ public class AssetManager implements Disposable{
 		return assets.get(name, type);
 	}
 	
-	public BitmapFont getFont(Font font){
+	public BitmapFont getFont(FontAsset font){
 		return assets.get(font.file, BitmapFont.class);
 	}
 	
-	public PooledEffect getEffect(Effect effect){
+	public PooledEffect getEffect(EffectAsset effect){
 		if(!effectPools.containsKey(effect))effectPools.put(effect, new ParticleEffectPool(assets.get(effect.file, ParticleEffect.class), 5, 50));
 		return effectPools.get(effect).obtain();
+	}
+	
+	public Sound getSound(SoundAsset sound){
+		return assets.get(sound.file, Sound.class);
+	}
+	
+	public Music getMusic(MusicAsset music){
+		return assets.get(music.file, Music.class);
 	}
 
 	@Override
@@ -50,24 +66,46 @@ public class AssetManager implements Disposable{
 		assets.dispose();
 	}
 	
-	public enum Font{
+	public enum FontAsset{
 		CatV("fonts/CatV_6x12_9.fnt");
 		
 		public final String file;
 		public static final Class<BitmapFont> clazz = BitmapFont.class;
 
-		private Font(String file) {
+		private FontAsset(String file) {
 			this.file = file;
 		}
 	}
 	
-	public enum Effect{
+	public enum EffectAsset{
 		Explosion("effects/Missile Death.p");
 		
 		public final String file;
 		public static final Class<ParticleEffect> clazz = ParticleEffect.class;
 
-		private Effect(String file) {
+		private EffectAsset(String file) {
+			this.file = file;
+		}
+	}
+	
+	public enum MusicAsset{
+		;
+		
+		public final String file;
+		public static final Class<MusicAsset> clazz = MusicAsset.class;
+		
+		private MusicAsset(String file){
+			this.file = file;
+		}
+	}
+	
+	public enum SoundAsset{
+		;
+		
+		public final String file;
+		public static final Class<MusicAsset> clazz = MusicAsset.class;
+		
+		private SoundAsset(String file){
 			this.file = file;
 		}
 	}

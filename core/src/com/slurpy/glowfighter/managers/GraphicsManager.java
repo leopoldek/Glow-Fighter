@@ -16,14 +16,15 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.Entity;
-import com.slurpy.glowfighter.managers.AssetManager.Effect;
-import com.slurpy.glowfighter.managers.AssetManager.Font;
+import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
+import com.slurpy.glowfighter.managers.AssetManager.FontAsset;
 import com.slurpy.glowfighter.utils.Constants;
 import com.slurpy.glowfighter.utils.Util;
 
@@ -48,6 +49,7 @@ public class GraphicsManager implements Disposable{
 	private final ShaderProgram glowShader;
 	
 	private Entity follow;
+	private final Vector2 oldCameraPos = new Vector2();
 	
 	private final BitmapFont font;
 	
@@ -70,7 +72,7 @@ public class GraphicsManager implements Disposable{
 		if(!glowShader.isCompiled())System.out.println(glowShader.getLog());
 		
 		//Create BitMapFont
-		font = Core.assets.getFont(Font.CatV);
+		font = Core.assets.getFont(FontAsset.CatV);
 		font.setColor(Color.WHITE);
 		font.setUseIntegerPositions(false);
 	}
@@ -84,6 +86,7 @@ public class GraphicsManager implements Disposable{
 		//Gdx.gl.glHint(GL20.GL_PO, GL20.GL_NICEST);
 		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		Util.setVector2(oldCameraPos, viewport.getCamera().position);
 		if(follow != null){
 			Camera cam = viewport.getCamera();
 			cam.position.set(follow.getPosition(), 0);
@@ -151,7 +154,7 @@ public class GraphicsManager implements Disposable{
 		drawTextQueue.addLast(new TextDraw(text, pos.x, pos.y, size));
 	}
 	
-	public void drawParticle(Effect effect, Vector2 pos, float rot, float scl){
+	public void drawParticle(EffectAsset effect, Vector2 pos, float rot, float scl){
 		PooledEffect pooledEffect = Core.assets.getEffect(effect);
 		pooledEffect.setEmittersCleanUpBlendFunction(false);
 		pooledEffect.setPosition(pos.x, pos.y);
@@ -160,7 +163,7 @@ public class GraphicsManager implements Disposable{
 		effectArray.add(pooledEffect);
 	}
 	
-	public void drawParticle(Effect effect, Vector2 pos){
+	public void drawParticle(EffectAsset effect, Vector2 pos){
 		PooledEffect pooledEffect = Core.assets.getEffect(effect);
 		pooledEffect.setEmittersCleanUpBlendFunction(false);
 		pooledEffect.setPosition(pos.x, pos.y);
@@ -243,6 +246,15 @@ public class GraphicsManager implements Disposable{
 	
 	public void follow(Entity entity){
 		follow = entity;
+	}
+	
+	public Vector2 getCameraPosition(){
+		Vector3 pos = viewport.getCamera().position;
+		return new Vector2(pos.x, pos.y);
+	}
+	
+	public Vector2 getCameraVelocity(){
+		return Util.setVector2(new Vector2(), viewport.getCamera().position).sub(oldCameraPos).scl(1 / Gdx.graphics.getDeltaTime());
 	}
 	
 	public void resize(int width, int height){

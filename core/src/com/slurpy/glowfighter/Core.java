@@ -10,6 +10,7 @@ import com.slurpy.glowfighter.entities.LineWall;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.TestEntity;
 import com.slurpy.glowfighter.managers.AssetManager;
+import com.slurpy.glowfighter.managers.AudioManager;
 import com.slurpy.glowfighter.managers.EntityManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
 import com.slurpy.glowfighter.managers.PhysicsManager;
@@ -23,8 +24,9 @@ public class Core extends ApplicationAdapter {
 	public static AssetManager assets;
 	public static GraphicsManager graphics;
 	public static PhysicsManager physics;
-	public static KeyBindings bindings;
+	public static AudioManager audio;
 	public static EntityManager entities;
+	public static KeyBindings bindings;
 	
 	private FPSCounter fps = new FPSCounter(1);
 	private Spawner spawner = new Spawner(0.05f);
@@ -34,6 +36,7 @@ public class Core extends ApplicationAdapter {
 		assets = AssetManager.getAssetManager();
 		graphics = GraphicsManager.getGraphicsManager();
 		physics = PhysicsManager.getPhysicsManager();
+		audio = AudioManager.getAudioManager();
 		entities = EntityManager.getEntityManager();
 		
 		bindings = KeyBindings.createNewBinding();
@@ -78,6 +81,7 @@ public class Core extends ApplicationAdapter {
 		graphics.begin();
 		entities.draw();
 		graphics.end();
+		audio.update();
 	}
 	
 	@Override

@@ -11,7 +11,7 @@ import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.EntityDef;
 import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
-import com.slurpy.glowfighter.managers.AssetManager.Effect;
+import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 
@@ -44,7 +44,7 @@ public class MissileEnemy extends Entity implements Damage{
 
 	@Override
 	public void hit(Entity other) {
-		Core.graphics.drawParticle(Effect.Explosion, body.getPosition());
+		Core.graphics.drawParticle(EffectAsset.Explosion, body.getPosition());
 		delete();
 	}
 	
