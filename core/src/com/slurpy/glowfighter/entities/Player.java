@@ -66,11 +66,9 @@ public class Player extends Entity implements Health, Knockback{
 		}
 		body.setLinearVelocity(vel);
 		
-		if(Core.bindings.isActionPressed(Action.primary)){
-			float angle = body.getAngle();
-			Core.entities.addEntity(new Bullet(body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2),
-					new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD, Team.FRIENDLY));
-		}
+		float angle = body.getAngle();
+		Core.entities.addEntity(new Bullet(body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2),
+				new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD, Team.FRIENDLY));
 		
 		health += 5f * Gdx.graphics.getDeltaTime();
 		if(health > maxHealth)health = maxHealth;

@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -51,6 +53,7 @@ public class GraphicsManager implements Disposable{
 	
 	private Queue<TextDraw> drawTextQueue = new Queue<>();
 	private Queue<PooledEffect> drawEffectQueue = new Queue<>();
+	private Queue<TextureDraw> drawTextureQueue = new Queue<>();
 	private Array<PooledEffect> effectArray = new Array<>(false, 16);
 	
 	private GraphicsManager(){
@@ -168,8 +171,8 @@ public class GraphicsManager implements Disposable{
 		drawEffectQueue.addLast(effect);
 	}
 	
-	public void drawTexture(){
-		throw new UnsupportedOperationException("Texture drawing is not supported yet!");
+	public void drawTexture(TextureRegion region, Vector2 pos, Vector2 size, Vector2 origin, float rot){
+		drawTextureQueue.addLast(new TextureDraw(region, pos.x, pos.y, size.x, size.y, origin.x, origin.y, rot));
 	}
 	
 	public void end(){
@@ -183,6 +186,10 @@ public class GraphicsManager implements Disposable{
 		}
 		while(drawEffectQueue.size != 0){
 			drawEffectQueue.removeFirst().draw(batch, Gdx.graphics.getDeltaTime());
+		}
+		while(drawTextureQueue.size != 0){
+			TextureDraw texture = drawTextureQueue.removeFirst();
+			batch.draw(texture.texture, texture.x, texture.y, texture.originX, texture.origonY, texture.width, texture.height, 1, 1, texture.rot * MathUtils.radiansToDegrees);
 		}
 		for (int i = effectArray.size - 1; i >= 0; i--) {
 			PooledEffect effect = effectArray.get(i);
@@ -271,6 +278,26 @@ public class GraphicsManager implements Disposable{
 			this.x = x;
 			this.y = y;
 			this.size = size;
+		}
+	}
+	private class TextureDraw{
+		private final TextureRegion texture;
+		private final float x;
+		private final float y;
+		private final float width;
+		private final float height;
+		private final float originX;
+		private final float origonY;
+		private final float rot;
+		public TextureDraw(TextureRegion texture, float x, float y, float width, float height, float originX, float origonY, float rot) {
+			this.texture = texture;
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+			this.originX = originX;
+			this.origonY = origonY;
+			this.rot = rot;
 		}
 	}
 }

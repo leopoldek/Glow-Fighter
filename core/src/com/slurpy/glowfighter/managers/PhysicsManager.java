@@ -10,13 +10,14 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.entities.traits.Knockback;
 import com.slurpy.glowfighter.utils.Constants;
 
-public class PhysicsManager {
+public class PhysicsManager implements Disposable{
 	
 	private static PhysicsManager singleton;
 	
@@ -95,5 +96,10 @@ public class PhysicsManager {
 	        world.step(Constants.TIME_STEP, Constants.VELOCITY_ITERATIONS, Constants.POSITION_ITERATIONS);
 	        accumulator -= Constants.TIME_STEP;
 	    }
+	}
+
+	@Override
+	public void dispose() {
+		world.dispose();
 	}
 }

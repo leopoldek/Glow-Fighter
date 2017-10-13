@@ -87,6 +87,7 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
+		physics.dispose();
 		graphics.dispose();
 		assets.dispose();
 	}
