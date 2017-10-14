@@ -78,7 +78,7 @@ public class AssetManager implements Disposable{
 	}
 	
 	public enum EffectAsset{
-		Explosion("effects/Missile Death.p");
+		Explosion("effects/Missile Death.effect");
 		
 		public final String file;
 		public static final Class<ParticleEffect> clazz = ParticleEffect.class;
@@ -89,7 +89,7 @@ public class AssetManager implements Disposable{
 	}
 	
 	public enum MusicAsset{
-		;
+		BackgroundTechno("songs/Retro Techno Music.mp3");
 		
 		public final String file;
 		public static final Class<MusicAsset> clazz = MusicAsset.class;
@@ -100,7 +100,7 @@ public class AssetManager implements Disposable{
 	}
 	
 	public enum SoundAsset{
-		;
+		Shoot("sounds/Shoot.wav"), Hit("sounds/Hit.wav");
 		
 		public final String file;
 		public static final Class<MusicAsset> clazz = MusicAsset.class;

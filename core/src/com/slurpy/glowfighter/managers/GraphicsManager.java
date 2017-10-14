@@ -49,7 +49,6 @@ public class GraphicsManager implements Disposable{
 	private final ShaderProgram glowShader;
 	
 	private Entity follow;
-	private final Vector2 oldCameraPos = new Vector2();
 	
 	private final BitmapFont font;
 	
@@ -86,7 +85,6 @@ public class GraphicsManager implements Disposable{
 		//Gdx.gl.glHint(GL20.GL_PO, GL20.GL_NICEST);
 		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Util.setVector2(oldCameraPos, viewport.getCamera().position);
 		if(follow != null){
 			Camera cam = viewport.getCamera();
 			cam.position.set(follow.getPosition(), 0);
@@ -203,7 +201,6 @@ public class GraphicsManager implements Disposable{
 			}
 		}
 		//TODO Make separate draw loop for additive particle effects
-		//TODO Draw glowing images
 		batch.flush();
 		screenFBO.end();
 		batch.setShader(glowShader);
@@ -251,10 +248,6 @@ public class GraphicsManager implements Disposable{
 	public Vector2 getCameraPosition(){
 		Vector3 pos = viewport.getCamera().position;
 		return new Vector2(pos.x, pos.y);
-	}
-	
-	public Vector2 getCameraVelocity(){
-		return Util.setVector2(new Vector2(), viewport.getCamera().position).sub(oldCameraPos).scl(1 / Gdx.graphics.getDeltaTime());
 	}
 	
 	public void resize(int width, int height){

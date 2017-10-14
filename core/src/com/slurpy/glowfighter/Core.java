@@ -3,6 +3,7 @@ package com.slurpy.glowfighter;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -10,6 +11,7 @@ import com.slurpy.glowfighter.entities.LineWall;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.TestEntity;
 import com.slurpy.glowfighter.managers.AssetManager;
+import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
 import com.slurpy.glowfighter.managers.AudioManager;
 import com.slurpy.glowfighter.managers.EntityManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
@@ -48,7 +50,7 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.moveSlow, Keys.SHIFT_LEFT);
 		bindings.addBinding(Action.primary, Keys.SPACE);
 		
-		entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
+		//entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
 		entities.addEntity(new TestEntity(new Vector2(10, 0), 10f, Color.RED));
 		entities.addEntity(new TestEntity(new Vector2(-10, -10), 60f, Color.BLUE));
 		
@@ -69,6 +71,10 @@ public class Core extends ApplicationAdapter {
 		entities.addEntity(player, "player");
 		graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
+		
+		Music music = Core.audio.getMusic(MusicAsset.BackgroundTechno);
+		music.setLooping(true);
+		music.play();
 	}
 	
 	@Override
@@ -81,7 +87,6 @@ public class Core extends ApplicationAdapter {
 		graphics.begin();
 		entities.draw();
 		graphics.end();
-		audio.update();
 	}
 	
 	@Override

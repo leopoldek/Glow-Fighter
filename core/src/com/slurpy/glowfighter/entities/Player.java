@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.entities.traits.Knockback;
+import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
@@ -78,7 +79,8 @@ public class Player extends Entity implements Health, Knockback{
 	
 	@Override
 	public void hit(Entity other){
-		System.out.println("Hit entity!");
+		//Don't need 2D Sound because player always center of camera.
+		Core.audio.playSound(SoundAsset.Hit);
 	}
 	
 	@Override
