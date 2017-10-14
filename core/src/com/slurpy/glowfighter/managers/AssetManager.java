@@ -67,46 +67,46 @@ public class AssetManager implements Disposable{
 	}
 	
 	public enum FontAsset{
-		CatV("fonts/CatV_6x12_9.fnt");
+		CatV("CatV_6x12_9.fnt");
 		
 		public final String file;
 		public static final Class<BitmapFont> clazz = BitmapFont.class;
 
 		private FontAsset(String file) {
-			this.file = file;
+			this.file = "fonts/" + file;
 		}
 	}
 	
 	public enum EffectAsset{
-		Explosion("effects/Missile Death.effect");
+		Explosion("Missile Death.effect");
 		
 		public final String file;
 		public static final Class<ParticleEffect> clazz = ParticleEffect.class;
 
 		private EffectAsset(String file) {
-			this.file = file;
+			this.file = "effects/" + file;
 		}
 	}
 	
 	public enum MusicAsset{
-		BackgroundTechno("songs/Retro Techno Music.mp3");
+		BackgroundTechno("Retro Techno Music.mp3");
 		
 		public final String file;
 		public static final Class<MusicAsset> clazz = MusicAsset.class;
 		
 		private MusicAsset(String file){
-			this.file = file;
+			this.file = "songs/" + file;
 		}
 	}
 	
 	public enum SoundAsset{
-		Shoot("sounds/Shoot.wav"), Hit("sounds/Hit.wav");
+		Shoot("Shoot.wav"), Hit("Hit.wav"), PlayerDie("Player Die.wav");
 		
 		public final String file;
 		public static final Class<MusicAsset> clazz = MusicAsset.class;
 		
 		private SoundAsset(String file){
-			this.file = file;
+			this.file = "sounds/" + file;
 		}
 	}
 }

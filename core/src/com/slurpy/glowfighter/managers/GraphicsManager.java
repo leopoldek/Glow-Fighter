@@ -126,7 +126,7 @@ public class GraphicsManager implements Disposable{
 			if(degrees < 0)degrees += 360;
 			
 			//shapeBatch.arc(p3.x, p3.y, w, a1-180, 180-a);
-			shapeBatch.arc(points[i].x, points[i].y, w, start, degrees, Math.max(1, (int)((float)Math.cbrt(w) * degrees * (5 / 3))));
+			shapeBatch.arc(points[i].x, points[i].y, w, start, degrees, 3);
 			shapeBatch.rect(points[i].x, points[i].y, 0, 0, Vector2.dst(points[i].x, points[i].y, points[wrap(i+1)].x, points[wrap(i+1)].y), w, 1, 1, a2);
 		}
 	}

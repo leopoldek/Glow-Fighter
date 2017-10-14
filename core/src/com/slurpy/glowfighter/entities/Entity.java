@@ -16,6 +16,7 @@ public abstract class Entity {
 	
 	public final Body body;
 	public final Category category;
+	public final Team team;
 	
 	private boolean deleted = false;
 	
@@ -23,6 +24,7 @@ public abstract class Entity {
 		parts = entityDef.parts;
 		colors = entityDef.colors;
 		category = entityDef.category;
+		team = entityDef.team;
 		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(entityDef.pos);
@@ -40,6 +42,8 @@ public abstract class Entity {
 		FixtureDef fixDef = new FixtureDef();
 		//fixDef.isSensor = true;
 		fixDef.shape = shape;
+		fixDef.isSensor = entityDef.sensor;
+		fixDef.density = entityDef.density;
 		fixDef.filter.categoryBits = entityDef.category.categoryBits;
 		fixDef.filter.maskBits = entityDef.category.maskBits;
 		fixDef.filter.groupIndex = (short) -entityDef.team.ordinal();

@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.entities.LineWall;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.TestEntity;
+import com.slurpy.glowfighter.entities.enemies.BallLaunchingEnemy;
 import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
 import com.slurpy.glowfighter.managers.AudioManager;
@@ -31,7 +32,7 @@ public class Core extends ApplicationAdapter {
 	public static KeyBindings bindings;
 	
 	private FPSCounter fps = new FPSCounter(1);
-	private Spawner spawner = new Spawner(0.05f);
+	private Spawner spawner = new Spawner(0.2f);
 	
 	@Override
 	public void create () {

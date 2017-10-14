@@ -15,11 +15,17 @@ public class EntityDef {
 	public Team team = Team.NEUTRAL;
 	public boolean bullet = false;
 	public BodyType bodyType = BodyType.DynamicBody;
+	public boolean sensor = false;
+	public float density = 0f;
 	
 	public void setColor(Color color){
 		colors = new Color[parts.length];
 		for(int i = 0; i < colors.length; i++){
 			colors[i] = color;
 		}
+	}
+	
+	public void setNoCollisionForce(){
+		density = 1e30f;
 	}
 }

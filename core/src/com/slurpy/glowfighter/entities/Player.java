@@ -69,7 +69,7 @@ public class Player extends Entity implements Health, Knockback{
 		
 		float angle = body.getAngle();
 		Core.entities.addEntity(new Bullet(body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2),
-				new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD, Team.FRIENDLY));
+				new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD, Team.FRIENDLY, 2f));
 		
 		health += 5f * Gdx.graphics.getDeltaTime();
 		if(health > maxHealth)health = maxHealth;
@@ -79,15 +79,18 @@ public class Player extends Entity implements Health, Knockback{
 	
 	@Override
 	public void hit(Entity other){
-		//Don't need 2D Sound because player always center of camera.
-		Core.audio.playSound(SoundAsset.Hit);
 		Core.graphics.shake(0.2f);
 	}
 	
 	@Override
 	public void takeDamage(float dmg) {
 		health -= dmg;
-		if(health < 0)dead = true;
+		if(health < 0){
+			if(!dead)Core.audio.playSound(SoundAsset.PlayerDie);
+			dead = true;
+		}else{
+			Core.audio.playSound(SoundAsset.Hit);
+		}
 	}
 	
 	@Override

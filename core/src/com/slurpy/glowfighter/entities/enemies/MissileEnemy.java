@@ -67,7 +67,6 @@ public class MissileEnemy extends Entity implements Damage{
 	
 	static{
 		entityDef.polygon = polygon;
-		entityDef.parts = new Part[2];
 		entityDef.category = Category.ENTITY;
 		entityDef.team = Team.ENEMY;
 		entityDef.bullet = false;

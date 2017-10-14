@@ -3,14 +3,18 @@ package com.slurpy.glowfighter.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 
-public class Bullet extends Entity {//TODO Make abstract class for all bullets later.
+public class Bullet extends Entity implements Damage{//TODO Make abstract class for all bullets later.
 	
-	public Bullet(Vector2 pos, Vector2 vel, Color color, Team team) {
+	private final float damage;
+	
+	public Bullet(Vector2 pos, Vector2 vel, Color color, Team team, float damage) {
 		super(getEntityDef(pos, vel.angleRad(), color, team));
 		body.setLinearVelocity(vel);
+		this.damage = damage;
 	}
 
 	@Override
@@ -21,6 +25,11 @@ public class Bullet extends Entity {//TODO Make abstract class for all bullets l
 	@Override
 	public void hit(Entity other){
 		delete();
+	}
+	
+	@Override
+	public float getDamage() {
+		return damage;
 	}
 	
 	private static EntityDef entityDef = new EntityDef();
@@ -48,6 +57,7 @@ public class Bullet extends Entity {//TODO Make abstract class for all bullets l
 		entityDef.polygon = polygon;
 		entityDef.category = Category.BULLET;
 		entityDef.bullet = true;
+		//entityDef.sensor = true;
 		entityDef.bodyType = BodyType.DynamicBody;
 	}
 }
