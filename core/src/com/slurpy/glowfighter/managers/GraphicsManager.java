@@ -16,7 +16,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
@@ -48,14 +47,16 @@ public class GraphicsManager implements Disposable{
 	private FrameBuffer pongFBO;
 	private final ShaderProgram glowShader;
 	
+	private final Vector2 cameraPos = new Vector2();
 	private Entity follow;
+	private float shake = 0f;
 	
 	private final BitmapFont font;
 	
-	private Queue<TextDraw> drawTextQueue = new Queue<>();
-	private Queue<PooledEffect> drawEffectQueue = new Queue<>();
-	private Queue<TextureDraw> drawTextureQueue = new Queue<>();
-	private Array<PooledEffect> effectArray = new Array<>(false, 16);
+	private final Queue<TextDraw> drawTextQueue = new Queue<>();
+	private final Queue<PooledEffect> drawEffectQueue = new Queue<>();
+	private final Queue<TextureDraw> drawTextureQueue = new Queue<>();
+	private final Array<PooledEffect> effectArray = new Array<>(false, 16);
 	
 	private GraphicsManager(){
 		batch = new SpriteBatch();
@@ -80,18 +81,23 @@ public class GraphicsManager implements Disposable{
 		screenFBO.begin();
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 		Gdx.gl.glEnable(GL20.GL_BLEND);
-		//Gdx.gl.glHint(GL20.GL_PO, GL20.GL_NICEST);
-		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		if(follow != null){
-			Camera cam = viewport.getCamera();
-			cam.position.set(follow.getPosition(), 0);
-			cam.update();
+		
+		if(follow != null)cameraPos.set(follow.getPosition());
+		Camera cam = viewport.getCamera();
+		if(shake > 0f){
+			Vector2 actualPos = new Vector2().setToRandomDirection().scl(shake);
+			actualPos.add(cameraPos);
+			cam.position.set(actualPos, 0);
+			shake -= 2.1f * Gdx.graphics.getDeltaTime();
+		}else{
+			cam.position.set(cameraPos, 0);
+			shake = 0f;
 		}
+		cam.update();
+		
 		shapeBatch.setProjectionMatrix(viewport.getCamera().combined);
-		//shapeBatch.setAutoShapeType(true);
 		shapeBatch.begin(ShapeType.Filled);
 	}
 	
@@ -180,26 +186,31 @@ public class GraphicsManager implements Disposable{
 		shapeBatch.end();
 		batch.setProjectionMatrix(viewport.getCamera().combined);
 		batch.begin();
+		
 		while(drawTextQueue.size != 0){
 			TextDraw text = drawTextQueue.removeFirst();
 			font.getData().setScale(text.size * Constants.MPP);//Font size is 48 for CatV
 			font.draw(batch, text.text, text.x, text.y);
 		}
+		
 		while(drawEffectQueue.size != 0){
 			drawEffectQueue.removeFirst().draw(batch, Gdx.graphics.getDeltaTime());
 		}
+		
 		while(drawTextureQueue.size != 0){
 			TextureDraw texture = drawTextureQueue.removeFirst();
 			batch.draw(texture.texture, texture.x, texture.y, texture.originX, texture.origonY, texture.width, texture.height, 1, 1, texture.rot * MathUtils.radiansToDegrees);
 		}
-		for (int i = effectArray.size - 1; i >= 0; i--) {
+		
+		for(int i = effectArray.size - 1; i >= 0; i--){
 			PooledEffect effect = effectArray.get(i);
 			effect.draw(batch, Gdx.graphics.getDeltaTime());
-			if (effect.isComplete()) {
+			if(effect.isComplete()){
 				effect.free();
 				effectArray.removeIndex(i);
 			}
 		}
+		
 		//TODO Make separate draw loop for additive particle effects
 		batch.flush();
 		screenFBO.end();
@@ -246,8 +257,12 @@ public class GraphicsManager implements Disposable{
 	}
 	
 	public Vector2 getCameraPosition(){
-		Vector3 pos = viewport.getCamera().position;
-		return new Vector2(pos.x, pos.y);
+		return cameraPos.cpy();
+	}
+	
+	public void shake(float amount){
+		shake += amount;
+		if(shake > Constants.MAX_SHAKE)shake = Constants.MAX_SHAKE;
 	}
 	
 	public void resize(int width, int height){

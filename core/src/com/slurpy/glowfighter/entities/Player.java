@@ -81,6 +81,7 @@ public class Player extends Entity implements Health, Knockback{
 	public void hit(Entity other){
 		//Don't need 2D Sound because player always center of camera.
 		Core.audio.playSound(SoundAsset.Hit);
+		Core.graphics.shake(0.2f);
 	}
 	
 	@Override
