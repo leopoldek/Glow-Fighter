@@ -107,9 +107,9 @@ public class GraphicsManager implements Disposable{
 		shapeBatch.rectLine(start, end, width);
 		temp.set(end).sub(start);
 		float angle = temp.angle() + 90;
-		shapeBatch.arc(start.x, start.y, width/2, angle, 180, Math.max(1, (int)((float)Math.cbrt(width) * angle * (5 / 3))));
+		shapeBatch.arc(start.x, start.y, width/2, angle, 180, Math.max(1, (int)(6 * (float)Math.cbrt(width * 25) * 0.5f)));
 		temp.set(start).sub(end);
-		shapeBatch.arc(end.x, end.y, width/2, angle - 180, 180, Math.max(1, (int)((float)Math.cbrt(width) * angle * (5 / 3))));
+		shapeBatch.arc(end.x, end.y, width/2, angle - 180, 180, Math.max(1, (int)(6 * (float)Math.cbrt(width * 25) * 0.5f)));
 	}
 	
 	public void drawPolygon(Vector2[] points, float w, Color color){
@@ -126,7 +126,7 @@ public class GraphicsManager implements Disposable{
 			if(degrees < 0)degrees += 360;
 			
 			//shapeBatch.arc(p3.x, p3.y, w, a1-180, 180-a);
-			shapeBatch.arc(points[i].x, points[i].y, w, start, degrees, 3);
+			shapeBatch.arc(points[i].x, points[i].y, w, start, degrees, Math.max(1, (int)(6 * (float)Math.cbrt(w * 50) * (degrees / 360f))));
 			shapeBatch.rect(points[i].x, points[i].y, 0, 0, Vector2.dst(points[i].x, points[i].y, points[wrap(i+1)].x, points[wrap(i+1)].y), w, 1, 1, a2);
 		}
 	}
@@ -145,7 +145,7 @@ public class GraphicsManager implements Disposable{
 	
 	public void drawCircle(Vector2 pos, float radius, Color color){
 		shapeBatch.setColor(color);
-		shapeBatch.circle(pos.x, pos.y, radius);
+		shapeBatch.circle(pos.x, pos.y, radius, Math.max(1, (int)(4 * (float)Math.cbrt(radius * 50))));
 	}
 	
 	private int len;

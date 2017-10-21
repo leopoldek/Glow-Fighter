@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.entities.LineWall;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.TestEntity;
-import com.slurpy.glowfighter.entities.enemies.BallLaunchingEnemy;
 import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
 import com.slurpy.glowfighter.managers.AudioManager;
@@ -49,9 +48,11 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.moveDown, Keys.S);
 		bindings.addBinding(Action.moveRight, Keys.D);
 		bindings.addBinding(Action.moveSlow, Keys.SHIFT_LEFT);
-		bindings.addBinding(Action.primary, Keys.SPACE);
+		bindings.addBinding(Action.primary, KeyBindings.LEFT);
+		bindings.addBinding(Action.nextWeapon, KeyBindings.SCROLLED_UP);
+		bindings.addBinding(Action.lastWeapon, KeyBindings.SCROLLED_DOWN);
 		
-		//entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
+		entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
 		entities.addEntity(new TestEntity(new Vector2(10, 0), 10f, Color.RED));
 		entities.addEntity(new TestEntity(new Vector2(-10, -10), 60f, Color.BLUE));
 		
@@ -80,7 +81,7 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void render () {
-		graphics.drawText("WADDUP!!!", new Vector2(5, 5), 1f);
+		//graphics.drawText("WADDUP!!!", new Vector2(5, 5), 1f);
 		spawner.spawn(Gdx.graphics.getDeltaTime());
 		fps.update(Gdx.graphics.getDeltaTime());
 		entities.update();

@@ -1,17 +1,21 @@
-package com.slurpy.glowfighter.entities;
+package com.slurpy.glowfighter.entities.bullets;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.slurpy.glowfighter.entities.Category;
+import com.slurpy.glowfighter.entities.Entity;
+import com.slurpy.glowfighter.entities.EntityDef;
+import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 
-public class Bullet extends Entity implements Damage{//TODO Make abstract class for all bullets later.
+public class LaserShot extends Entity implements Damage{//TODO Make abstract class for all bullets later.
 	
 	private final float damage;
 	
-	public Bullet(Vector2 pos, Vector2 vel, Color color, Team team, float damage) {
+	public LaserShot(Vector2 pos, Vector2 vel, Color color, Team team, float damage) {
 		super(getEntityDef(pos, vel.angleRad(), color, team));
 		body.setLinearVelocity(vel);
 		this.damage = damage;

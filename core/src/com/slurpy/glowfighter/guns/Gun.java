@@ -1,20 +1,17 @@
 package com.slurpy.glowfighter.guns;
 
-public class Gun {
+import com.badlogic.gdx.math.Vector2;
+import com.slurpy.glowfighter.entities.Entity;
+
+public abstract class Gun {
 	
-	public final float maxTime;
+	protected Entity entity;
 	
-	private float timeLeft;
-	
-	public Gun(float maxTime){
-		this.maxTime = maxTime;
+	public Gun(Entity entity){
+		this.entity = entity;
 	}
 	
-	public void update(boolean shoot){
-		
-	}
-	
-	public float getTimeLeft(){
-		return timeLeft;
-	}
+	public abstract void start();
+	public abstract void update(boolean shoot, Vector2 pos, float rot);
+	public abstract void end();
 }

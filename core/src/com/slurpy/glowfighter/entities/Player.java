@@ -6,12 +6,14 @@ import static com.badlogic.gdx.math.MathUtils.sin;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.entities.traits.Knockback;
+import com.slurpy.glowfighter.guns.Gun;
+import com.slurpy.glowfighter.guns.PeaShooter;
+import com.slurpy.glowfighter.guns.Shotgun;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
@@ -22,16 +24,26 @@ import com.slurpy.glowfighter.utils.Action;
 public class Player extends Entity implements Health, Knockback{
 	
 	private static final float speed = 200;
-	private static final float maxSpeed = 40f;
-	private static final float slowMaxSpeed = maxSpeed * 0.2f;
+	//private static final float maxSpeed = 40f;
+	//private static final float slowMaxSpeed = maxSpeed * 0.2f;
 	private static final float maxHealth = 100;
+	
+	private Gun defaultGun = new PeaShooter(this);
 	
 	private float health = maxHealth;
 	private boolean dead = false;
-
+	
 	public Player(Vector2 pos, float rot) {
 		super(getEntityDef(pos, rot));
 		body.setLinearDamping(5f);
+		
+		Core.bindings.subscribe(Action.nextWeapon, () -> {
+			defaultGun = new Shotgun(this);
+		});
+		
+		Core.bindings.subscribe(Action.lastWeapon, () -> {
+			defaultGun = new PeaShooter(this);
+		});
 	}
 
 	@Override
@@ -59,17 +71,17 @@ public class Player extends Entity implements Health, Knockback{
 		
 		body.applyForceToCenter(move, true);
 		
-		Vector2 vel = body.getLinearVelocity();
+		/*Vector2 vel = body.getLinearVelocity();
 		if(Core.bindings.isActionPressed(Action.moveSlow)){
 			if(vel.len2() > slowMaxSpeed * slowMaxSpeed)vel.setLength2(slowMaxSpeed * slowMaxSpeed);
 		}else{
 			if(vel.len2() > maxSpeed * maxSpeed)vel.setLength2(maxSpeed * maxSpeed);
 		}
-		body.setLinearVelocity(vel);
+		body.setLinearVelocity(vel);*/
 		
 		float angle = body.getAngle();
-		Core.entities.addEntity(new Bullet(body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2),
-				new Vector2(100, 0).rotateRad(angle + MathUtils.random(-0.1f, 0.1f)), Color.GOLD, Team.FRIENDLY, 2f));
+		Vector2 pos = body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2);
+		defaultGun.update(Core.bindings.isActionPressed(Action.primary), pos, angle);
 		
 		health += 5f * Gdx.graphics.getDeltaTime();
 		if(health > maxHealth)health = maxHealth;
@@ -79,7 +91,7 @@ public class Player extends Entity implements Health, Knockback{
 	
 	@Override
 	public void hit(Entity other){
-		Core.graphics.shake(0.2f);
+		Core.graphics.shake(0.3f);
 	}
 	
 	@Override

@@ -54,7 +54,7 @@ public class KeyBindings extends InputAdapter{
 		if(!actionBindings.containsKey(action))return false;
 		for(int bind : actionBindings.get(action)){
 			if(bind < -5){//Scroll
-				
+				throw new IllegalArgumentException("Must use listener for scroll wheel(For now...)");
 			}else if(bind < 0){//Button
 				if(Gdx.input.isButtonPressed(-bind - 1))return true;
 			}else if(Gdx.input.isKeyPressed(bind))return true;
@@ -77,8 +77,9 @@ public class KeyBindings extends InputAdapter{
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(!keyBindings.containsKey(-button - 1))return false;
-		ActionListener listener = listeners.get(keyBindings.get(-button - 1));
+		button = -button - 1;
+		if(!keyBindings.containsKey(button))return false;
+		ActionListener listener = listeners.get(keyBindings.get(button));
 		if(listener == null)return false;
 		listener.actionPressed();
 		return true;
