@@ -81,7 +81,7 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void render () {
-		//graphics.drawText("WADDUP!!!", new Vector2(5, 5), 1f);
+		graphics.drawText("Glow Fighter", new Vector2(10, 10), 1.5f, Color.WHITE);
 		spawner.spawn(Gdx.graphics.getDeltaTime());
 		fps.update(Gdx.graphics.getDeltaTime());
 		entities.update();

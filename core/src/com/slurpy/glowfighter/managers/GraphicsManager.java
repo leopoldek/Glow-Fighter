@@ -154,8 +154,8 @@ public class GraphicsManager implements Disposable{
 		return i%len;
 	}
 	
-	public void drawText(String text, Vector2 pos, float size){
-		drawTextQueue.addLast(new TextDraw(text, pos.x, pos.y, size));
+	public void drawText(String text, Vector2 pos, float size, Color color){
+		drawTextQueue.addLast(new TextDraw(text, pos.x, pos.y, size, color.r, color.g, color.b, color.a));
 	}
 	
 	public void drawParticle(EffectAsset effect, Vector2 pos, float rot, float scl){
@@ -189,6 +189,7 @@ public class GraphicsManager implements Disposable{
 		
 		while(drawTextQueue.size != 0){
 			TextDraw text = drawTextQueue.removeFirst();
+			font.setColor(text.r, text.g, text.b, text.a);
 			font.getData().setScale(text.size * Constants.MPP);//Font size is 48 for CatV
 			font.draw(batch, text.text, text.x, text.y);
 		}
@@ -293,11 +294,16 @@ public class GraphicsManager implements Disposable{
 		private final float x;
 		private final float y;
 		private final float size;
-		private TextDraw(String text, float x, float y, float size){
+		private final float r, g, b, a;
+		private TextDraw(String text, float x, float y, float size, float r, float g, float b, float a){
 			this.text = text;
 			this.x = x;
 			this.y = y;
 			this.size = size;
+			this.r = r;
+			this.g = g;
+			this.b = b;
+			this.a = a;
 		}
 	}
 	private class TextureDraw{
