@@ -15,6 +15,7 @@ import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.entities.traits.Knockback;
+import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
 import com.slurpy.glowfighter.utils.Constants;
 
 public class PhysicsManager implements Disposable{
@@ -53,11 +54,13 @@ public class PhysicsManager implements Disposable{
 				if(entityA instanceof Knockback){
 					Vector2 pos = entityA.getPosition();
 					float knockback = ((Knockback)entityA).getKnockback();
+					if(entityB instanceof KnockbackMultiplier)knockback *= ((KnockbackMultiplier)entityB).getMultiplier();
 					entityA.body.applyLinearImpulse(-normal.x * knockback, -normal.y * knockback, pos.x, pos.y, true);
 				}
 				if(entityB instanceof Knockback){
 					Vector2 pos = entityB.getPosition();
 					float knockback = ((Knockback)entityB).getKnockback();
+					if(entityA instanceof KnockbackMultiplier)knockback *= ((KnockbackMultiplier)entityA).getMultiplier();
 					entityB.body.applyLinearImpulse(normal.x * knockback, normal.y * knockback, pos.x, pos.y, true);
 				}
 				

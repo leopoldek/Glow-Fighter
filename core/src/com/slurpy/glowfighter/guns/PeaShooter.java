@@ -25,15 +25,15 @@ public class PeaShooter extends Gun{
 	@Override
 	public void update(boolean shoot, Vector2 pos, float rot) {
 		accumulator += Gdx.graphics.getDeltaTime();
-		float cooldown = 0.1f;
+		float cooldown = 0.20f;
 		if(shoot){
-			while(accumulator > cooldown){
-				Core.entities.addEntity(new LaserShot(pos, new Vector2(50, 0).rotateRad(rot), Color.GOLD, Team.FRIENDLY, 45f));
+			while(accumulator >= cooldown){
+				Core.entities.addEntity(new LaserShot(pos, new Vector2(50, 0).rotateRad(rot), Color.GOLD, Team.FRIENDLY, 60f));
 				Core.audio.playSound(SoundAsset.Shoot, 0.2f);
 				accumulator -= cooldown;
 			}
 		}else{
-			accumulator = cooldown;
+			if(accumulator > cooldown)accumulator = cooldown;
 		}
 	}
 

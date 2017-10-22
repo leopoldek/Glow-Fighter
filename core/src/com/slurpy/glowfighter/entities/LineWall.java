@@ -3,10 +3,11 @@ package com.slurpy.glowfighter.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 
-public class LineWall extends Entity{
+public class LineWall extends Entity implements KnockbackMultiplier{
 	public LineWall(Vector2 pos, float length, float width, float rot, Color color) {
 		super(getEntityDef(pos, length, width, rot, color));
 	}
@@ -19,6 +20,11 @@ public class LineWall extends Entity{
 	@Override
 	public void hit(Entity other) {
 		
+	}
+	
+	@Override
+	public float getMultiplier() {
+		return 2f;
 	}
 	
 	private static EntityDef entityDef = new EntityDef();

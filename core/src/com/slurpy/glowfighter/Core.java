@@ -51,6 +51,7 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.primary, KeyBindings.LEFT);
 		bindings.addBinding(Action.nextWeapon, KeyBindings.SCROLLED_UP);
 		bindings.addBinding(Action.lastWeapon, KeyBindings.SCROLLED_DOWN);
+		bindings.addBinding(Action.boost, Keys.SPACE);
 		
 		entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
 		entities.addEntity(new TestEntity(new Vector2(10, 0), 10f, Color.RED));

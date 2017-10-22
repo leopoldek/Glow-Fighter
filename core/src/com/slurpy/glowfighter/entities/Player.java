@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.entities.traits.Knockback;
+import com.slurpy.glowfighter.guns.BurstGun;
 import com.slurpy.glowfighter.guns.Gun;
 import com.slurpy.glowfighter.guns.PeaShooter;
 import com.slurpy.glowfighter.guns.Shotgun;
@@ -24,10 +25,12 @@ import com.slurpy.glowfighter.utils.Action;
 public class Player extends Entity implements Health, Knockback{
 	
 	private static final float speed = 200;
+	private static final float boost = 40;
 	//private static final float maxSpeed = 40f;
 	//private static final float slowMaxSpeed = maxSpeed * 0.2f;
 	private static final float maxHealth = 100;
 	
+	private int gunType = 0;
 	private Gun defaultGun = new PeaShooter(this);
 	
 	private float health = maxHealth;
@@ -38,11 +41,47 @@ public class Player extends Entity implements Health, Knockback{
 		body.setLinearDamping(5f);
 		
 		Core.bindings.subscribe(Action.nextWeapon, () -> {
-			defaultGun = new Shotgun(this);
+			gunType++;
+			if(gunType < 0)gunType = 2;
+			if(gunType > 2)gunType = 0;
+			if(gunType == 0){
+				defaultGun = new PeaShooter(this);
+			}else if(gunType == 1){
+				defaultGun = new Shotgun(this);
+			}else{
+				defaultGun = new BurstGun(this);
+			}
 		});
 		
 		Core.bindings.subscribe(Action.lastWeapon, () -> {
-			defaultGun = new PeaShooter(this);
+			gunType--;
+			if(gunType < 0)gunType = 2;
+			if(gunType > 2)gunType = 0;
+			if(gunType == 0){
+				defaultGun = new PeaShooter(this);
+			}else if(gunType == 1){
+				defaultGun = new Shotgun(this);
+			}else{
+				defaultGun = new BurstGun(this);
+			}
+		});
+		
+		Core.bindings.subscribe(Action.boost, () -> {
+			Vector2 move = new Vector2();
+			if(Core.bindings.isActionPressed(Action.moveUp)){
+				move.add(0, 1);
+			}
+			if(Core.bindings.isActionPressed(Action.moveDown)){
+				move.add(0, -1);
+			}
+			if(Core.bindings.isActionPressed(Action.moveLeft)){
+				move.add(-1, 0);
+			}
+			if(Core.bindings.isActionPressed(Action.moveRight)){
+				move.add(1, 0);
+			}
+			
+			body.applyLinearImpulse(move.nor().scl(boost), body.getPosition(), true);
 		});
 	}
 
