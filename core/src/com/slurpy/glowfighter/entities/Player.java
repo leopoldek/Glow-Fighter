@@ -14,6 +14,7 @@ import com.slurpy.glowfighter.entities.traits.Knockback;
 import com.slurpy.glowfighter.guns.BurstGun;
 import com.slurpy.glowfighter.guns.Gun;
 import com.slurpy.glowfighter.guns.PeaShooter;
+import com.slurpy.glowfighter.guns.RocketRepeater;
 import com.slurpy.glowfighter.guns.Shotgun;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.parts.LinePart;
@@ -42,27 +43,31 @@ public class Player extends Entity implements Health, Knockback{
 		
 		Core.bindings.subscribe(Action.nextWeapon, () -> {
 			gunType++;
-			if(gunType < 0)gunType = 2;
-			if(gunType > 2)gunType = 0;
+			if(gunType < 0)gunType = 3;
+			if(gunType > 3)gunType = 0;
 			if(gunType == 0){
 				defaultGun = new PeaShooter(this);
 			}else if(gunType == 1){
 				defaultGun = new Shotgun(this);
-			}else{
+			}else if(gunType == 2){
 				defaultGun = new BurstGun(this);
+			}else{
+				defaultGun = new RocketRepeater(this);
 			}
 		});
 		
 		Core.bindings.subscribe(Action.lastWeapon, () -> {
 			gunType--;
-			if(gunType < 0)gunType = 2;
-			if(gunType > 2)gunType = 0;
+			if(gunType < 0)gunType = 3;
+			if(gunType > 3)gunType = 0;
 			if(gunType == 0){
 				defaultGun = new PeaShooter(this);
 			}else if(gunType == 1){
 				defaultGun = new Shotgun(this);
-			}else{
+			}else if(gunType == 2){
 				defaultGun = new BurstGun(this);
+			}else{
+				defaultGun = new RocketRepeater(this);
 			}
 		});
 		

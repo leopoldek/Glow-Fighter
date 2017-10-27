@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.ObjectSet;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.Health;
@@ -82,6 +83,17 @@ public class PhysicsManager implements Disposable{
 	
 	public void destroy(Body body){
 		world.destroyBody(body);
+	}
+	
+	//TODO Use raycasts instead
+	public ObjectSet<Entity> getEntitiesInRadius(final Vector2 pos, final float radius){
+		final ObjectSet<Entity> entities = new ObjectSet<>();
+		final float radius2 = radius * radius;
+		world.QueryAABB(fixture -> {
+			if(fixture.getBody().getPosition().dst2(pos) <= radius2)entities.add((Entity)fixture.getBody().getUserData());
+			return true;
+		}, pos.x - radius, pos.y - radius, pos.x + radius, pos.y + radius);
+		return entities;
 	}
 	
 	public void update(){
