@@ -11,21 +11,23 @@ import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 
 public class RocketLauncher extends Gun{
 	
-	private float accumulator = 0f;
-
-	public RocketLauncher(Entity entity) {
-		super(entity);
+	private static final float time = 10f;//Add reload time bar later.
+	private static final float cooldown = 2.0f;
+	
+	private float accumulator = cooldown;
+	
+	public RocketLauncher(){
+		super(time);
 	}
-
+	
 	@Override
-	public void start() {
+	public void start(Entity entity) {
 		
 	}
 
 	@Override
 	public void update(boolean shoot, Vector2 pos, float rot) {
 		accumulator += Gdx.graphics.getDeltaTime();
-		float cooldown = 2.0f;
 		if(shoot){
 			while(accumulator >= cooldown){
 				Core.entities.addEntity(new Rocket(pos, new Vector2(50, 0).rotateRad(rot), Color.GRAY, Color.GOLDENROD, Team.FRIENDLY, 350f, 7.5f));

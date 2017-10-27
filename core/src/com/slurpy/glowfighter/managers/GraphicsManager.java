@@ -275,9 +275,11 @@ public class GraphicsManager implements Disposable{
 			pingFBO.dispose();
 			pongFBO.dispose();
 		}
+		float fboWidth = width / Constants.FBO_SIZE_RATIO;
+		float fboHeight = height / Constants.FBO_SIZE_RATIO;
 		screenFBO = new FrameBuffer(Format.RGBA4444, width, height, false, false);
-		pingFBO = new FrameBuffer(Format.RGBA4444, width, height, false, false);
-		pongFBO = new FrameBuffer(Format.RGBA4444, width, height, false, false);
+		pingFBO = new FrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
+		pongFBO = new FrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
 	}
 	
 	public void dispose(){

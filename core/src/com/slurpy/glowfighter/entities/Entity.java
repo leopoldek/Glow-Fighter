@@ -40,7 +40,6 @@ public abstract class Entity {
 		shape.set(entityDef.polygon);
 		
 		FixtureDef fixDef = new FixtureDef();
-		//fixDef.isSensor = true;
 		fixDef.shape = shape;
 		fixDef.isSensor = entityDef.sensor;
 		fixDef.density = entityDef.density;

@@ -11,20 +11,20 @@ import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 
 public class BurstGun extends Gun{
 	
-	private static float BURST_INTERVAL = 0.05f;
-	private static float COOLDOWN = 0.8f;
-	private static int BURST_COUNT = 4;
+	private static final float burstInterval = 0.05f;
+	private static final float cooldown = 0.8f;
+	private static final int burstCount = 4;//If you edit this edit the color chooser in update(...) also
 	
-	private float accumulator = 0f;
+	private float accumulator = cooldown;
 	private float burstAccumulator = 0f;
 	private int shotsLeft = 0;
-
-	public BurstGun(Entity entity) {
-		super(entity);
+	
+	public BurstGun(){
+		super(10f);
 	}
-
+	
 	@Override
-	public void start() {
+	public void start(Entity entity) {
 		
 	}
 
@@ -32,25 +32,25 @@ public class BurstGun extends Gun{
 	public void update(boolean shoot, Vector2 pos, float rot) {
 		accumulator += Gdx.graphics.getDeltaTime();
 		if(shoot){
-			while(accumulator >= COOLDOWN){
-				shotsLeft += BURST_COUNT;
-				accumulator -= COOLDOWN;
+			while(accumulator >= cooldown){
+				shotsLeft += burstCount;
+				accumulator -= cooldown;
 			}
 		}else{
-			if(accumulator > COOLDOWN)accumulator = COOLDOWN;
+			if(accumulator > cooldown)accumulator = cooldown;
 		}
 		
 		burstAccumulator += Gdx.graphics.getDeltaTime();
 		if(shotsLeft != 0){
-			while(burstAccumulator >= BURST_INTERVAL){
+			while(burstAccumulator >= burstInterval){
 				Color color = Color.BLUE.cpy().add(0.2f * (4 - shotsLeft), 0.2f * (4 - shotsLeft), 0, 0);
 				Core.entities.addEntity(new LaserShot(pos, new Vector2(50, 0).rotateRad(rot), color, Team.FRIENDLY, 45f));
 				Core.audio.playSound(SoundAsset.Shoot, 0.2f);
 				shotsLeft--;
-				burstAccumulator -= BURST_INTERVAL;
+				burstAccumulator -= burstInterval;
 			}
 		}else{
-			if(burstAccumulator > BURST_INTERVAL)burstAccumulator = BURST_INTERVAL;
+			if(burstAccumulator > burstInterval)burstAccumulator = burstInterval;
 		}
 	}
 

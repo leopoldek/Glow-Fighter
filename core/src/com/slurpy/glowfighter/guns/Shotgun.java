@@ -12,24 +12,24 @@ import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 
 public class Shotgun extends Gun{
 	
+	private static final float cooldown = 0.7f;
 	private static final float spread = 0.3f;
 	private static final int shots = 13;
 	
-	private float accumulator = 0f;
-
-	public Shotgun(Entity entity) {
-		super(entity);
+	private float accumulator = cooldown;
+	
+	public Shotgun(){
+		super(10f);
 	}
-
+	
 	@Override
-	public void start() {
+	public void start(Entity entity) {
 		
 	}
 
 	@Override
 	public void update(boolean shoot, Vector2 pos, float rot) {
 		accumulator += Gdx.graphics.getDeltaTime();
-		float cooldown = 0.7f;
 		if(shoot){
 			while(accumulator > cooldown){
 				for(int i = 0; i < shots; i++){

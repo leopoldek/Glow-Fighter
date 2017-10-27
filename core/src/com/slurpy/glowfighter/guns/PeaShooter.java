@@ -11,21 +11,22 @@ import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 
 public class PeaShooter extends Gun{
 	
-	private float accumulator = 0f;
-
-	public PeaShooter(Entity entity) {
-		super(entity);
+	private static final float cooldown = 0.20f;
+	
+	private float accumulator = cooldown;
+	
+	public PeaShooter(){
+		super(10f);
 	}
-
+	
 	@Override
-	public void start() {
+	public void start(Entity entity) {
 		
 	}
 
 	@Override
 	public void update(boolean shoot, Vector2 pos, float rot) {
 		accumulator += Gdx.graphics.getDeltaTime();
-		float cooldown = 0.20f;
 		if(shoot){
 			while(accumulator >= cooldown){
 				Core.entities.addEntity(new LaserShot(pos, new Vector2(50, 0).rotateRad(rot), Color.GOLD, Team.FRIENDLY, 60f));

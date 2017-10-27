@@ -31,7 +31,7 @@ public class Core extends ApplicationAdapter {
 	public static KeyBindings bindings;
 	
 	private FPSCounter fps = new FPSCounter(1);
-	private Spawner spawner = new Spawner(0.2f);
+	private Spawner spawner;
 	
 	@Override
 	public void create () {
@@ -77,6 +77,8 @@ public class Core extends ApplicationAdapter {
 		graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
 		
+		spawner = new Spawner(0.2f);
+		
 		Music music = Core.audio.getMusic(MusicAsset.BackgroundTechno);
 		music.setLooping(true);
 		music.play();
@@ -84,7 +86,7 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void render () {
-		graphics.drawText("Glow Fighter", new Vector2(10, 10), 1.5f, Color.WHITE);
+		//graphics.drawText("Glow Fighter", new Vector2(10, 10), 1.5f, Color.WHITE);
 		spawner.spawn(Gdx.graphics.getDeltaTime());
 		fps.update(Gdx.graphics.getDeltaTime());
 		entities.update();

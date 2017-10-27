@@ -11,12 +11,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.entities.traits.Knockback;
-import com.slurpy.glowfighter.guns.BurstGun;
 import com.slurpy.glowfighter.guns.Gun;
 import com.slurpy.glowfighter.guns.PeaShooter;
-import com.slurpy.glowfighter.guns.RocketLauncher;
-import com.slurpy.glowfighter.guns.RocketRepeater;
-import com.slurpy.glowfighter.guns.Shotgun;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
@@ -32,8 +28,8 @@ public class Player extends Entity implements Health, Knockback{
 	//private static final float slowMaxSpeed = maxSpeed * 0.2f;
 	private static final float maxHealth = 100;
 	
-	private int gunType = 0;
-	private Gun defaultGun = new PeaShooter(this);
+	private Gun defaultGun = new PeaShooter();
+	private Gun gun = null;
 	
 	private float health = maxHealth;
 	private boolean dead = false;
@@ -41,40 +37,6 @@ public class Player extends Entity implements Health, Knockback{
 	public Player(Vector2 pos, float rot) {
 		super(getEntityDef(pos, rot));
 		body.setLinearDamping(5f);
-		
-		Core.bindings.subscribe(Action.nextWeapon, () -> {
-			gunType++;
-			if(gunType < 0)gunType = 4;
-			if(gunType > 4)gunType = 0;
-			if(gunType == 0){
-				defaultGun = new PeaShooter(this);
-			}else if(gunType == 1){
-				defaultGun = new Shotgun(this);
-			}else if(gunType == 2){
-				defaultGun = new BurstGun(this);
-			}else if(gunType == 3){
-				defaultGun = new RocketLauncher(this);
-			}else{
-				defaultGun = new RocketRepeater(this);
-			}
-		});
-		
-		Core.bindings.subscribe(Action.lastWeapon, () -> {
-			gunType--;
-			if(gunType < 0)gunType = 4;
-			if(gunType > 4)gunType = 0;
-			if(gunType == 0){
-				defaultGun = new PeaShooter(this);
-			}else if(gunType == 1){
-				defaultGun = new Shotgun(this);
-			}else if(gunType == 2){
-				defaultGun = new BurstGun(this);
-			}else if(gunType == 3){
-				defaultGun = new RocketLauncher(this);
-			}else{
-				defaultGun = new RocketRepeater(this);
-			}
-		});
 		
 		Core.bindings.subscribe(Action.boost, () -> {
 			Vector2 move = new Vector2();
@@ -130,8 +92,13 @@ public class Player extends Entity implements Health, Knockback{
 		
 		float angle = body.getAngle();
 		Vector2 pos = body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2);
-		//defaultGun.update(Core.bindings.isActionPressed(Action.primary), pos, angle);
-		defaultGun.update(true, pos, angle);
+		if(gun == null){
+			defaultGun.update(Core.bindings.isActionPressed(Action.primary), pos, angle);
+		}else{
+			gun.tick(Gdx.graphics.getDeltaTime());
+			gun.update(Core.bindings.isActionPressed(Action.primary), pos, angle);
+			if(gun.getTimeLeft() <= 0)gun = null;
+		}
 		
 		health += 5f * Gdx.graphics.getDeltaTime();
 		if(health > maxHealth)health = maxHealth;
@@ -141,7 +108,7 @@ public class Player extends Entity implements Health, Knockback{
 	
 	@Override
 	public void hit(Entity other){
-		Core.graphics.shake(0.3f);
+		if(other.category != Category.ITEM)Core.graphics.shake(0.3f);
 	}
 	
 	@Override
@@ -158,6 +125,11 @@ public class Player extends Entity implements Health, Knockback{
 	@Override
 	public float getKnockback() {
 		return 40;
+	}
+	
+	public void setGun(Gun gun){
+		this.gun = gun;
+		gun.start(this);
 	}
 	
 	private static EntityDef entityDef = new EntityDef();
