@@ -39,11 +39,13 @@ public class Rocket extends Entity implements Damage{//TODO Make abstract class 
 	public void update() {
 		Vector2 vel = body.getLinearVelocity();
 		float len = vel.len();
-		if(len > speed){
-			len = speed;
-			return;
+		if(acceleration > 0){
+			colors[0] = postColor;
+			if(len > speed){
+				len = speed;
+				return;
+			}
 		}
-		if(acceleration > 0)colors[0] = postColor;
 		acceleration += DELTA * Gdx.graphics.getDeltaTime();
 		len += acceleration * Gdx.graphics.getDeltaTime();
 		vel.setLength(len);
@@ -57,6 +59,7 @@ public class Rocket extends Entity implements Damage{//TODO Make abstract class 
 		ObjectSet<Entity> entities = Core.physics.getEntitiesInRadius(body.getPosition(), radius);
 		for(Entity entity : entities){
 			if(entity == this)continue;
+			if(entity.team == Team.FRIENDLY)continue;
 			entity.hit(this);
 			if(entity instanceof Health)((Health)entity).takeDamage(damage);
 		}

@@ -50,7 +50,9 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.moveSlow, Keys.SHIFT_LEFT);
 		bindings.addBinding(Action.primary, KeyBindings.LEFT);
 		bindings.addBinding(Action.nextWeapon, KeyBindings.SCROLLED_UP);
+		bindings.addBinding(Action.nextWeapon, Keys.E);
 		bindings.addBinding(Action.lastWeapon, KeyBindings.SCROLLED_DOWN);
+		bindings.addBinding(Action.lastWeapon, Keys.Q);
 		bindings.addBinding(Action.boost, Keys.SPACE);
 		
 		entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));

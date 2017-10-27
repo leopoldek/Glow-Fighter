@@ -1,3 +1,5 @@
+
+const int skip = 2;
   
 uniform bool horizontal;
 //uniform float weight[6] = float[] (0.198596, 0.175713, 0.121703, 0.065984, 0.028002, 0.0093);
@@ -32,15 +34,15 @@ void main(){
 	vec2 tex_offset = 1.0 / textureSize(u_texture, 0); // gets size of single texel
     vec3 result = texture(u_texture, v_texCoords).rgb; // current fragment's contribution
     if(horizontal){
-        for(int i = 1; i < 20; ++i){
+        for(int i = skip; i < 20; i += skip){
             result += texture(u_texture, v_texCoords + vec2(tex_offset.x * i, 0.0)).rgb;
             result += texture(u_texture, v_texCoords - vec2(tex_offset.x * i, 0.0)).rgb;
         }
     }else{
-        for(int i = 1; i < 20; ++i){
+        for(int i = skip; i < 20; i += skip){
             result += texture(u_texture, v_texCoords + vec2(0.0, tex_offset.y * i)).rgb;
             result += texture(u_texture, v_texCoords - vec2(0.0, tex_offset.y * i)).rgb;
         }
     }
-    gl_FragColor = v_color * vec4(result/39.0, 1.0);
+    gl_FragColor = v_color * vec4(result/17, 1.0);
 }
