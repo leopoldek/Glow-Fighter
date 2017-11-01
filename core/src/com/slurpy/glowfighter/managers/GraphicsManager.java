@@ -25,16 +25,10 @@ import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
 import com.slurpy.glowfighter.managers.AssetManager.FontAsset;
 import com.slurpy.glowfighter.utils.Constants;
+import com.slurpy.glowfighter.utils.Gui;
 import com.slurpy.glowfighter.utils.Util;
 
 public class GraphicsManager implements Disposable{
-	
-	private static GraphicsManager singleton;
-	
-	public static GraphicsManager getGraphicsManager(){
-		if(singleton == null)singleton = new GraphicsManager();
-		return singleton;
-	}
 	
 	private final SpriteBatch batch;
 	private final ScreenViewport viewport;
@@ -58,7 +52,9 @@ public class GraphicsManager implements Disposable{
 	private final Queue<TextureDraw> drawTextureQueue = new Queue<>();
 	private final Array<PooledEffect> effectArray = new Array<>(false, 16);
 	
-	private GraphicsManager(){
+	private final Gui gui;
+	
+	public GraphicsManager(){
 		batch = new SpriteBatch();
 		shapeBatch = new ShapeRenderer();
 		//batch.setBlendFunction(-1, -1);
@@ -75,6 +71,9 @@ public class GraphicsManager implements Disposable{
 		font = Core.assets.getFont(FontAsset.CatV);
 		font.setColor(Color.WHITE);
 		font.setUseIntegerPositions(false);
+		
+		//Create gui
+		gui = new Gui();
 	}
 	
 	public void begin(){
@@ -186,23 +185,7 @@ public class GraphicsManager implements Disposable{
 		shapeBatch.end();
 		batch.setProjectionMatrix(viewport.getCamera().combined);
 		batch.begin();
-		
-		while(drawTextQueue.size != 0){
-			TextDraw text = drawTextQueue.removeFirst();
-			font.setColor(text.r, text.g, text.b, text.a);
-			font.getData().setScale(text.size * Constants.MPP);//Font size is 48 for CatV
-			font.draw(batch, text.text, text.x, text.y);
-		}
-		
-		while(drawEffectQueue.size != 0){
-			drawEffectQueue.removeFirst().draw(batch, Gdx.graphics.getDeltaTime());
-		}
-		
-		while(drawTextureQueue.size != 0){
-			TextureDraw texture = drawTextureQueue.removeFirst();
-			batch.draw(texture.texture, texture.x, texture.y, texture.originX, texture.origonY, texture.width, texture.height, 1, 1, texture.rot * MathUtils.radiansToDegrees);
-		}
-		
+		flushQueues();
 		for(int i = effectArray.size - 1; i >= 0; i--){
 			PooledEffect effect = effectArray.get(i);
 			effect.draw(batch, Gdx.graphics.getDeltaTime());
@@ -211,12 +194,19 @@ public class GraphicsManager implements Disposable{
 				effectArray.removeIndex(i);
 			}
 		}
-		
 		//TODO Make separate draw loop for additive particle effects
+		batch.end();
+		//Draw GUI
+		shapeBatch.setProjectionMatrix(fboProj);
+		shapeBatch.begin(ShapeType.Filled);
+		gui.draw();
+		shapeBatch.end();
+		batch.setProjectionMatrix(fboProj);
+		batch.begin();
+		flushQueues();
 		batch.flush();
 		screenFBO.end();
 		batch.setShader(glowShader);
-		batch.setProjectionMatrix(fboProj);
 		
 		for(int i = 0; i < Constants.BLUR_PASSES; i++){
 			pingFBO.begin();
@@ -238,12 +228,29 @@ public class GraphicsManager implements Disposable{
 		batch.setShader(null);
 		renderFBO(pongFBO);
 		renderFBO(screenFBO);
-		//TODO Draw gui pictures n' stuff
 		batch.end();
 	}
 	
 	private void renderFBO(FrameBuffer fbo){
 		batch.draw(fbo.getColorBufferTexture(), 0, Gdx.graphics.getHeight(), Gdx.graphics.getWidth(), -Gdx.graphics.getHeight());
+	}
+	
+	private void flushQueues(){
+		while(drawTextQueue.size != 0){
+			TextDraw text = drawTextQueue.removeFirst();
+			font.setColor(text.r, text.g, text.b, text.a);
+			font.getData().setScale(text.size * Constants.MPP);//Font size is 48 for CatV
+			font.draw(batch, text.text, text.x, text.y);
+		}
+		
+		while(drawEffectQueue.size != 0){
+			drawEffectQueue.removeFirst().draw(batch, Gdx.graphics.getDeltaTime());
+		}
+		
+		while(drawTextureQueue.size != 0){
+			TextureDraw texture = drawTextureQueue.removeFirst();
+			batch.draw(texture.texture, texture.x, texture.y, texture.originX, texture.origonY, texture.width, texture.height, 1, 1, texture.rot * MathUtils.radiansToDegrees);
+		}
 	}
 	
 	public void look(Vector2 look){
@@ -266,8 +273,13 @@ public class GraphicsManager implements Disposable{
 		if(shake > Constants.MAX_SHAKE)shake = Constants.MAX_SHAKE;
 	}
 	
+	public Vector2 unproject(Vector2 pos){
+		return viewport.unproject(pos);
+	}
+	
 	public void resize(int width, int height){
 		//System.out.println("RESIZED");
+		gui.resize(width, height);
 		viewport.update(width, height);
 		fboProj = new Matrix4().setToOrtho2D(0, 0, width, height);
 		if(screenFBO != null){
@@ -308,6 +320,7 @@ public class GraphicsManager implements Disposable{
 			this.a = a;
 		}
 	}
+	
 	private class TextureDraw{
 		private final TextureRegion texture;
 		private final float x;

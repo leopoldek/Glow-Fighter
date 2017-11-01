@@ -20,7 +20,7 @@ public class BurstGun extends Gun{
 	private int shotsLeft = 0;
 	
 	public BurstGun(){
-		super(10f);
+		super(30f);
 	}
 	
 	@Override

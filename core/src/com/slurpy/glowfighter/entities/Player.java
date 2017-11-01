@@ -114,9 +114,10 @@ public class Player extends Entity implements Health, Knockback{
 	@Override
 	public void takeDamage(float dmg) {
 		health -= dmg;
-		if(health < 0){
+		if(health <= 0){
 			if(!dead)Core.audio.playSound(SoundAsset.PlayerDie);
 			dead = true;
+			health = 0;
 		}else{
 			Core.audio.playSound(SoundAsset.Hit);
 		}
@@ -130,6 +131,18 @@ public class Player extends Entity implements Health, Knockback{
 	public void setGun(Gun gun){
 		this.gun = gun;
 		gun.start(this);
+	}
+	
+	public float getHealth(){
+		return health;
+	}
+	
+	public Gun getGun(){
+		return gun == null ? defaultGun : gun;
+	}
+	
+	public boolean usingDefault(){
+		return gun == null;
 	}
 	
 	private static EntityDef entityDef = new EntityDef();

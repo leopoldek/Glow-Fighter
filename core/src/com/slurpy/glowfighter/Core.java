@@ -35,11 +35,11 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-		assets = AssetManager.getAssetManager();
-		graphics = GraphicsManager.getGraphicsManager();
-		physics = PhysicsManager.getPhysicsManager();
-		audio = AudioManager.getAudioManager();
-		entities = EntityManager.getEntityManager();
+		assets = new AssetManager();
+		graphics = new GraphicsManager();
+		physics = new PhysicsManager();
+		audio = new AudioManager();
+		entities = new EntityManager();
 		
 		bindings = KeyBindings.createNewBinding();
 		Gdx.input.setInputProcessor(bindings);
@@ -77,7 +77,7 @@ public class Core extends ApplicationAdapter {
 		graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
 		
-		spawner = new Spawner(0.2f);
+		spawner = new Spawner(0.3f);
 		
 		Music music = Core.audio.getMusic(MusicAsset.BackgroundTechno);
 		music.setLooping(true);

@@ -16,7 +16,7 @@ public class RocketRepeater extends Gun{
 	private float accumulator = cooldown;
 	
 	public RocketRepeater(){
-		super(10f);
+		super(15f);
 	}
 	
 	@Override

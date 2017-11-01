@@ -42,7 +42,7 @@ public class Spawner {
 				ticks = 0;
 			}
 		}
-		timer = 1 / (1 / timer + 0.000001f / delta);
+		timer = 1 / (1 / timer + 0.0000001f / delta);
 	}
 	
 	private void spawnPickup(){

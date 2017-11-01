@@ -11,7 +11,7 @@ import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 
 public class RocketLauncher extends Gun{
 	
-	private static final float time = 10f;//Add reload time bar later.
+	private static final float time = 25f;//Add reload time bar later.
 	private static final float cooldown = 2.0f;
 	
 	private float accumulator = cooldown;

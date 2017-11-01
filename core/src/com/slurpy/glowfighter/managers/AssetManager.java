@@ -2,6 +2,7 @@ package com.slurpy.glowfighter.managers;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
@@ -11,20 +12,12 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 public class AssetManager implements Disposable{
 	
-	private static AssetManager singleton;
-	
-	public static AssetManager getAssetManager(){
-		if(singleton == null)singleton = new AssetManager();
-		return singleton;
-	}
-	
 	private final com.badlogic.gdx.assets.AssetManager assets;
 	
 	private final ObjectMap<EffectAsset, ParticleEffectPool> effectPools = new ObjectMap<>();
 	
-	private AssetManager(){
+	public AssetManager(){
 		assets = new com.badlogic.gdx.assets.AssetManager();
-		//assets.load("WhiteCircle.png", Texture.class);
 		for(FontAsset font : FontAsset.values()){
 			assets.load(font.file, BitmapFont.class);
 		}
@@ -36,6 +29,9 @@ public class AssetManager implements Disposable{
 		}
 		for(SoundAsset sound : SoundAsset.values()){
 			assets.load(sound.file, Sound.class);
+		}
+		for(TextureAsset texture : TextureAsset.values()){
+			assets.load(texture.file, Texture.class);
 		}
 		assets.finishLoading();
 	}
@@ -59,6 +55,10 @@ public class AssetManager implements Disposable{
 	
 	public Music getMusic(MusicAsset music){
 		return assets.get(music.file, Music.class);
+	}
+	
+	public Texture getTexture(TextureAsset texture){
+		return assets.get(texture.file, Texture.class);
 	}
 
 	@Override
@@ -107,6 +107,17 @@ public class AssetManager implements Disposable{
 		
 		private SoundAsset(String file){
 			this.file = "sounds/" + file;
+		}
+	}
+	
+	public enum TextureAsset{
+		WhitePixel("WhitePixel.png");
+		
+		public final String file;
+		public static final Class<MusicAsset> clazz = MusicAsset.class;
+		
+		private TextureAsset(String file){
+			this.file = "textures/" + file;
 		}
 	}
 }

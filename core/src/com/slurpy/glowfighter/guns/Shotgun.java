@@ -19,7 +19,7 @@ public class Shotgun extends Gun{
 	private float accumulator = cooldown;
 	
 	public Shotgun(){
-		super(10f);
+		super(20f);
 	}
 	
 	@Override
