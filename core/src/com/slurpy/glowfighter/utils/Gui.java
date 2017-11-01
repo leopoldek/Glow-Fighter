@@ -1,5 +1,6 @@
 package com.slurpy.glowfighter.utils;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.Core;
@@ -12,6 +13,7 @@ public class Gui{
 	
 	private final Position healthBar = new Position(50, 50, Anchor.end, Anchor.start);
 	private final Position gunStats = new Position(50, 50, Anchor.start, Anchor.start);
+	private final Position fps = new Position(10, 10, Anchor.start, Anchor.end);
 	
 	public Gui(){
 		
@@ -32,6 +34,8 @@ public class Gui{
 			Core.graphics.drawLine(start, end, 20f, Color.RED.cpy().lerp(Color.CHARTREUSE, time));
 			Core.graphics.drawText(gun.getName(), start.add(0, 40), 32, Color.NAVY);
 		}
+		
+		Core.graphics.drawText(Integer.toString(Gdx.graphics.getFramesPerSecond()), fps.getPosition(), 24, Color.WHITE);
 	}
 	
 	public void resize(int width, int height){
