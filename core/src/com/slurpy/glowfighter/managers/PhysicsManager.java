@@ -85,7 +85,6 @@ public class PhysicsManager implements Disposable{
 		world.destroyBody(body);
 	}
 	
-	//TODO Use raycasts instead
 	public ObjectSet<Entity> getEntitiesInRadius(final Vector2 pos, final float radius){
 		final ObjectSet<Entity> entities = new ObjectSet<>();
 		final float radius2 = radius * radius;
@@ -94,6 +93,11 @@ public class PhysicsManager implements Disposable{
 			return true;
 		}, pos.x - radius, pos.y - radius, pos.x + radius, pos.y + radius);
 		return entities;
+	}
+	
+	//TODO Finish sight finder
+	public ObjectSet<Entity> getEntitiesInSight(final Vector2 pos, final float radius){
+		throw new UnsupportedOperationException();
 	}
 	
 	public void update(){

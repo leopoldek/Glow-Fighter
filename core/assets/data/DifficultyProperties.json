@@ -1,0 +1,14 @@
+{
+  "easy":{
+    "SpawnRate": 0.25
+  },
+  "normal":{
+    "SpawnRate": 0.2
+  },
+  "hard":{
+    "SpawnRate": 0.15
+  },
+  "insane":{
+    "SpawnRate": 0.1
+  }
+}

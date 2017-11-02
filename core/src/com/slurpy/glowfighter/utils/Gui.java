@@ -14,6 +14,7 @@ public class Gui{
 	private final Position healthBar = new Position(50, 50, Anchor.end, Anchor.start);
 	private final Position gunStats = new Position(50, 50, Anchor.start, Anchor.start);
 	private final Position fps = new Position(10, 10, Anchor.start, Anchor.end);
+	private final Position level = new Position(-40, 10, Anchor.center, Anchor.end);
 	
 	public Gui(){
 		
@@ -36,6 +37,7 @@ public class Gui{
 		}
 		
 		Core.graphics.drawText(Integer.toString(Gdx.graphics.getFramesPerSecond()), fps.getPosition(), 24, Color.WHITE);
+		Core.graphics.drawText("Level " + Core.game.getLevel(), level.getPosition(), 32, Color.WHITE);
 	}
 	
 	public void resize(int width, int height){

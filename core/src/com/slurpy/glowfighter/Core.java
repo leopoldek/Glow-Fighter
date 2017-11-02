@@ -5,39 +5,39 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.slurpy.glowfighter.entities.LineWall;
 import com.slurpy.glowfighter.entities.Player;
-import com.slurpy.glowfighter.entities.TestEntity;
 import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
 import com.slurpy.glowfighter.managers.AudioManager;
 import com.slurpy.glowfighter.managers.EntityManager;
+import com.slurpy.glowfighter.managers.GameManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
 import com.slurpy.glowfighter.managers.PhysicsManager;
+import com.slurpy.glowfighter.managers.PropertiesManager;
 import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.KeyBindings;
-import com.slurpy.glowfighter.utils.Spawner;
 
 public class Core extends ApplicationAdapter {
 	
+	public static PropertiesManager properties;
 	public static AssetManager assets;
 	public static GraphicsManager graphics;
 	public static PhysicsManager physics;
 	public static AudioManager audio;
 	public static EntityManager entities;
 	public static KeyBindings bindings;
-	
-	private Spawner spawner;
+	public static GameManager game;
 	
 	@Override
 	public void create () {
+		properties = new PropertiesManager();
 		assets = new AssetManager();
 		graphics = new GraphicsManager();
 		physics = new PhysicsManager();
 		audio = new AudioManager();
 		entities = new EntityManager();
+		game = new GameManager();
 		
 		bindings = KeyBindings.createNewBinding();
 		Gdx.input.setInputProcessor(bindings);
@@ -53,29 +53,10 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.lastWeapon, Keys.Q);
 		bindings.addBinding(Action.boost, Keys.SPACE);
 		
-		entities.addEntity(new TestEntity(new Vector2(0, 0), 0f, Color.GREEN));
-		entities.addEntity(new TestEntity(new Vector2(10, 0), 10f, Color.RED));
-		entities.addEntity(new TestEntity(new Vector2(-10, -10), 60f, Color.BLUE));
-		
-		//Walls
-		float length = 50;
-		float height = 25;
-		float width = 3;
-		//entities.addEntity(new Wall(new Vector2(0, height), new Vector2(length - width, width), 0f, Color.WHITE));//Top
-		//entities.addEntity(new Wall(new Vector2(0, -height), new Vector2(length - width, width), 0f, Color.WHITE));//Bot
-		//entities.addEntity(new Wall(new Vector2(length, 0), new Vector2(width, height + width), 0f, Color.WHITE));//Right
-		//entities.addEntity(new Wall(new Vector2(-length, 0), new Vector2(width, height + width), 0f, Color.WHITE));//Left
-		entities.addEntity(new LineWall(new Vector2(0, height), length, width, 0f, Color.WHITE));
-		entities.addEntity(new LineWall(new Vector2(0, -height), length, width, 0f, Color.WHITE));
-		entities.addEntity(new LineWall(new Vector2(-length, 0), height, width, MathUtils.PI / 2, Color.WHITE));
-		entities.addEntity(new LineWall(new Vector2(length, 0), height, width, MathUtils.PI / 2, Color.WHITE));
-		
 		Player player = new Player(new Vector2(), 0);
 		entities.addEntity(player, "player");
 		graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
-		
-		spawner = new Spawner(0.3f);
 		
 		Music music = Core.audio.getMusic(MusicAsset.BackgroundTechno);
 		music.setLooping(true);
@@ -84,8 +65,8 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void render () {
-		//graphics.drawText("Glow Fighter", new Vector2(10, 10), 1.5f, Color.WHITE);
-		spawner.spawn(Gdx.graphics.getDeltaTime());
+		graphics.drawText("Glow Fighter", new Vector2(0, 0), 1.5f, Color.WHITE);
+		game.update();
 		entities.update();
 		physics.update();
 		graphics.begin();

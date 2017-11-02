@@ -14,7 +14,7 @@ public class Shotgun extends Gun{
 	
 	private static final float cooldown = 0.7f;
 	private static final float spread = 0.3f;
-	private static final int shots = 13;
+	private static final int shots = 17;
 	
 	private float accumulator = cooldown;
 	
