@@ -25,7 +25,6 @@ import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
 import com.slurpy.glowfighter.managers.AssetManager.FontAsset;
 import com.slurpy.glowfighter.utils.Constants;
-import com.slurpy.glowfighter.utils.Gui;
 import com.slurpy.glowfighter.utils.Util;
 
 public class GraphicsManager implements Disposable{
@@ -52,8 +51,6 @@ public class GraphicsManager implements Disposable{
 	private final Queue<TextureDraw> drawTextureQueue = new Queue<>();
 	private final Array<PooledEffect> effectArray = new Array<>(false, 16);
 	
-	private final Gui gui;
-	
 	public GraphicsManager(){
 		batch = new SpriteBatch();
 		shapeBatch = new ShapeRenderer();
@@ -71,9 +68,6 @@ public class GraphicsManager implements Disposable{
 		font = Core.assets.getFont(FontAsset.CatV);
 		font.setColor(Color.WHITE);
 		font.setUseIntegerPositions(false);
-		
-		//Create gui
-		gui = new Gui();
 	}
 	
 	public void begin(){
@@ -199,7 +193,7 @@ public class GraphicsManager implements Disposable{
 		//Draw GUI
 		shapeBatch.setProjectionMatrix(fboProj);
 		shapeBatch.begin(ShapeType.Filled);
-		gui.draw();
+		Core.game.getGui().draw();
 		shapeBatch.end();
 		batch.setProjectionMatrix(fboProj);
 		batch.begin();
@@ -279,7 +273,7 @@ public class GraphicsManager implements Disposable{
 	
 	public void resize(int width, int height){
 		//System.out.println("RESIZED");
-		gui.resize(width, height);
+		Core.game.getGui().resize(width, height);
 		viewport.update(width, height);
 		fboProj = new Matrix4().setToOrtho2D(0, 0, width, height);
 		if(screenFBO != null){

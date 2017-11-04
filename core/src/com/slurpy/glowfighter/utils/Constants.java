@@ -12,7 +12,4 @@ public class Constants {
 	public static final int POSITION_ITERATIONS = 2;
 	
 	public static final float MAX_SHAKE = 0.5f;
-	
-	public static final String DIFFICULTY_PROPERTIES_LOCATION = "data/DifficultyProperties.json";
-	public static final String PROPERTIES_LOCATION = "data/Properties.json";
 }

@@ -3,41 +3,35 @@ package com.slurpy.glowfighter;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
-import com.slurpy.glowfighter.entities.Player;
+import com.slurpy.glowfighter.gamemodes.Gamemode;
+import com.slurpy.glowfighter.gamemodes.Survival;
 import com.slurpy.glowfighter.managers.AssetManager;
-import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
 import com.slurpy.glowfighter.managers.AudioManager;
 import com.slurpy.glowfighter.managers.EntityManager;
-import com.slurpy.glowfighter.managers.GameManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
 import com.slurpy.glowfighter.managers.PhysicsManager;
-import com.slurpy.glowfighter.managers.PropertiesManager;
 import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.KeyBindings;
 
 public class Core extends ApplicationAdapter {
 	
-	public static PropertiesManager properties;
 	public static AssetManager assets;
 	public static GraphicsManager graphics;
 	public static PhysicsManager physics;
 	public static AudioManager audio;
 	public static EntityManager entities;
+	
 	public static KeyBindings bindings;
-	public static GameManager game;
+	
+	public static Gamemode game;
 	
 	@Override
 	public void create () {
-		properties = new PropertiesManager();
 		assets = new AssetManager();
 		graphics = new GraphicsManager();
 		physics = new PhysicsManager();
 		audio = new AudioManager();
 		entities = new EntityManager();
-		game = new GameManager();
 		
 		bindings = KeyBindings.createNewBinding();
 		Gdx.input.setInputProcessor(bindings);
@@ -53,19 +47,12 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.lastWeapon, Keys.Q);
 		bindings.addBinding(Action.boost, Keys.SPACE);
 		
-		Player player = new Player(new Vector2(), 0);
-		entities.addEntity(player, "player");
-		graphics.follow(player);
-		//graphics.look(new Vector2(100, 100));
-		
-		Music music = Core.audio.getMusic(MusicAsset.BackgroundTechno);
-		music.setLooping(true);
-		music.play();
+		game = new Survival();
+		game.start();
 	}
 	
 	@Override
 	public void render () {
-		graphics.drawText("Glow Fighter", new Vector2(0, 0), 1.5f, Color.WHITE);
 		game.update();
 		entities.update();
 		physics.update();
