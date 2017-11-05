@@ -267,6 +267,10 @@ public class GraphicsManager implements Disposable{
 		if(shake > Constants.MAX_SHAKE)shake = Constants.MAX_SHAKE;
 	}
 	
+	public Vector2 project(Vector2 pos){
+		return viewport.project(pos);
+	}
+	
 	public Vector2 unproject(Vector2 pos){
 		return viewport.unproject(pos);
 	}

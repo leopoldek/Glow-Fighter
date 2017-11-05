@@ -37,4 +37,38 @@ public class Util{
 	public static JsonValue loadJson(String file){
 		return new JsonReader().parse(Gdx.files.internal(file).readString());
 	}
+	
+	public static Vector2 getBoundryPoint(Vector2 center, Vector2 point, float width, float height){
+		float x = point.x - center.x;
+		float y = point.y - center.y;
+		float a = width/2;
+		float b = height/2;
+		
+		float ay = a * y;
+		float bx = b * x;
+		
+		Vector2 answer = new Vector2();
+		if(Math.abs(ay) < Math.abs(bx)){
+			if(x > 0){
+				answer.set(a, ay / x);
+			}else{
+				answer.set(-a, -ay / x);
+			}
+		}else{
+			if(y > 0){
+				answer.set(bx / y, b);
+			}else{
+				answer.set(-bx / y, -b);
+			}
+		}
+		return answer.add(center);
+	}
+	
+	public static boolean isInsideRect(Vector2 center, Vector2 point, float width, float height){
+		float halfWidth = width/2;
+		float halfHeight = height/2;
+		if(point.x > center.x + halfWidth || point.x < center.x - halfWidth)return false;
+		if(point.y > center.y + halfHeight || point.y < center.y - halfHeight)return false;
+		return true;
+	}
 }

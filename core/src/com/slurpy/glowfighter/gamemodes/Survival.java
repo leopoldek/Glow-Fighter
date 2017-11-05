@@ -18,6 +18,8 @@ import com.slurpy.glowfighter.guns.RocketLauncher;
 import com.slurpy.glowfighter.guns.RocketRepeater;
 import com.slurpy.glowfighter.guns.Shotgun;
 import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
+import com.slurpy.glowfighter.parts.PolygonPart;
+import com.slurpy.glowfighter.utils.Util;
 import com.slurpy.glowfighter.utils.animation.AnimationBuilder;
 import com.slurpy.glowfighter.utils.animation.KeyFrame;
 
@@ -105,11 +107,17 @@ public class Survival implements Gamemode{
 	}
 	
 	public class SurvivalGui extends Gui{
+		private static final float INDICATOR_SIZE = 15;
 		
 		private final Position healthBarPos = new Position(50, 50, Anchor.end, Anchor.start);
 		private final Position gunStatsPos = new Position(50, 50, Anchor.start, Anchor.start);
 		private final Position fpsPos = new Position(10, 10, Anchor.start, Anchor.end);
 		private final Position levelPos = new Position(-40, 10, Anchor.center, Anchor.end);
+		private final PolygonPart arrowIndicator = new PolygonPart(new Vector2[]{
+				new Vector2(INDICATOR_SIZE, 0),
+				new Vector2(-INDICATOR_SIZE, -INDICATOR_SIZE),
+				new Vector2(-INDICATOR_SIZE, INDICATOR_SIZE)
+		}, 6);
 		
 		private float levelTextSize = 32;
 		
@@ -120,6 +128,14 @@ public class Survival implements Gamemode{
 		@Override
 		public void draw(){
 			Player player = (Player)Core.entities.getGroup("player").iterator().next();
+			
+			Vector2 playerPos = Core.graphics.project(player.getPosition());
+			Vector2 pickupPos = Core.graphics.project(pickup.getPosition());
+			if(!Util.isInsideRect(playerPos, pickupPos, width, height)){
+				Vector2 indicatorPos = Util.getBoundryPoint(playerPos, pickupPos, width - 40, height - 40);
+				arrowIndicator.draw(indicatorPos, pickupPos.sub(playerPos).angleRad(), Color.LIME);
+			}
+			
 			Vector2 start = healthBarPos.getPosition();
 			float health = player.getHealth();
 			Vector2 end = new Vector2(start).add(health * -2, 0);
