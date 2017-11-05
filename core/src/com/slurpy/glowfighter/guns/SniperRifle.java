@@ -29,8 +29,8 @@ public class SniperRifle extends Gun{
 		accumulator += Gdx.graphics.getDeltaTime();
 		if(shoot){
 			while(accumulator >= cooldown){
-				Core.entities.addEntity(new PiercingShot(pos, new Vector2(65, 0).rotateRad(rot), Color.FIREBRICK, Team.FRIENDLY, 100f, 5));
-				Core.audio.playSound(SoundAsset.Shoot, 0.2f);
+				Core.entities.addEntity(new PiercingShot(pos, new Vector2(65, 0).rotateRad(rot), Color.FIREBRICK, Team.FRIENDLY, 300f, 5));
+				Core.audio.playSound(SoundAsset.Shoot, 0.4f);
 				accumulator -= cooldown;
 			}
 		}else{

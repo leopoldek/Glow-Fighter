@@ -14,6 +14,7 @@ import com.slurpy.glowfighter.entities.enemies.BallLaunchingEnemy;
 import com.slurpy.glowfighter.entities.enemies.MissileEnemy;
 import com.slurpy.glowfighter.guns.BurstGun;
 import com.slurpy.glowfighter.guns.Gun;
+import com.slurpy.glowfighter.guns.Minigun;
 import com.slurpy.glowfighter.guns.RocketLauncher;
 import com.slurpy.glowfighter.guns.RocketRepeater;
 import com.slurpy.glowfighter.guns.Shotgun;
@@ -89,7 +90,7 @@ public class Survival implements Gamemode{
 	
 	private void spawnPickup(){
 		if(pickup != null)pickup.delete();
-		int random = MathUtils.random(4);
+		int random = MathUtils.random(5);
 		Gun gun;
 		if(random == 0){
 			gun = new Shotgun();
@@ -99,8 +100,10 @@ public class Survival implements Gamemode{
 			gun = new RocketLauncher();
 		}else if(random == 3){
 			gun = new RocketRepeater();
-		}else{
+		}else if(random == 4){
 			gun = new SniperRifle();
+		}else{
+			gun = new Minigun();
 		}
 		pickup = new GunPickup(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), gun);
 		Core.entities.addEntity(pickup);

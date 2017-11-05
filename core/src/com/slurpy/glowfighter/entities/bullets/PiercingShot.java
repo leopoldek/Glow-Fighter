@@ -8,6 +8,7 @@ import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.EntityDef;
 import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
+import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 
@@ -37,6 +38,7 @@ public class PiercingShot extends Entity implements Damage{//TODO Make abstract 
 			return;
 		}
 		other.hit(this);
+		if(other instanceof Health)((Health)other).takeDamage(getDamage());
 		penetrated++;
 		if(penetrated == penetration){
 			delete();

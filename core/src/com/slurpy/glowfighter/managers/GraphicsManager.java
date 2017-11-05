@@ -138,7 +138,7 @@ public class GraphicsManager implements Disposable{
 	
 	public void drawCircle(Vector2 pos, float radius, Color color){
 		shapeBatch.setColor(color);
-		shapeBatch.circle(pos.x, pos.y, radius, Math.max(1, (int)(4 * (float)Math.cbrt(radius * 50))));
+		shapeBatch.circle(pos.x, pos.y, radius, Math.max(1, (int)(6 * (float)Math.cbrt(radius * 50))));
 	}
 	
 	private int len;
