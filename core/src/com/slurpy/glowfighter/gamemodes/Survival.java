@@ -3,6 +3,7 @@ package com.slurpy.glowfighter.gamemodes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.Core;
@@ -17,6 +18,8 @@ import com.slurpy.glowfighter.guns.RocketLauncher;
 import com.slurpy.glowfighter.guns.RocketRepeater;
 import com.slurpy.glowfighter.guns.Shotgun;
 import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
+import com.slurpy.glowfighter.utils.animation.AnimationBuilder;
+import com.slurpy.glowfighter.utils.animation.KeyFrame;
 
 public class Survival implements Gamemode{
 	
@@ -74,6 +77,7 @@ public class Survival implements Gamemode{
 			if(ticks > 200){
 				Core.entities.addEntity(new BallLaunchingEnemy(new Vector2(spawnRange, 0)));
 				Core.entities.addEntity(new BallLaunchingEnemy(new Vector2(-spawnRange, 0)));
+				gui.animateNextLevel();
 				ticks = 0;
 			}
 		}
@@ -107,6 +111,8 @@ public class Survival implements Gamemode{
 		private final Position fpsPos = new Position(10, 10, Anchor.start, Anchor.end);
 		private final Position levelPos = new Position(-40, 10, Anchor.center, Anchor.end);
 		
+		private float levelTextSize = 32;
+		
 		public SurvivalGui(){
 			
 		}
@@ -129,7 +135,53 @@ public class Survival implements Gamemode{
 			}
 			
 			Core.graphics.drawText(Integer.toString(Gdx.graphics.getFramesPerSecond()), fpsPos.getPosition(), 24, Color.WHITE);
-			Core.graphics.drawText("Level " + level, levelPos.getPosition(), 32, Color.WHITE);
+			Core.graphics.drawText("Level " + level, levelPos.getPosition(), levelTextSize, Color.WHITE);
+		}
+		
+		public void animateNextLevel(){
+			AnimationBuilder builder = new AnimationBuilder();
+			builder.addKeyFrame(new KeyFrame(){//TODO Clean up and make pretty!
+				@Override
+				public void start() {}
+				@Override
+				public void act(float progress, float frameProgress) {
+					levelPos.x = Interpolation.circleOut.apply(-40, -55, frameProgress);
+					levelPos.y = Interpolation.circleOut.apply(10, 300, frameProgress);
+					levelTextSize = Interpolation.circleOut.apply(32, 58, frameProgress);
+				}
+				@Override
+				public void end() {
+					levelPos.x = -55;
+					levelPos.y = 300;
+					levelTextSize = 58;
+					level++;
+				}
+			}, 1.5f);
+			builder.addKeyFrame(new KeyFrame(){
+				@Override
+				public void start() {}
+				@Override
+				public void act(float progress, float frameProgress) {}
+				@Override
+				public void end() {}
+			}, 1.2f);
+			builder.addKeyFrame(new KeyFrame(){
+				@Override
+				public void start() {}
+				@Override
+				public void act(float progress, float frameProgress) {
+					levelPos.x = Interpolation.circleOut.apply(-55, -40, frameProgress);
+					levelPos.y = Interpolation.circleOut.apply(300, 10, frameProgress);
+					levelTextSize = Interpolation.circleOut.apply(58, 32, frameProgress);
+				}
+				@Override
+				public void end() {
+					levelPos.x = -40;
+					levelPos.y = 10;
+					levelTextSize = 32;
+				}
+			}, 1.5f);
+			Core.tasks.addAnimation(builder);
 		}
 	}
 }

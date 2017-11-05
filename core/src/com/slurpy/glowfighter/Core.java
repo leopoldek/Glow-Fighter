@@ -10,6 +10,7 @@ import com.slurpy.glowfighter.managers.AudioManager;
 import com.slurpy.glowfighter.managers.EntityManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
 import com.slurpy.glowfighter.managers.PhysicsManager;
+import com.slurpy.glowfighter.managers.TaskManager;
 import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.KeyBindings;
 
@@ -20,6 +21,7 @@ public class Core extends ApplicationAdapter {
 	public static PhysicsManager physics;
 	public static AudioManager audio;
 	public static EntityManager entities;
+	public static TaskManager tasks;
 	
 	public static KeyBindings bindings;
 	
@@ -32,6 +34,7 @@ public class Core extends ApplicationAdapter {
 		physics = new PhysicsManager();
 		audio = new AudioManager();
 		entities = new EntityManager();
+		tasks = new TaskManager();
 		
 		bindings = KeyBindings.createNewBinding();
 		Gdx.input.setInputProcessor(bindings);
@@ -53,6 +56,7 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void render () {
+		tasks.update();
 		game.update();
 		entities.update();
 		physics.update();
