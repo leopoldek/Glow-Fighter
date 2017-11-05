@@ -1,6 +1,5 @@
 package com.slurpy.glowfighter.gamemodes;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Gui {
@@ -12,11 +11,6 @@ public abstract class Gui {
 	public final void resize(int width, int height){
 		this.width = width;
 		this.height = height;
-	}
-	
-	protected final void drawIndicator(float angle, float radius, Color color){
-		//TODO Draw indicator
-		throw new UnsupportedOperationException();
 	}
 	
 	protected class Position{

@@ -47,6 +47,18 @@ public class PhysicsManager implements Disposable{
 				Entity entityA = (Entity)contact.getFixtureA().getBody().getUserData();
 				Entity entityB = (Entity)contact.getFixtureB().getBody().getUserData();
 				
+				boolean isA = contact.getFixtureA().isSensor();
+				boolean isB = contact.getFixtureB().isSensor();
+				if(isA && isB)return;
+				if(isA){
+					entityA.hit(entityB);
+					return;
+				}
+				if(isB){
+					entityB.hit(entityA);
+					return;
+				}
+				//Neither are sensors so continue with normal collision.
 				entityA.hit(entityB);
 				entityB.hit(entityA);
 				

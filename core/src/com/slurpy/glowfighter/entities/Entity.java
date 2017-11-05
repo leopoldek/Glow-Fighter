@@ -62,7 +62,7 @@ public abstract class Entity {
 		}
 	}
 	
-	public abstract void hit(Entity other);
+	public void hit(Entity other){}
 	
 	public Vector2 getPosition(){
 		return body.getPosition();

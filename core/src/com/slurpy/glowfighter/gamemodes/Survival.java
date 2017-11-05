@@ -17,6 +17,7 @@ import com.slurpy.glowfighter.guns.Gun;
 import com.slurpy.glowfighter.guns.RocketLauncher;
 import com.slurpy.glowfighter.guns.RocketRepeater;
 import com.slurpy.glowfighter.guns.Shotgun;
+import com.slurpy.glowfighter.guns.SniperRifle;
 import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
 import com.slurpy.glowfighter.parts.PolygonPart;
 import com.slurpy.glowfighter.utils.Util;
@@ -88,16 +89,20 @@ public class Survival implements Gamemode{
 	
 	private void spawnPickup(){
 		if(pickup != null)pickup.delete();
-		int random = MathUtils.random(3);
+		int random = MathUtils.random(4);
+		Gun gun;
 		if(random == 0){
-			pickup = new GunPickup(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), new Shotgun());
+			gun = new Shotgun();
 		}else if(random == 1){
-			pickup = new GunPickup(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), new BurstGun());
+			gun = new BurstGun();
 		}else if(random == 2){
-			pickup = new GunPickup(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), new RocketLauncher());
+			gun = new RocketLauncher();
+		}else if(random == 3){
+			gun = new RocketRepeater();
 		}else{
-			pickup = new GunPickup(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), new RocketRepeater());
+			gun = new SniperRifle();
 		}
+		pickup = new GunPickup(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), gun);
 		Core.entities.addEntity(pickup);
 	}
 

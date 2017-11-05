@@ -108,7 +108,7 @@ public class Player extends Entity implements Health, Knockback{
 	
 	@Override
 	public void hit(Entity other){
-		if(other.category != Category.ITEM)Core.graphics.shake(0.3f);
+		Core.graphics.shake(0.3f);
 	}
 	
 	@Override
