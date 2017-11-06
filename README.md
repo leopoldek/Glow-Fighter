@@ -16,8 +16,12 @@ Clone this repository. If you just want to run the project, open the command lin
 For more help see [the LibGDX wiki](https://github.com/libgdx/libgdx/wiki).
 
 ## Gameplay
-
-*Note: Currently I'm not correcting for Gamma which is (probably) why the pictures look so washed out. It looks better in-game. I will fix this soon.
+The main enemy types are the blue missle guys thgat spawn randomly. Each new level a big enemy shooting balls appears. Every 5 levels a turret enemy appears. Grab the green pickups to get new guns. Guns have infinite ammo but disappear after a time limit shown at the bottom left. Health is at bottom right.
+Controls:
+ - Fire = Left Mouse Button
+ - Move = WASD
+ - Boost(Infinite) = Space
+ - Move Slow = Left Shift
 
 ![Gameplay Image #1 - Shooting Big Guy](https://i.imgur.com/QN3HsN6.png "Shooting Big Guy")
 
