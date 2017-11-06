@@ -67,7 +67,7 @@ public class PiercingShot extends Entity implements Damage{//TODO Make abstract 
 	
 	private static float height = 0.05f;
 	private static float depth = -0.2f;
-	private static float width = 0.1f;
+	private static float width = 0.15f;
 	private static Vector2[] polygon = new Vector2[]{
 			new Vector2(height, width),
 			new Vector2(height, -width),

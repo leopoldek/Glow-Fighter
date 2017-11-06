@@ -31,7 +31,7 @@ public class SpikeBall extends Entity implements Damage, Health{
 
 	@Override
 	public void hit(Entity other) {
-		if(other.team != Team.FRIENDLY)delete();
+		if(other.category == Category.WALL)delete();
 	}
 	
 	@Override

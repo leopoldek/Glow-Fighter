@@ -12,6 +12,7 @@ import com.slurpy.glowfighter.entities.LineWall;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.enemies.BallLaunchingEnemy;
 import com.slurpy.glowfighter.entities.enemies.MissileEnemy;
+import com.slurpy.glowfighter.entities.enemies.TurretEnemy;
 import com.slurpy.glowfighter.guns.BurstGun;
 import com.slurpy.glowfighter.guns.Gun;
 import com.slurpy.glowfighter.guns.Minigun;
@@ -34,6 +35,8 @@ public class Survival implements Gamemode{
 	
 	private final SurvivalGui gui;
 	
+	private Player player;
+	
 	private float timer;
 	private float accumulator = 0;
 	private float ticks = 0;
@@ -52,7 +55,7 @@ public class Survival implements Gamemode{
 		Core.entities.addEntity(new LineWall(new Vector2(-length, 0), height, wallWidth, MathUtils.PI / 2, Color.WHITE));
 		Core.entities.addEntity(new LineWall(new Vector2(length, 0), height, wallWidth, MathUtils.PI / 2, Color.WHITE));
 		
-		Player player = new Player(new Vector2(), 0);
+		player = new Player(new Vector2(), 0);
 		Core.entities.addEntity(player, "player");
 		Core.graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
@@ -75,12 +78,10 @@ public class Survival implements Gamemode{
 		
 		accumulator += Gdx.graphics.getDeltaTime();
 		while(accumulator > timer){
-			Core.entities.addEntity(new MissileEnemy(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), MathUtils.random(MathUtils.PI2)));
+			Core.entities.addEntity(new MissileEnemy(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), MathUtils.random(MathUtils.PI2), player));
 			accumulator -= timer;
 			ticks++;
 			if(ticks > 200){
-				Core.entities.addEntity(new BallLaunchingEnemy(new Vector2(spawnRange, 0)));
-				Core.entities.addEntity(new BallLaunchingEnemy(new Vector2(-spawnRange, 0)));
 				gui.animateNextLevel();
 				ticks = 0;
 			}
@@ -135,8 +136,6 @@ public class Survival implements Gamemode{
 		
 		@Override
 		public void draw(){
-			Player player = (Player)Core.entities.getGroup("player").iterator().next();
-			
 			Vector2 playerPos = Core.graphics.project(player.getPosition());
 			Vector2 pickupPos = Core.graphics.project(pickup.getPosition());
 			if(!Util.isInsideRect(playerPos, pickupPos, width, height)){
@@ -158,7 +157,7 @@ public class Survival implements Gamemode{
 				Core.graphics.drawText(gun.getName(), start.add(0, 40), 32, Color.NAVY);
 			}
 			
-			Core.graphics.drawText(Integer.toString(Gdx.graphics.getFramesPerSecond()), fpsPos.getPosition(), 24, Color.WHITE);
+			Core.graphics.drawText(Integer.toString(Gdx.graphics.getFramesPerSecond()), fpsPos.getPosition(), 24, Color.GRAY);
 			Core.graphics.drawText("Level " + level, levelPos.getPosition(), levelTextSize, Color.WHITE);
 		}
 		
@@ -178,7 +177,12 @@ public class Survival implements Gamemode{
 					levelPos.x = -55;
 					levelPos.y = 300;
 					levelTextSize = 58;
+					
 					level++;
+					
+					Core.entities.addEntity(new BallLaunchingEnemy(new Vector2(spawnRange, 0)));
+					Core.entities.addEntity(new BallLaunchingEnemy(new Vector2(-spawnRange, 0)));
+					if(level % 5 == 0)Core.entities.addEntity(new TurretEnemy(new Vector2(), player));
 				}
 			}, 1.5f);
 			builder.addKeyFrame(new KeyFrame(){

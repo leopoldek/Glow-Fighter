@@ -9,6 +9,7 @@ import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.Category;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.EntityDef;
+import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
@@ -18,15 +19,18 @@ import com.slurpy.glowfighter.parts.PolygonPart;
 public class MissileEnemy extends Entity implements Damage{
 	
 	private static final float SPEED = 10f;
+	
+	private final Player player;
 
-	public MissileEnemy(Vector2 pos, float rot) {
+	public MissileEnemy(Vector2 pos, float rot, Player player) {
 		super(getEntityDef(pos, rot));
 		body.setLinearVelocity(SPEED, 0);
+		this.player = player;
 	}
 
 	@Override
 	public void update() {
-		Vector2 playerPos = Core.entities.getGroup("player").iterator().next().getPosition();
+		Vector2 playerPos = player.getPosition();
 		float angle = playerPos.sub(getPosition()).angleRad();
 		angle -= body.getAngle();
 		if(angle > MathUtils.PI)angle -= MathUtils.PI2;
