@@ -42,7 +42,6 @@ public class AudioManager {
 		float distY = pos.y - cameraPos.y;
 		
 		float realVolume = Math.max(volume * ((range - Vector2.len(distX, distY)) / range), 0f);
-		System.out.println(realVolume);
 		float realPan = MathUtils.clamp(distX / range, -1, 1);
 		
 		Core.assets.getSound(soundAsset).play(realVolume, 1, realPan);

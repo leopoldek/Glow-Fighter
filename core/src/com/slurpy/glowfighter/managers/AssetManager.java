@@ -100,7 +100,7 @@ public class AssetManager implements Disposable{
 	}
 	
 	public enum SoundAsset{
-		Shoot("Shoot.wav"), Hit("Hit.wav"), PlayerDie("Player Die.wav");
+		Shoot("Shoot.wav"), Hit("Hit.wav"), PlayerDie("Player Die.wav"), Pulse("Pulse.wav"), Activated("Activated.wav");
 		
 		public final String file;
 		public static final Class<MusicAsset> clazz = MusicAsset.class;

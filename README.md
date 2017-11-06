@@ -16,7 +16,7 @@ Clone this repository. If you just want to run the project, open the command lin
 For more help see [the LibGDX wiki](https://github.com/libgdx/libgdx/wiki).
 
 ## Gameplay
-The main enemy types are the blue missle guys thgat spawn randomly. Each new level a big enemy shooting balls appears. Every 5 levels a turret enemy appears. Grab the green pickups to get new guns. Guns have infinite ammo but disappear after a time limit shown at the bottom left. Health is at bottom right.
+The main enemy types are the blue missile guys that spawn randomly. Each new level a big enemy shooting balls appears. Every 5 levels a turret enemy appears. Grab the green pickups to get new guns. Guns have infinite ammo but disappear after a time limit shown at the bottom left. Health is at bottom right.
 Controls:
  - Fire = Left Mouse Button
  - Move = WASD

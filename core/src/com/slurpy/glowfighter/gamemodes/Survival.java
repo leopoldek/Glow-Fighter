@@ -11,6 +11,7 @@ import com.slurpy.glowfighter.entities.GunPickup;
 import com.slurpy.glowfighter.entities.LineWall;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.enemies.BallLaunchingEnemy;
+import com.slurpy.glowfighter.entities.enemies.DiveStabber;
 import com.slurpy.glowfighter.entities.enemies.MissileEnemy;
 import com.slurpy.glowfighter.entities.enemies.TurretEnemy;
 import com.slurpy.glowfighter.guns.BurstGun;
@@ -78,7 +79,8 @@ public class Survival implements Gamemode{
 		
 		accumulator += Gdx.graphics.getDeltaTime();
 		while(accumulator > timer){
-			Core.entities.addEntity(new MissileEnemy(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), MathUtils.random(MathUtils.PI2), player));
+			Core.entities.addEntity(new MissileEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
+			if(MathUtils.randomBoolean(0.04f))Core.entities.addEntity(new DiveStabber(Util.randomTriangularVector(spawnRange), player));
 			accumulator -= timer;
 			ticks++;
 			if(ticks > 200){
@@ -106,7 +108,7 @@ public class Survival implements Gamemode{
 		}else{
 			gun = new Minigun();
 		}
-		pickup = new GunPickup(new Vector2(MathUtils.randomTriangular(-spawnRange, spawnRange), MathUtils.randomTriangular(-spawnRange, spawnRange)), gun);
+		pickup = new GunPickup(Util.randomTriangularVector(spawnRange), gun);
 		Core.entities.addEntity(pickup);
 	}
 

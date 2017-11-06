@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter.ScaledNumericValue;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
@@ -70,5 +71,13 @@ public class Util{
 		if(point.x > center.x + halfWidth || point.x < center.x - halfWidth)return false;
 		if(point.y > center.y + halfHeight || point.y < center.y - halfHeight)return false;
 		return true;
+	}
+	
+	public static Vector2 randomTriangularVector(float range){
+		return new Vector2(MathUtils.randomTriangular(-range, range), MathUtils.randomTriangular(-range, range));
+	}
+	
+	public static Vector2 randomTriangularVector(float width, float height){
+		return new Vector2(MathUtils.randomTriangular(-width, width), MathUtils.randomTriangular(-height, height));
 	}
 }
