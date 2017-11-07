@@ -83,7 +83,7 @@ public class Survival implements Gamemode{
 			if(MathUtils.randomBoolean(0.04f))Core.entities.addEntity(new DiveStabber(Util.randomTriangularVector(spawnRange), player));
 			accumulator -= timer;
 			ticks++;
-			if(ticks > 20){
+			if(ticks > 200){
 				gui.animateNextLevel();
 				ticks = 0;
 			}

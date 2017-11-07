@@ -22,10 +22,9 @@ import com.slurpy.glowfighter.utils.Action;
 
 public class Player extends Entity implements Health, Knockback{
 	
-	private static final float speed = 200;
+	private static final float speed = 6000;
+	private static final float slowSpeed = speed * 0.4f;
 	private static final float boost = 40;
-	//private static final float maxSpeed = 40f;
-	//private static final float slowMaxSpeed = maxSpeed * 0.2f;
 	private static final float maxHealth = 100;
 	
 	private Gun defaultGun = new PeaShooter();
@@ -67,18 +66,18 @@ public class Player extends Entity implements Health, Knockback{
 		
 		Vector2 move = new Vector2();
 		if(Core.bindings.isActionPressed(Action.moveUp)){
-			move.add(0, speed);
+			move.add(0, 1);
 		}
 		if(Core.bindings.isActionPressed(Action.moveDown)){
-			move.add(0, -speed);
+			move.add(0, -1);
 		}
 		if(Core.bindings.isActionPressed(Action.moveLeft)){
-			move.add(-speed, 0);
+			move.add(-1, 0);
 		}
 		if(Core.bindings.isActionPressed(Action.moveRight)){
-			move.add(speed, 0);
+			move.add(1, 0);
 		}
-		move.scl(Gdx.graphics.getDeltaTime() * 30);
+		move.nor().scl(Gdx.graphics.getDeltaTime() * (Core.bindings.isActionPressed(Action.moveSlow) ? slowSpeed : speed));
 		
 		body.applyForceToCenter(move, true);
 		
