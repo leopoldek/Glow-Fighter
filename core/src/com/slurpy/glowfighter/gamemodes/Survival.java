@@ -24,8 +24,8 @@ import com.slurpy.glowfighter.guns.SniperRifle;
 import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
 import com.slurpy.glowfighter.parts.PolygonPart;
 import com.slurpy.glowfighter.utils.Util;
-import com.slurpy.glowfighter.utils.animation.AnimationBuilder;
-import com.slurpy.glowfighter.utils.animation.KeyFrame;
+import com.slurpy.glowfighter.utils.tasks.KeyFrame;
+import com.slurpy.glowfighter.utils.tasks.TaskBuilder;
 
 public class Survival implements Gamemode{
 	
@@ -83,7 +83,7 @@ public class Survival implements Gamemode{
 			if(MathUtils.randomBoolean(0.04f))Core.entities.addEntity(new DiveStabber(Util.randomTriangularVector(spawnRange), player));
 			accumulator -= timer;
 			ticks++;
-			if(ticks > 200){
+			if(ticks > 20){
 				gui.animateNextLevel();
 				ticks = 0;
 			}
@@ -120,10 +120,11 @@ public class Survival implements Gamemode{
 	public class SurvivalGui extends Gui{
 		private static final float INDICATOR_SIZE = 15;
 		
-		private final Position healthBarPos = new Position(50, 50, Anchor.end, Anchor.start);
-		private final Position gunStatsPos = new Position(50, 50, Anchor.start, Anchor.start);
-		private final Position fpsPos = new Position(10, 10, Anchor.start, Anchor.end);
-		private final Position levelPos = new Position(-40, 10, Anchor.center, Anchor.end);
+		private final Position healthBarPos = new Position(1, 0, -50, 50);
+		private final Position gunStatsPos = new Position(0, 0, 50, 50);
+		private final Position fpsPos = new Position(0, 1, 10, -10);
+		private final Position levelPos = new Position(0.5f, 1, -40, -10);
+		
 		private final PolygonPart arrowIndicator = new PolygonPart(new Vector2[]{
 				new Vector2(INDICATOR_SIZE, 0),
 				new Vector2(-INDICATOR_SIZE, -INDICATOR_SIZE),
@@ -140,8 +141,8 @@ public class Survival implements Gamemode{
 		public void draw(){
 			Vector2 playerPos = Core.graphics.project(player.getPosition());
 			Vector2 pickupPos = Core.graphics.project(pickup.getPosition());
-			if(!Util.isInsideRect(playerPos, pickupPos, width, height)){
-				Vector2 indicatorPos = Util.getBoundryPoint(playerPos, pickupPos, width - 40, height - 40);
+			if(!Util.isInsideRect(playerPos, pickupPos, getWidth(), getHeight())){
+				Vector2 indicatorPos = Util.getBoundryPoint(playerPos, pickupPos, getWidth() - 40, getHeight() - 40);
 				arrowIndicator.draw(indicatorPos, pickupPos.sub(playerPos).angleRad(), Color.LIME);
 			}
 			
@@ -164,21 +165,31 @@ public class Survival implements Gamemode{
 		}
 		
 		public void animateNextLevel(){
-			AnimationBuilder builder = new AnimationBuilder();
-			builder.addKeyFrame(new KeyFrame(){//TODO Clean up and make pretty!
+			TaskBuilder builder = new TaskBuilder();
+			final float ryStart = 1f;
+			final float ryEnd = 0.5f;
+			final float xStart = -40;
+			final float xEnd = -55;
+			final float yStart = -10;
+			final float yEnd = 10;
+			final float textSizeStart = 32;
+			final float textSizeEnd = 58;
+			builder.addKeyFrame(new KeyFrame(){
 				@Override
 				public void start() {}
 				@Override
 				public void act(float progress, float frameProgress) {
-					levelPos.x = Interpolation.circleOut.apply(-40, -55, frameProgress);
-					levelPos.y = Interpolation.circleOut.apply(10, 300, frameProgress);
-					levelTextSize = Interpolation.circleOut.apply(32, 58, frameProgress);
+					levelPos.ry = Interpolation.circleOut.apply(ryStart, ryEnd, frameProgress);
+					levelPos.x = Interpolation.circleOut.apply(xStart, xEnd, frameProgress);
+					levelPos.y = Interpolation.linear.apply(yStart, yEnd, frameProgress);
+					levelTextSize = Interpolation.circleOut.apply(textSizeStart, textSizeEnd, frameProgress);
 				}
 				@Override
 				public void end() {
-					levelPos.x = -55;
-					levelPos.y = 300;
-					levelTextSize = 58;
+					levelPos.ry = ryEnd;
+					levelPos.x = xEnd;
+					levelPos.y = yEnd;
+					levelTextSize = textSizeEnd;
 					
 					level++;
 					
@@ -186,8 +197,8 @@ public class Survival implements Gamemode{
 					Core.entities.addEntity(new BallLaunchingEnemy(new Vector2(-spawnRange, 0)));
 					if(level % 5 == 0)Core.entities.addEntity(new TurretEnemy(new Vector2(), player));
 				}
-			}, 1.5f);
-			builder.addKeyFrame(new KeyFrame(){
+			}, 1.1f);
+			builder.addKeyFrame(new KeyFrame(){//TODO Add idle task
 				@Override
 				public void start() {}
 				@Override
@@ -200,18 +211,20 @@ public class Survival implements Gamemode{
 				public void start() {}
 				@Override
 				public void act(float progress, float frameProgress) {
-					levelPos.x = Interpolation.circleOut.apply(-55, -40, frameProgress);
-					levelPos.y = Interpolation.circleOut.apply(300, 10, frameProgress);
-					levelTextSize = Interpolation.circleOut.apply(58, 32, frameProgress);
+					levelPos.ry = Interpolation.circleOut.apply(ryEnd, ryStart, frameProgress);
+					levelPos.x = Interpolation.circleOut.apply(xEnd, xStart, frameProgress);
+					levelPos.y = Interpolation.linear.apply(yEnd, yStart, frameProgress);
+					levelTextSize = Interpolation.circleOut.apply(textSizeEnd, textSizeStart, frameProgress);
 				}
 				@Override
 				public void end() {
-					levelPos.x = -40;
-					levelPos.y = 10;
-					levelTextSize = 32;
+					levelPos.ry = ryStart;
+					levelPos.x = xStart;
+					levelPos.y = yStart;
+					levelTextSize = textSizeStart;
 				}
-			}, 1.5f);
-			Core.tasks.addAnimation(builder);
+			}, 1.2f);
+			Core.tasks.addTask(builder);
 		}
 	}
 }

@@ -1,8 +1,8 @@
-package com.slurpy.glowfighter.utils.animation;
+package com.slurpy.glowfighter.utils.tasks;
 
 import com.badlogic.gdx.Gdx;
 
-public class Animation {
+public class Task {
 	
 	private final KeyFrame[] frames;
 	private final float[] times;
@@ -13,7 +13,7 @@ public class Animation {
 	
 	private int keyFrame = 0;
 	
-	Animation(KeyFrame[] frames, float[] times){
+	Task(KeyFrame[] frames, float[] times){
 		this.frames = frames;
 		this.times = times;
 		cTimes = new float[times.length];

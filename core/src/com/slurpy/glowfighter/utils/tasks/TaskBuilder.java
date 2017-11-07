@@ -1,9 +1,9 @@
-package com.slurpy.glowfighter.utils.animation;
+package com.slurpy.glowfighter.utils.tasks;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 
-public class AnimationBuilder {
+public class TaskBuilder {
 	
 	private Array<KeyFrame> frames = new Array<>(KeyFrame.class);
 	private FloatArray times = new FloatArray();
@@ -13,7 +13,7 @@ public class AnimationBuilder {
 		times.add(time);
 	}
 	
-	public Animation build(){
-		return new Animation(frames.toArray(), times.toArray());
+	public Task build(){
+		return new Task(frames.toArray(), times.toArray());
 	}
 }

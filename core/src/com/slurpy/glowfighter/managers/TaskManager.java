@@ -2,29 +2,29 @@ package com.slurpy.glowfighter.managers;
 
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.ObjectSet.ObjectSetIterator;
-import com.slurpy.glowfighter.utils.animation.Animation;
-import com.slurpy.glowfighter.utils.animation.AnimationBuilder;
+import com.slurpy.glowfighter.utils.tasks.Task;
+import com.slurpy.glowfighter.utils.tasks.TaskBuilder;
 
 public class TaskManager{
 	
-	private ObjectSet<Animation> animations = new ObjectSet<>();
+	private ObjectSet<Task> tasks = new ObjectSet<>();
 	
 	public TaskManager(){
 		
 	}
 	
 	public void update(){
-		for(ObjectSetIterator<Animation> i = animations.iterator(); i.hasNext;){
-			Animation a = i.next();
+		for(ObjectSetIterator<Task> i = tasks.iterator(); i.hasNext;){
+			Task a = i.next();
 			if(a.update())i.remove();
 		}
 	}
 	
-	public void addAnimation(AnimationBuilder builder){
-		animations.add(builder.build());
+	public void addTask(TaskBuilder builder){
+		tasks.add(builder.build());
 	}
 	
-	public void removeAnimation(Animation animation){
-		animations.remove(animation);
+	public void removeTask(Task animation){
+		tasks.remove(animation);
 	}
 }

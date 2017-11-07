@@ -1,4 +1,4 @@
-package com.slurpy.glowfighter.utils.animation;
+package com.slurpy.glowfighter.utils.tasks;
 
 public interface KeyFrame {
 	public void start();
