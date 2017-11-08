@@ -21,13 +21,6 @@ import com.slurpy.glowfighter.utils.Constants;
 
 public class PhysicsManager implements Disposable{
 	
-	private static PhysicsManager singleton;
-	
-	public static PhysicsManager getPhysicsManager(){
-		if(singleton == null)singleton = new PhysicsManager();
-		return singleton;
-	}
-	
 	private World world;
 	
 	private float accumulator = 0;
@@ -128,6 +121,21 @@ public class PhysicsManager implements Disposable{
 	        accumulator -= Constants.TIME_STEP;
 	    }
 	}
+	
+	/*public void clear(){
+		Array<Body> bodies = new Array<>();
+		world.getBodies(bodies);
+		for(Body body : bodies){
+			world.destroyBody(body);
+		}
+		
+		Array<Joint> joints = new Array<>();
+		world.getJoints(joints);
+		for(Joint joint : joints){
+			world.destroyJoint(joint);
+		}
+		
+	}*/
 
 	@Override
 	public void dispose() {

@@ -1,11 +1,10 @@
 package com.slurpy.glowfighter.managers;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectSet;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.Entity;
 
@@ -18,8 +17,8 @@ public class EntityManager {
 		return singleton;
 	}
 	
-	private Array<Entity> entities = new Array<>(false, 100);
-	private HashMap<String, HashSet<Entity>> groups = new HashMap<>();
+	private Array<Entity> entities = new Array<>(false, 200);
+	private ObjectMap<String, ObjectSet<Entity>> groups = new ObjectMap<>();
 	
 	public void addEntity(Entity entity){
 		entities.add(entity);
@@ -28,12 +27,12 @@ public class EntityManager {
 	public void addEntity(Entity entity, String...groupNames){
 		entities.add(entity);
 		for(String groupName : groupNames){
-			if(!groups.containsKey(groupName))groups.put(groupName, new HashSet<Entity>());
+			if(!groups.containsKey(groupName))groups.put(groupName, new ObjectSet<Entity>());
 			groups.get(groupName).add(entity);
 		}
 	}
 	
-	public Set<Entity> getGroup(String groupName){
+	public ObjectSet<Entity> getGroup(String groupName){
 		return groups.get(groupName);
 	}
 	
@@ -47,10 +46,10 @@ public class EntityManager {
 			if(!entity.isDeleted())entity.update();
 			if(entity.isDeleted()){
 				i.remove();
-				for(Iterator<HashSet<Entity>> groupIt = groups.values().iterator(); groupIt.hasNext();){
-					HashSet<Entity> group = groupIt.next();
+				for(Iterator<ObjectSet<Entity>> groupIt = groups.values().iterator(); groupIt.hasNext();){
+					ObjectSet<Entity> group = groupIt.next();
 					group.remove(entity);
-					if(group.isEmpty())groupIt.remove();
+					if(group.size == 0)groupIt.remove();
 				}
 				Core.physics.destroy(entity.body);
 			}
@@ -69,6 +68,9 @@ public class EntityManager {
 	}
 	
 	public void clear(){
+		for(Entity entity : entities){
+			Core.physics.destroy(entity.body);
+		}
 		entities.clear();
 		groups.clear();
 	}

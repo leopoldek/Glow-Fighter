@@ -10,13 +10,6 @@ import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 
 public class AudioManager {
 	
-	private static AudioManager singleton;
-	
-	public static AudioManager getAudioManager(){
-		if(singleton == null)singleton = new AudioManager();
-		return singleton;
-	}
-	
 	public void playSound(SoundAsset soundAsset){
 		Sound sound = Core.assets.getSound(soundAsset);
 		sound.play();
@@ -49,5 +42,14 @@ public class AudioManager {
 	
 	public Music getMusic(MusicAsset musicAsset){
 		return Core.assets.getMusic(musicAsset);
+	}
+	
+	public void stopAll(){
+		for(SoundAsset soundAsset : SoundAsset.values()){
+			Core.assets.getSound(soundAsset).stop();
+		}
+		for(MusicAsset musicAsset : MusicAsset.values()){
+			Core.assets.getMusic(musicAsset).stop();
+		}
 	}
 }

@@ -93,7 +93,7 @@ public class Survival implements State{
 	
 	@Override
 	public void end() {
-		Core.entities.clear();
+		Core.reset();
 	}
 	
 	private void spawnPickup(){

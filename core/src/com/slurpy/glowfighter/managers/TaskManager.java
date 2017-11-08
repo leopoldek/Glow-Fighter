@@ -16,7 +16,8 @@ public class TaskManager{
 	public void update(){
 		for(ObjectSetIterator<Task> i = tasks.iterator(); i.hasNext;){
 			Task a = i.next();
-			if(a.update())i.remove();
+			a.update();
+			if(a.isDone())i.remove();
 		}
 	}
 	
@@ -26,5 +27,9 @@ public class TaskManager{
 	
 	public void removeTask(Task animation){
 		tasks.remove(animation);
+	}
+	
+	public void clear(){
+		tasks.clear();
 	}
 }

@@ -1,11 +1,12 @@
 package com.slurpy.glowfighter.utils;
 
-import java.util.HashMap;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class KeyBindings extends InputAdapter{
 	
@@ -17,21 +18,40 @@ public class KeyBindings extends InputAdapter{
 	public static final int SCROLLED_DOWN = -6;
 	public static final int SCROLLED_UP = -7;
 	
-	private HashMap<Integer, Action> keyBindings;
-	private HashMap<Action, Array<Integer>> actionBindings;
+	private final InputMultiplexer multiplexer;
 	
-	private HashMap<Action, ActionListener> listeners;
+	private ObjectMap<Integer, Action> keyBindings;
+	private ObjectMap<Action, Array<Integer>> actionBindings;
+	
+	private ObjectMap<Action, ActionListener> listeners;
 	
 	private KeyBindings(){
-		keyBindings = new HashMap<>();
-		actionBindings = new HashMap<>();
+		multiplexer = new InputMultiplexer(this);
+		
+		keyBindings = new ObjectMap<>();
+		actionBindings = new ObjectMap<>();
 		for(Action action : Action.values()){
 			actionBindings.put(action, new Array<Integer>(false, 4));
 		}
-		listeners = new HashMap<>();
+		
+		listeners = new ObjectMap<>();
 		for(Action action : Action.values()){
 			listeners.put(action, null);
 		}
+	}
+	
+	public void bind() {
+		Gdx.input.setInputProcessor(multiplexer);
+	}
+	
+	public void addProcessor(InputProcessor processor){
+		if(processor == this)throw new IllegalArgumentException("You can't add this processor to itself!");
+		multiplexer.addProcessor(0, processor);
+	}
+	
+	public void removeProcessor(InputProcessor processor){
+		if(processor == this)throw new IllegalArgumentException("You can't remove this processor from itself!");
+		multiplexer.removeProcessor(processor);
 	}
 	
 	public void addBinding(Action action, int bind){
@@ -64,6 +84,10 @@ public class KeyBindings extends InputAdapter{
 	
 	public void subscribe(Action action, ActionListener listener){
 		listeners.put(action, listener);
+	}
+	
+	public void unsubscribe(Action action){
+		listeners.put(action, null);
 	}
 
 	@Override

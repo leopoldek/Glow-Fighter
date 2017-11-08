@@ -1,7 +1,6 @@
 package com.slurpy.glowfighter;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.AudioManager;
@@ -10,7 +9,7 @@ import com.slurpy.glowfighter.managers.GraphicsManager;
 import com.slurpy.glowfighter.managers.PhysicsManager;
 import com.slurpy.glowfighter.managers.StateManager;
 import com.slurpy.glowfighter.managers.TaskManager;
-import com.slurpy.glowfighter.states.Survival;
+import com.slurpy.glowfighter.states.Menu;
 import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.KeyBindings;
 
@@ -37,7 +36,7 @@ public class Core extends ApplicationAdapter {
 		state = new StateManager();
 		
 		bindings = KeyBindings.createNewBinding();
-		Gdx.input.setInputProcessor(bindings);
+		bindings.bind();
 		bindings.addBinding(Action.moveUp, Keys.W);
 		bindings.addBinding(Action.moveLeft, Keys.A);
 		bindings.addBinding(Action.moveDown, Keys.S);
@@ -50,7 +49,7 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.lastWeapon, Keys.Q);
 		bindings.addBinding(Action.boost, Keys.SPACE);
 		
-		state.setState(new Survival());
+		state.setState(new Menu());
 	}
 	
 	@Override
@@ -67,6 +66,13 @@ public class Core extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height) {
 		graphics.resize(width, height);
+	}
+	
+	public static void reset(){
+		tasks.clear();
+		entities.clear();
+		audio.stopAll();
+		graphics.clearDrawCalls();
 	}
 	
 	@Override

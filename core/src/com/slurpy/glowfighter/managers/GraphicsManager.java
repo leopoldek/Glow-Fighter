@@ -167,13 +167,6 @@ public class GraphicsManager implements Disposable{
 		effectArray.add(pooledEffect);
 	}
 	
-	public void clearParticleArray(){
-		for(PooledEffect effect : effectArray){
-			effect.free();
-		}
-		effectArray.clear();
-	}
-	
 	public void drawParticle(PooledEffect effect){
 		drawEffectQueue.addLast(effect);
 	}
@@ -252,6 +245,16 @@ public class GraphicsManager implements Disposable{
 			TextureDraw texture = drawTextureQueue.removeFirst();
 			batch.draw(texture.texture, texture.x, texture.y, texture.originX, texture.origonY, texture.width, texture.height, 1, 1, texture.rot * MathUtils.radiansToDegrees);
 		}
+	}
+	
+	public void clearDrawCalls(){
+		drawTextQueue.clear();
+		drawEffectQueue.clear();
+		drawTextureQueue.clear();
+		for(PooledEffect effect : effectArray){
+			effect.free();
+		}
+		effectArray.clear();
 	}
 	
 	public void look(Vector2 look){

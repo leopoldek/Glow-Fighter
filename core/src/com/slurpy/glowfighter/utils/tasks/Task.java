@@ -26,21 +26,21 @@ public class Task {
 		frames[0].start();
 	}
 	
-	public boolean update(){
-		if(paused)return false;
+	public void update(){
+		if(paused)return;
 		timer += Gdx.graphics.getDeltaTime();
 		
 		while(timer >= cTimes[keyFrame]){
 			frames[keyFrame].end();
 			keyFrame++;
-			if(keyFrame == frames.length)return true;
+			if(keyFrame == frames.length)return;
 			frames[keyFrame].start();
 		}
 		
 		float progress = getProgress();
 		float frameProgress = (keyFrame == 0 ? timer : timer - cTimes[keyFrame - 1]) / times[keyFrame];
 		frames[keyFrame].act(progress, frameProgress);
-		return false;
+		return;
 	}
 	
 	public void setKeyFrame(int frame){
