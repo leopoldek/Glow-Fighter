@@ -13,6 +13,11 @@ public class TaskBuilder {
 		times.add(time);
 	}
 	
+	public void addKeyFrame(float time){
+		frames.add(new IdleKeyFrame());
+		times.add(time);
+	}
+	
 	public Task build(){
 		return new Task(frames.toArray(), times.toArray());
 	}

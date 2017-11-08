@@ -181,8 +181,6 @@ public class Survival implements State{
 			final float textSizeEnd = 58;
 			builder.addKeyFrame(new KeyFrame(){
 				@Override
-				public void start() {}
-				@Override
 				public void act(float progress, float frameProgress) {
 					levelPos.ry = Interpolation.circleOut.apply(ryStart, ryEnd, frameProgress);
 					levelPos.x = Interpolation.circleOut.apply(xStart, xEnd, frameProgress);
@@ -203,17 +201,8 @@ public class Survival implements State{
 					if(level % 5 == 0)Core.entities.addEntity(new TurretEnemy(new Vector2(), player));
 				}
 			}, 1.1f);
-			builder.addKeyFrame(new KeyFrame(){//TODO Add idle task
-				@Override
-				public void start() {}
-				@Override
-				public void act(float progress, float frameProgress) {}
-				@Override
-				public void end() {}
-			}, 1.2f);
+			builder.addKeyFrame(1.2f);
 			builder.addKeyFrame(new KeyFrame(){
-				@Override
-				public void start() {}
 				@Override
 				public void act(float progress, float frameProgress) {
 					levelPos.ry = Interpolation.circleOut.apply(ryEnd, ryStart, frameProgress);

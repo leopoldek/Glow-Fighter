@@ -22,7 +22,12 @@ public class TaskManager{
 	}
 	
 	public void addTask(TaskBuilder builder){
-		tasks.add(builder.build());
+		addTask(builder.build());
+	}
+	
+	public void addTask(Task task){
+		tasks.add(task);
+		task.start();
 	}
 	
 	public void removeTask(Task animation){

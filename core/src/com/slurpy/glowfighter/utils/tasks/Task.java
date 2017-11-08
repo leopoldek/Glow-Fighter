@@ -10,6 +10,7 @@ public class Task {
 	
 	private float timer = 0f;
 	private boolean paused = false;
+	private boolean loop = false;
 	
 	private int keyFrame = 0;
 	
@@ -23,6 +24,9 @@ public class Task {
 			length += times[i];
 			cTimes[i] = length;
 		}
+	}
+	
+	public void start(){
 		frames[0].start();
 	}
 	
@@ -33,7 +37,14 @@ public class Task {
 		while(timer >= cTimes[keyFrame]){
 			frames[keyFrame].end();
 			keyFrame++;
-			if(keyFrame == frames.length)return;
+			if(keyFrame == frames.length){
+				if(loop){
+					keyFrame = 0;
+					timer -= getLength();
+				}else{
+					return;
+				}
+			}
 			frames[keyFrame].start();
 		}
 		
@@ -44,15 +55,24 @@ public class Task {
 	}
 	
 	public void setKeyFrame(int frame){
-		
+		keyFrame = frame;
+		timer = frame == 0 ? 0 : cTimes[frame - 1];
 	}
 	
-	public void setTime(){
-		
+	public void setTime(float time){
+		timer = time;
 	}
 	
 	public float getTime(){
 		return timer;
+	}
+	
+	public void loop(boolean loop){
+		this.loop = loop;
+	}
+	
+	public boolean isLooping(){
+		return loop;
 	}
 	
 	public float getProgress(){

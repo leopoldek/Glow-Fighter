@@ -1,7 +1,7 @@
 package com.slurpy.glowfighter.utils.tasks;
 
 public interface KeyFrame {
-	public void start();
+	public default void start(){}
 	public void act(float progress, float frameProgress);
-	public void end();
+	public default void end(){}
 }

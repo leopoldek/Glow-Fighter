@@ -21,23 +21,23 @@ public abstract class Gui {
 		return height;
 	}
 	
-	protected class Position{
+	protected final class Position{
 		
-		float rx;
-		float ry;
-		float x;
-		float y;
+		protected float rx;
+		protected float ry;
+		protected float x;
+		protected float y;
 
 		private final Vector2 pos = new Vector2();
 
-		Position(float rx, float ry, float x, float y){
+		protected Position(float rx, float ry, float x, float y){
 			this.rx = rx;
 			this.ry = ry;
 			this.x = x;
 			this.y = y;
 		}
 
-		Vector2 getPosition(){
+		protected Vector2 getPosition(){
 			return pos.set(rx * width, ry * height).add(x, y);
 		}
 	}
