@@ -1,6 +1,8 @@
 package com.slurpy.glowfighter.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter.ScaledNumericValue;
@@ -9,6 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.slurpy.glowfighter.Core;
+import com.slurpy.glowfighter.managers.AssetManager.FontAsset;
 
 public class Util{
 	
@@ -79,5 +83,12 @@ public class Util{
 	
 	public static Vector2 randomTriangularVector(float width, float height){
 		return new Vector2(MathUtils.randomTriangular(-width, width), MathUtils.randomTriangular(-height, height));
+	}
+	
+	public static Vector2 getTextSize(FontAsset fontAsset, String text, float scale){
+		BitmapFont font = Core.assets.getFont(fontAsset);
+		font.getData().setScale(scale / 48f);
+		GlyphLayout layout = new GlyphLayout(font, text);
+		return new Vector2(layout.width, layout.height);
 	}
 }

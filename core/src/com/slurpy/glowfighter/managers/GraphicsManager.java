@@ -124,6 +124,18 @@ public class GraphicsManager implements Disposable{
 		}
 	}
 	
+	public void drawRectangle(float x, float y, float l, float h, float w, Color color){
+		float top = y + h;
+		float right = x + l;
+		Vector2[] points = new Vector2[]{
+				new Vector2(x, y),
+				new Vector2(x, top),
+				new Vector2(right, top),
+				new Vector2(right, y)
+		};
+		drawPolygon(points, w, color);
+	}
+	
 	public void drawPolyline(Vector2[] points, float w, Color color){
 		
 	}
