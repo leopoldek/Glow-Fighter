@@ -3,14 +3,14 @@ package com.slurpy.glowfighter;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.slurpy.glowfighter.gamemodes.Gamemode;
-import com.slurpy.glowfighter.gamemodes.Survival;
 import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.AudioManager;
 import com.slurpy.glowfighter.managers.EntityManager;
 import com.slurpy.glowfighter.managers.GraphicsManager;
 import com.slurpy.glowfighter.managers.PhysicsManager;
+import com.slurpy.glowfighter.managers.StateManager;
 import com.slurpy.glowfighter.managers.TaskManager;
+import com.slurpy.glowfighter.states.Survival;
 import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.KeyBindings;
 
@@ -22,10 +22,9 @@ public class Core extends ApplicationAdapter {
 	public static AudioManager audio;
 	public static EntityManager entities;
 	public static TaskManager tasks;
+	public static StateManager state;
 	
 	public static KeyBindings bindings;
-	
-	public static Gamemode game;
 	
 	@Override
 	public void create () {
@@ -35,6 +34,7 @@ public class Core extends ApplicationAdapter {
 		audio = new AudioManager();
 		entities = new EntityManager();
 		tasks = new TaskManager();
+		state = new StateManager();
 		
 		bindings = KeyBindings.createNewBinding();
 		Gdx.input.setInputProcessor(bindings);
@@ -50,14 +50,13 @@ public class Core extends ApplicationAdapter {
 		bindings.addBinding(Action.lastWeapon, Keys.Q);
 		bindings.addBinding(Action.boost, Keys.SPACE);
 		
-		game = new Survival();
-		game.start();
+		state.setState(new Survival());
 	}
 	
 	@Override
 	public void render () {
 		tasks.update();
-		game.update();
+		state.update();
 		entities.update();
 		physics.update();
 		graphics.begin();

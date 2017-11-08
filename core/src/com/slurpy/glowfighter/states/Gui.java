@@ -1,4 +1,4 @@
-package com.slurpy.glowfighter.gamemodes;
+package com.slurpy.glowfighter.states;
 
 import com.badlogic.gdx.math.Vector2;
 

@@ -1,4 +1,4 @@
-package com.slurpy.glowfighter.gamemodes;
+package com.slurpy.glowfighter.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -27,7 +27,7 @@ import com.slurpy.glowfighter.utils.Util;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.TaskBuilder;
 
-public class Survival implements Gamemode{
+public class Survival implements State{
 	
 	private static final float length = 70;
 	private static final float height = 50;
@@ -89,6 +89,11 @@ public class Survival implements Gamemode{
 			}
 		}
 		timer = 1 / (1 / timer + 0.0000001f / Gdx.graphics.getDeltaTime());
+	}
+	
+	@Override
+	public void end() {
+		Core.entities.clear();
 	}
 	
 	private void spawnPickup(){

@@ -67,4 +67,9 @@ public class EntityManager {
 	public int amount(){
 		return entities.size;
 	}
+	
+	public void clear(){
+		entities.clear();
+		groups.clear();
+	}
 }

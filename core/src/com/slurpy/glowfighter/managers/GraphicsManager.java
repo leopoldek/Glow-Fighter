@@ -49,7 +49,7 @@ public class GraphicsManager implements Disposable{
 	private final Queue<TextDraw> drawTextQueue = new Queue<>();
 	private final Queue<PooledEffect> drawEffectQueue = new Queue<>();
 	private final Queue<TextureDraw> drawTextureQueue = new Queue<>();
-	private final Array<PooledEffect> effectArray = new Array<>(false, 16);
+	private final Array<PooledEffect> effectArray = new Array<>(false, 50);
 	
 	public GraphicsManager(){
 		batch = new SpriteBatch();
@@ -167,6 +167,13 @@ public class GraphicsManager implements Disposable{
 		effectArray.add(pooledEffect);
 	}
 	
+	public void clearParticleArray(){
+		for(PooledEffect effect : effectArray){
+			effect.free();
+		}
+		effectArray.clear();
+	}
+	
 	public void drawParticle(PooledEffect effect){
 		drawEffectQueue.addLast(effect);
 	}
@@ -193,7 +200,7 @@ public class GraphicsManager implements Disposable{
 		//Draw GUI
 		shapeBatch.setProjectionMatrix(fboProj);
 		shapeBatch.begin(ShapeType.Filled);
-		Core.game.getGui().draw();
+		Core.state.getGui().draw();
 		shapeBatch.end();
 		batch.setProjectionMatrix(fboProj);
 		batch.begin();
@@ -277,7 +284,7 @@ public class GraphicsManager implements Disposable{
 	
 	public void resize(int width, int height){
 		//System.out.println("RESIZED");
-		Core.game.getGui().resize(width, height);
+		Core.state.getGui().resize(width, height);
 		viewport.update(width, height);
 		fboProj = new Matrix4().setToOrtho2D(0, 0, width, height);
 		if(screenFBO != null){
