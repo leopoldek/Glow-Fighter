@@ -4,22 +4,51 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.managers.AssetManager.FontAsset;
 import com.slurpy.glowfighter.utils.Util;
+import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.Task;
 import com.slurpy.glowfighter.utils.tasks.TaskBuilder;
 
 public class Menu extends Gui implements State, InputProcessor{
 	
-	private final Position titlePos = new Position(0.5f, 0.85f, -280, 0);
+	private static final float titleCenter = 0.85f;
+	private static final float titleTop = 1.2f;
+	
+	private final static float left = -0.5f;
+	private final static float center = 0.5f;
+	private final static float right = 1.5f;
+	
+	private MenuState menuState;
+	
+	//Main Menu
+	private final Position titlePos = new Position(center, titleCenter, -280, 0);
 	private final Color titleColor = new Color();
 	private final Task titleColorShift;
+	private final Button playButton = new Button("PLAY", new Position(center, 0.5f, -250, -30),  500, 60, Color.WHITE);
+	private final Button optionsButton = new Button("OPTIONS", new Position(center, 0.5f, -250, -120),  500, 60, Color.WHITE);
+	private final Button exitButton = new Button("EXIT", new Position(center, 0.5f, -250, -210),  500, 60, Color.WHITE);
 	
-	private final Button playButton = new Button("PLAY", new Position(0.5f, 0.5f, -250, -30),  500, 60, Color.WHITE);
-	private final Button optionsButton = new Button("OPTIONS", new Position(0.5f, 0.5f, -250, -120),  500, 60, Color.WHITE);
-	private final Button exitButton = new Button("EXIT", new Position(0.5f, 0.5f, -250, -210),  500, 60, Color.WHITE);
+	//Options Menu
+	private final Button gameButton = new Button(		"GAME SETTINGS",		new Position(right, 0.4f, -250, 135),	500, 60, Color.WHITE);
+	private final Button soundButton = new Button(		"SOUND SETTINGS",		new Position(right, 0.4f, -250, 45),	500, 60, Color.WHITE);
+	private final Button graphicsButton = new Button(	"GRAPHICS SETTINGS", 	new Position(right, 0.4f, -250, -45),	500, 60, Color.WHITE);
+	private final Button backButton = new Button(		"BACK",					new Position(right, 0.4f, -250, -135),	500, 60, Color.WHITE);
+	
+	//Game Menu
+	
+	
+	//Sound Menu
+	
+	
+	//Graphics Menu
+	
+	
+	//Keybindings Menu
+	
 	
 	public Menu(){
 		TaskBuilder builder = new TaskBuilder();
@@ -39,6 +68,8 @@ public class Menu extends Gui implements State, InputProcessor{
 		builder.addKeyFrame((progress, frameProgress) -> titleColor.set(colors[colors.length-1]).lerp(colors[0], frameProgress), 1f);
 		titleColorShift = builder.build();
 		titleColorShift.loop(true);
+		
+		menuState = MenuState.main;
 	}
 	
 	@Override
@@ -51,9 +82,10 @@ public class Menu extends Gui implements State, InputProcessor{
 	public void update() {
 		final Color selected = Color.RED;
 		final Color normal = Color.WHITE;
-		float screenX = Gdx.graphics.getWidth() - Gdx.input.getX();
-		float screenY = Gdx.graphics.getHeight() - Gdx.input.getY();
-		if(playButton.contains(screenX, screenY)){
+		final float screenX = Gdx.graphics.getWidth() - Gdx.input.getX();
+		final float screenY = Gdx.graphics.getHeight() - Gdx.input.getY();
+		//Main
+		if(playButton.contains(screenX, screenY)){//TODO Make method for this in Button.
 			playButton.color.set(selected);
 		}else{
 			playButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
@@ -70,6 +102,27 @@ public class Menu extends Gui implements State, InputProcessor{
 		}else{
 			exitButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
 		}
+		//Options
+		if(gameButton.contains(screenX, screenY)){
+			gameButton.color.set(selected);
+		}else{
+			gameButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
+		}
+		if(soundButton.contains(screenX, screenY)){
+			soundButton.color.set(selected);
+		}else{
+			soundButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
+		}
+		if(graphicsButton.contains(screenX, screenY)){
+			graphicsButton.color.set(selected);
+		}else{
+			graphicsButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
+		}
+		if(backButton.contains(screenX, screenY)){
+			backButton.color.set(selected);
+		}else{
+			backButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
+		}
 	}
 	
 	@Override
@@ -78,17 +131,131 @@ public class Menu extends Gui implements State, InputProcessor{
 		playButton.draw();
 		optionsButton.draw();
 		exitButton.draw();
+		
+		gameButton.draw();
+		soundButton.draw();
+		graphicsButton.draw();
+		backButton.draw();
 	}
 	
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		screenX = Gdx.graphics.getWidth() - screenX;
+		screenY = Gdx.graphics.getHeight() - screenY;
 		if(button == Buttons.LEFT){
-			if(playButton.contains(screenX, screenY)){
-				Core.state.setState(new Survival());
-				return true;
+			if(menuState == MenuState.main){
+				if(playButton.contains(screenX, screenY)){
+					Core.state.setState(new Survival());
+					return true;
+				}
+				if(optionsButton.contains(screenX, screenY)){
+					gotoOptionsMenu();
+					return true;
+				}
+				if(exitButton.contains(screenX, screenY)){
+					Gdx.app.exit();
+					return true;
+				}
+			}else if(menuState == MenuState.options){
+				if(gameButton.contains(screenX, screenY)){
+					gotoMainMenu();
+					return true;
+				}
+				if(soundButton.contains(screenX, screenY)){
+					
+					return true;
+				}
+				if(graphicsButton.contains(screenX, screenY)){
+					
+					return true;
+				}
+				if(backButton.contains(screenX, screenY)){
+					gotoMainMenu();
+					return true;
+				}
 			}
 		}
 		return false;
+	}
+	
+	public void gotoOptionsMenu(){
+		if(menuState != MenuState.main)return;
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				titlePos.ry = Interpolation.sine.apply(titleCenter, titleTop, frameProgress);
+				
+				playButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				optionsButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				exitButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				
+				gameButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				soundButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				graphicsButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				backButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.options;
+				
+				titlePos.ry = titleTop;
+				
+				playButton.position.rx = left;
+				optionsButton.position.rx = left;
+				exitButton.position.rx = left;
+				
+				gameButton.position.rx = center;
+				soundButton.position.rx = center;
+				graphicsButton.position.rx = center;
+				backButton.position.rx = center;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
+	}
+	
+	public void gotoMainMenu(){
+		if(menuState != MenuState.options)return;
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				titlePos.ry = Interpolation.sine.apply(titleTop, titleCenter, frameProgress);
+				
+				gameButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				soundButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				graphicsButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				backButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				
+				playButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				optionsButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				exitButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.main;
+				
+				titlePos.ry = titleCenter;
+				
+				gameButton.position.rx = right;
+				soundButton.position.rx = right;
+				graphicsButton.position.rx = right;
+				backButton.position.rx = right;
+				
+				playButton.position.rx = center;
+				optionsButton.position.rx = center;
+				exitButton.position.rx = center;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
 	}
 	
 	@Override
@@ -137,6 +304,10 @@ public class Menu extends Gui implements State, InputProcessor{
 			pos.add(w/2, h/2).sub(fontW/2, -fontH/2);
 			Core.graphics.drawText(text, pos, 48f, color);
 		}
+	}
+	
+	public enum MenuState{
+		main, options, switching
 	}
 
 	@Override

@@ -10,8 +10,9 @@ public class DesktopLauncher {
 		config.title = "Glow Fighter";
 		//config.addIcon(path, fileType);
 		
-		config.vSyncEnabled = false;
-		config.foregroundFPS = 120;
+		config.vSyncEnabled = true;
+		//config.vSyncEnabled = false;  
+		//config.foregroundFPS = 120;
 		//config.foregroundFPS = 0;
 		//config.backgroundFPS = 120;
 		config.backgroundFPS = -1;
@@ -22,7 +23,7 @@ public class DesktopLauncher {
 		config.height = 600;
 		//config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
 		//config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
-		//config.fullscreen = true;
+		config.fullscreen = false;
 		
 		new LwjglApplication(new Core(), config);
 	}
