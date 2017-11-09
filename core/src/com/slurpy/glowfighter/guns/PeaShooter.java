@@ -30,7 +30,7 @@ public class PeaShooter extends Gun{
 		if(shoot){
 			while(accumulator >= cooldown){
 				Core.entities.addEntity(new LaserShot(pos, new Vector2(50, 0).rotateRad(rot), Color.GOLD, Team.FRIENDLY, 60f));
-				Core.audio.playSound(SoundAsset.Shoot, 0.2f);
+				Core.audio.playSound(SoundAsset.Shoot);
 				accumulator -= cooldown;
 			}
 		}else{

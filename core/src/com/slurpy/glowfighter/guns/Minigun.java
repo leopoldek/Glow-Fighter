@@ -32,7 +32,7 @@ public class Minigun extends Gun{
 		if(shoot){
 			while(accumulator >= cooldown){
 				Core.entities.addEntity(new LaserShot(pos, new Vector2(50, 0).rotateRad(rot + MathUtils.randomTriangular(-spread, spread)), Color.YELLOW, Team.FRIENDLY, 20f));
-				Core.audio.playSound(SoundAsset.Shoot, 0.1f);
+				Core.audio.playSound(SoundAsset.Shoot);
 				accumulator -= cooldown;
 			}
 		}else{

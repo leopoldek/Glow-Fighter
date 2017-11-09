@@ -30,7 +30,7 @@ public class RocketRepeater extends Gun{
 		if(shoot){
 			while(accumulator >= cooldown){
 				Core.entities.addEntity(new Rocket(pos, new Vector2(50, 0).rotateRad(rot), Color.GRAY, Color.RED, Team.FRIENDLY, 40f, 2.5f));
-				Core.audio.playSound(SoundAsset.Shoot, 0.2f);
+				Core.audio.playSound(SoundAsset.Shoot);
 				accumulator -= cooldown;
 			}
 		}else{

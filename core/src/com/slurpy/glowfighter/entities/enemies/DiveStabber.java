@@ -52,7 +52,7 @@ public class DiveStabber extends Entity implements Damage, Health{
 			countdown -= Gdx.graphics.getDeltaTime();
 			if(countdown <= 0){
 				body.setLinearVelocity(new Vector2(25f, 0).rotateRad(angle));
-				Core.audio.playSound2D(SoundAsset.Activated, body.getPosition(), 1f, 18f);
+				Core.audio.playSound2D(SoundAsset.Activated, body.getPosition(), 18f);
 				diving = true;
 			}
 		}

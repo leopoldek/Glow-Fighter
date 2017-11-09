@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.slurpy.glowfighter.utils.SoundType;
 
 public class AssetManager implements Disposable{
 	
@@ -89,24 +90,30 @@ public class AssetManager implements Disposable{
 	}
 	
 	public enum MusicAsset{
-		BackgroundTechno("Retro Techno Music.mp3");
+		BackgroundTechno("Retro Techno Music.mp3", SoundType.music);
 		
 		public final String file;
+		public final SoundType type;
 		public static final Class<MusicAsset> clazz = MusicAsset.class;
 		
-		private MusicAsset(String file){
+		private MusicAsset(String file, SoundType type){
 			this.file = "songs/" + file;
+			this.type = type;
 		}
 	}
 	
 	public enum SoundAsset{
-		Shoot("Shoot.wav"), Hit("Hit.wav"), PlayerDie("Player Die.wav"), Pulse("Pulse.wav"), Activated("Activated.wav");
+		Shoot("Shoot.wav", SoundType.effect), Hit("Hit.wav", SoundType.effect),
+		PlayerDie("Player Die.wav", SoundType.effect), Pulse("Pulse.wav", SoundType.effect),
+		Activated("Activated.wav", SoundType.effect);
 		
 		public final String file;
+		public final SoundType type;
 		public static final Class<MusicAsset> clazz = MusicAsset.class;
 		
-		private SoundAsset(String file){
+		private SoundAsset(String file, SoundType type){
 			this.file = "sounds/" + file;
+			this.type = type;
 		}
 	}
 	

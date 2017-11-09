@@ -45,7 +45,7 @@ public class BurstGun extends Gun{
 			while(burstAccumulator >= burstInterval){
 				Color color = Color.BLUE.cpy().add(0.2f * (4 - shotsLeft), 0.2f * (4 - shotsLeft), 0, 0);
 				Core.entities.addEntity(new LaserShot(pos, new Vector2(50, 0).rotateRad(rot), color, Team.FRIENDLY, 60f));
-				Core.audio.playSound(SoundAsset.Shoot, 0.2f);
+				Core.audio.playSound(SoundAsset.Shoot);
 				shotsLeft--;
 				burstAccumulator -= burstInterval;
 			}

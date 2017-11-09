@@ -18,9 +18,9 @@ public class Menu extends Gui implements State, InputProcessor{
 	private static final float titleCenter = 0.85f;
 	private static final float titleTop = 1.2f;
 	
-	private final static float left = -0.5f;
-	private final static float center = 0.5f;
-	private final static float right = 1.5f;
+	private static final float left = -0.5f;
+	private static final float center = 0.5f;
+	private static final float right = 1.5f;
 	
 	private MenuState menuState;
 	
@@ -33,16 +33,19 @@ public class Menu extends Gui implements State, InputProcessor{
 	private final Button exitButton = new Button("EXIT", new Position(center, 0.5f, -250, -210),  500, 60, Color.WHITE);
 	
 	//Options Menu
-	private final Button gameButton = new Button(		"GAME SETTINGS",		new Position(right, 0.4f, -250, 135),	500, 60, Color.WHITE);
-	private final Button soundButton = new Button(		"SOUND SETTINGS",		new Position(right, 0.4f, -250, 45),	500, 60, Color.WHITE);
-	private final Button graphicsButton = new Button(	"GRAPHICS SETTINGS", 	new Position(right, 0.4f, -250, -45),	500, 60, Color.WHITE);
-	private final Button backButton = new Button(		"BACK",					new Position(right, 0.4f, -250, -135),	500, 60, Color.WHITE);
+	private final Button gameButton = new Button("GAME SETTINGS", new Position(right, 0.4f, -250, 135), 500, 60, Color.WHITE);
+	private final Button soundButton = new Button("SOUND SETTINGS", new Position(right, 0.4f, -250, 45), 500, 60, Color.WHITE);
+	private final Button graphicsButton = new Button("GRAPHICS SETTINGS", new Position(right, 0.4f, -250, -45), 500, 60, Color.WHITE);
+	private final Button backButton = new Button("BACK", new Position(right, 0.4f, -250, -135), 500, 60, Color.WHITE);
 	
 	//Game Menu
 	
 	
 	//Sound Menu
-	
+	private final Slider masterVolume = new Slider(new Position(0.5f, 0.5f, -250, -100), 500f);
+	private final Slider effectVolume = new Slider(new Position(0.5f, 0.5f, -250, -100), 500f);
+	private final Slider musicVolume = new Slider(new Position(0.5f, 0.5f, -250, -100), 500f);
+	private final Slider interfaceVolume = new Slider(new Position(0.5f, 0.5f, -250, -100), 500f);
 	
 	//Graphics Menu
 	
@@ -85,44 +88,15 @@ public class Menu extends Gui implements State, InputProcessor{
 		final float screenX = Gdx.graphics.getWidth() - Gdx.input.getX();
 		final float screenY = Gdx.graphics.getHeight() - Gdx.input.getY();
 		//Main
-		if(playButton.contains(screenX, screenY)){//TODO Make method for this in Button.
-			playButton.color.set(selected);
-		}else{
-			playButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
-		}
+		playButton.animateColor(screenX, screenY, selected, normal);
+		optionsButton.animateColor(screenX, screenY, selected, normal);
+		exitButton.animateColor(screenX, screenY, selected, normal);
 		
-		if(optionsButton.contains(screenX, screenY)){
-			optionsButton.color.set(selected);
-		}else{
-			optionsButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
-		}
-		
-		if(exitButton.contains(screenX, screenY)){
-			exitButton.color.set(selected);
-		}else{
-			exitButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
-		}
 		//Options
-		if(gameButton.contains(screenX, screenY)){
-			gameButton.color.set(selected);
-		}else{
-			gameButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
-		}
-		if(soundButton.contains(screenX, screenY)){
-			soundButton.color.set(selected);
-		}else{
-			soundButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
-		}
-		if(graphicsButton.contains(screenX, screenY)){
-			graphicsButton.color.set(selected);
-		}else{
-			graphicsButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
-		}
-		if(backButton.contains(screenX, screenY)){
-			backButton.color.set(selected);
-		}else{
-			backButton.color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
-		}
+		gameButton.animateColor(screenX, screenY, selected, normal);
+		soundButton.animateColor(screenX, screenY, selected, normal);
+		graphicsButton.animateColor(screenX, screenY, selected, normal);
+		backButton.animateColor(screenX, screenY, selected, normal);
 	}
 	
 	@Override
@@ -158,7 +132,7 @@ public class Menu extends Gui implements State, InputProcessor{
 				}
 			}else if(menuState == MenuState.options){
 				if(gameButton.contains(screenX, screenY)){
-					gotoMainMenu();
+					
 					return true;
 				}
 				if(soundButton.contains(screenX, screenY)){
@@ -304,9 +278,36 @@ public class Menu extends Gui implements State, InputProcessor{
 			pos.add(w/2, h/2).sub(fontW/2, -fontH/2);
 			Core.graphics.drawText(text, pos, 48f, color);
 		}
+		
+		private void animateColor(float x, float y, Color selected, Color normal){
+			if(contains(x, y)){
+				color.set(selected);
+			}else{
+				color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
+			}
+		}
 	}
 	
-	public enum MenuState{
+	private class Slider{
+		
+		private final Position position;
+		private final float length;
+		
+		private Slider(Position position, float length) {
+			this.position = position;
+			this.length = length;
+		}
+		
+		private void sliderPressed(int x, int y){
+			
+		}
+		
+		private void sliderMoved(int deltaX, int deltaY){
+			
+		}
+	}
+	
+	private enum MenuState{
 		main, options, switching
 	}
 

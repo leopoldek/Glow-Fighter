@@ -30,7 +30,7 @@ public class SniperRifle extends Gun{
 		if(shoot){
 			while(accumulator >= cooldown){
 				Core.entities.addEntity(new PiercingShot(pos, new Vector2(80, 0).rotateRad(rot), Color.FIREBRICK, Team.FRIENDLY, 300f, 5));
-				Core.audio.playSound(SoundAsset.Shoot, 0.4f);
+				Core.audio.playSound(SoundAsset.Shoot);
 				accumulator -= cooldown;
 			}
 		}else{

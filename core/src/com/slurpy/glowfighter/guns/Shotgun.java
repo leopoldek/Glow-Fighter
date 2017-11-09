@@ -37,7 +37,7 @@ public class Shotgun extends Gun{
 							new Vector2(MathUtils.random(50f, 75f), 0).rotateRad(rot + MathUtils.random(-spread, spread)),
 							Color.FIREBRICK, Team.FRIENDLY, 15f));
 				}
-				Core.audio.playSound(SoundAsset.Shoot, 0.2f);
+				Core.audio.playSound(SoundAsset.Shoot);
 				accumulator -= cooldown;
 			}
 		}else{

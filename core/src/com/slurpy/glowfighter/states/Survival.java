@@ -23,6 +23,7 @@ import com.slurpy.glowfighter.guns.Shotgun;
 import com.slurpy.glowfighter.guns.SniperRifle;
 import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
 import com.slurpy.glowfighter.parts.PolygonPart;
+import com.slurpy.glowfighter.utils.SoundType;
 import com.slurpy.glowfighter.utils.Util;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.TaskBuilder;
@@ -64,6 +65,9 @@ public class Survival implements State{
 		Music music = Core.audio.getMusic(MusicAsset.BackgroundTechno);
 		music.setLooping(true);
 		music.play();
+		
+		Core.audio.setMasterVolume(0.2f);
+		Core.audio.setVolume(SoundType.effect, 0.42f);
 		
 		//timer = Core.properties.getDifficultyProperty("SpawnRate", difficulty);
 		timer = 0.2f;
