@@ -30,18 +30,26 @@ public class Menu extends Gui implements State, InputProcessor{//TODO Refactor c
 	private final Position titlePos = new Position(center, titleCenter, -280, 0);
 	private final Color titleColor = new Color();
 	private final Task titleColorShift;
-	private final Button playButton = new Button("PLAY", new Position(center, 0.5f, -250, -30),  500, 60, Color.WHITE);
-	private final Button optionsButton = new Button("OPTIONS", new Position(center, 0.5f, -250, -120),  500, 60, Color.WHITE);
-	private final Button exitButton = new Button("EXIT", new Position(center, 0.5f, -250, -210),  500, 60, Color.WHITE);
+	private final Button playButton = new Button("PLAY", new Position(center, 0.5f, -250, -30),  500, 60, Color.WHITE, 48f);
+	private final Button optionsButton = new Button("OPTIONS", new Position(center, 0.5f, -250, -120),  500, 60, Color.WHITE, 48f);
+	private final Button exitButton = new Button("EXIT", new Position(center, 0.5f, -250, -210),  500, 60, Color.WHITE, 48f);
 	
 	//Options Menu
-	private final Button gameButton = new Button("GAME SETTINGS", new Position(right, 0.4f, -250, 135), 500, 60, Color.WHITE);
-	private final Button soundButton = new Button("SOUND SETTINGS", new Position(right, 0.4f, -250, 45), 500, 60, Color.WHITE);
-	private final Button graphicsButton = new Button("GRAPHICS SETTINGS", new Position(right, 0.4f, -250, -45), 500, 60, Color.WHITE);
-	private final Button optionsBackButton = new Button("BACK", new Position(right, 0.4f, -250, -135), 500, 60, Color.WHITE);
+	private final Button gameButton = new Button("GAME SETTINGS", new Position(right, 0.4f, -250, 135), 500, 60, Color.WHITE, 48f);
+	private final Button soundButton = new Button("SOUND SETTINGS", new Position(right, 0.4f, -250, 45), 500, 60, Color.WHITE, 48f);
+	private final Button graphicsButton = new Button("GRAPHICS SETTINGS", new Position(right, 0.4f, -250, -45), 500, 60, Color.WHITE, 48f);
+	private final Button optionsBackButton = new Button("BACK", new Position(right, 0.4f, -250, -135), 500, 60, Color.WHITE, 48f);
 	
 	//Game Menu
-	
+	private final Button keyBindingsButton = new Button("KEY BINDINGS", new Position(right, 0.5f, -250, 150), 500, 60, Color.WHITE, 48f);
+	private final Button creditsButton = new Button("CREDITS", new Position(right, 0.5f, -250, 50), 500, 60, Color.WHITE, 48f);
+	private final Button resetPreferencesButton = new Button("RESET PREFERENCES", new Position(right, 0.5f, -250, -50), 500, 60, Color.WHITE, 48f);
+	private final Position guiBox = new Position(right, 0.5f, -270, -270);
+	private final float width = 520, height = 140;
+	private final Button showGuiButton = new Button("SHOW GUI", new Position(right, 0.5f, -250, -150), 500, 60, Color.WHITE, 48f);
+	private final Button showPickupIndicatorButton = new Button("SHOW PICKUP INDICATOR", new Position(right, 0.5f, -250, -150), 500, 60, Color.WHITE, 48f);
+	private final Button showFPSButton = new Button("SHOW FPS", new Position(right, 0.5f, -250, -250), 500, 60, Color.WHITE, 48f);
+	private final Button showDamageButton = new Button("SHOW DAMAGE", new Position(right, 0.5f, -250, -250), 500, 60, Color.WHITE, 48f);
 	
 	//Sound Menu
 	private final Position masterLabelPos = new Position(right, 0.5f, -368, 100);
@@ -52,7 +60,7 @@ public class Menu extends Gui implements State, InputProcessor{//TODO Refactor c
 	private final Slider effectVolume = new Slider(new Position(right, 0.5f, -250, 30), 500f);
 	private final Slider musicVolume = new Slider(new Position(right, 0.5f, -250, -30), 500f);
 	private final Slider interfaceVolume = new Slider(new Position(right, 0.5f, -250, -90), 500f);
-	private final Button soundBackButton = new Button("BACK", new Position(right, 0.5f, -250, -210), 500, 60, Color.WHITE);
+	private final Button soundBackButton = new Button("BACK", new Position(right, 0.5f, -250, -210), 500, 60, Color.WHITE, 48f);
 	
 	//Graphics Menu
 	
@@ -416,16 +424,18 @@ public class Menu extends Gui implements State, InputProcessor{//TODO Refactor c
 		private float w, h;
 		private final float fontW, fontH;
 		private Color color;
+		private final float size;
 		
-		private Button(String text, Position pos, int w, int h, Color color) {
+		private Button(String text, Position pos, int w, int h, Color color, float size) {
 			this.text = text;
 			this.position = pos;
 			this.w = w;
 			this.h = h;
-			Vector2 fontSize = Util.getTextSize(FontAsset.CatV, text, 48f);
+			Vector2 fontSize = Util.getTextSize(FontAsset.CatV, text, size);
 			fontW = fontSize.x;
 			fontH = fontSize.y;
 			this.color = color.cpy();
+			this.size = size;
 		}
 		
 		private boolean contains(int x, int y){
@@ -437,7 +447,7 @@ public class Menu extends Gui implements State, InputProcessor{//TODO Refactor c
 			Vector2 pos = position.getPosition();
 			Core.graphics.drawRectangle(pos.x, pos.y, w, h, 10, color);
 			pos.add(w/2, h/2).sub(fontW/2, -fontH/2);
-			Core.graphics.drawText(text, pos, 48f, color);
+			Core.graphics.drawText(text, pos, size, color);
 		}
 		
 		private void animateColor(int x, int y, Color selected, Color normal){
