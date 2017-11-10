@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.managers.AssetManager.FontAsset;
@@ -85,8 +86,8 @@ public class Menu extends Gui implements State, InputProcessor{
 	public void update() {
 		final Color selected = Color.RED;
 		final Color normal = Color.WHITE;
-		final float screenX = Gdx.graphics.getWidth() - Gdx.input.getX();
-		final float screenY = Gdx.graphics.getHeight() - Gdx.input.getY();
+		final int screenX = Gdx.graphics.getWidth() - Gdx.input.getX();
+		final int screenY = Gdx.graphics.getHeight() - Gdx.input.getY();
 		//Main
 		playButton.animateColor(screenX, screenY, selected, normal);
 		optionsButton.animateColor(screenX, screenY, selected, normal);
@@ -152,6 +153,16 @@ public class Menu extends Gui implements State, InputProcessor{
 		return false;
 	}
 	
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		return false;
+	}
+	
 	public void gotoOptionsMenu(){
 		if(menuState != MenuState.main)return;
 		TaskBuilder builder = new TaskBuilder();
@@ -204,14 +215,14 @@ public class Menu extends Gui implements State, InputProcessor{
 			public void act(float progress, float frameProgress) {
 				titlePos.ry = Interpolation.sine.apply(titleTop, titleCenter, frameProgress);
 				
+				playButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				optionsButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				exitButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				
 				gameButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				soundButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				graphicsButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				backButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
-				
-				playButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
-				optionsButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
-				exitButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
 			}
 			@Override
 			public void end() {
@@ -219,22 +230,17 @@ public class Menu extends Gui implements State, InputProcessor{
 				
 				titlePos.ry = titleCenter;
 				
+				playButton.position.rx = center;
+				optionsButton.position.rx = center;
+				exitButton.position.rx = center;
+				
 				gameButton.position.rx = right;
 				soundButton.position.rx = right;
 				graphicsButton.position.rx = right;
 				backButton.position.rx = right;
-				
-				playButton.position.rx = center;
-				optionsButton.position.rx = center;
-				exitButton.position.rx = center;
 			}
 		}, 0.6f);
 		Core.tasks.addTask(builder);
-	}
-	
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
 	}
 	
 	@Override
@@ -267,7 +273,7 @@ public class Menu extends Gui implements State, InputProcessor{
 			this.color = color.cpy();
 		}
 		
-		private boolean contains(float x, float y){
+		private boolean contains(int x, int y){
 			Vector2 pos = position.getPosition();
 			return x > pos.x && x < pos.x + w && y > pos.y && y < pos.y + h;
 		}
@@ -279,7 +285,7 @@ public class Menu extends Gui implements State, InputProcessor{
 			Core.graphics.drawText(text, pos, 48f, color);
 		}
 		
-		private void animateColor(float x, float y, Color selected, Color normal){
+		private void animateColor(int x, int y, Color selected, Color normal){
 			if(contains(x, y)){
 				color.set(selected);
 			}else{
@@ -290,8 +296,14 @@ public class Menu extends Gui implements State, InputProcessor{
 	
 	private class Slider{
 		
+		private static final float width = 8f;
+		private static final float sliderWidth = 12f;
+		
 		private final Position position;
 		private final float length;
+		
+		private float sliderPosition = 1f;
+		private boolean isMoving = false;
 		
 		private Slider(Position position, float length) {
 			this.position = position;
@@ -299,11 +311,39 @@ public class Menu extends Gui implements State, InputProcessor{
 		}
 		
 		private void sliderPressed(int x, int y){
-			
+			Vector2 pos = position.getPosition();
+			Vector2 center = pos.cpy().add(length / 2, 0);
+			if(!Util.isInsideRect(center, new Vector2(x, y), length/2 + width, sliderWidth))return;
+			sliderPosition = (x - pos.x) / length;
+			sliderPosition = MathUtils.clamp(sliderPosition, 0f, 1f);
+			isMoving = true;
 		}
 		
-		private void sliderMoved(int deltaX, int deltaY){
+		private void sliderDragged(int newX, int newY){
+			Vector2 pos = position.getPosition();
+			sliderPosition = (newX - pos.x) / length;
+			sliderPosition = MathUtils.clamp(sliderPosition, 0f, 1f);
+		}
+		
+		private void sliderReleased(){
+			isMoving = false;
+		}
+		
+		private void draw(){
+			Vector2 start = position.getPosition();
+			Vector2 end = new Vector2(start).add(length, 0);
+			Core.graphics.drawLine(start, end, width, Color.WHITE);
 			
+			end.set(start).add(length * sliderPosition, 0);
+			Core.graphics.drawCircle(end, sliderWidth, Color.GRAY);
+		}
+		
+		public float getSliderPosition(){
+			return sliderPosition;
+		}
+		
+		public void setSliderPosition(float sliderPosition){
+			this.sliderPosition = sliderPosition;
 		}
 	}
 	
@@ -325,14 +365,9 @@ public class Menu extends Gui implements State, InputProcessor{
 	public boolean keyTyped(char character) {
 		return false;
 	}
-
+	
 	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
+	public boolean mouseMoved(int screenX, int screenY) {
 		return false;
 	}
 
