@@ -14,6 +14,8 @@ import com.slurpy.glowfighter.entities.enemies.BallLaunchingEnemy;
 import com.slurpy.glowfighter.entities.enemies.DiveStabber;
 import com.slurpy.glowfighter.entities.enemies.MissileEnemy;
 import com.slurpy.glowfighter.entities.enemies.TurretEnemy;
+import com.slurpy.glowfighter.gui.Gui;
+import com.slurpy.glowfighter.gui.Position;
 import com.slurpy.glowfighter.guns.BurstGun;
 import com.slurpy.glowfighter.guns.Gun;
 import com.slurpy.glowfighter.guns.Minigun;
@@ -126,7 +128,7 @@ public class Survival implements State{
 		return gui;
 	}
 	
-	public class SurvivalGui extends Gui{
+	public class SurvivalGui implements Gui{
 		private static final float INDICATOR_SIZE = 15;
 		
 		private final Position healthBarPos = new Position(1, 0, -50, 50);
@@ -150,8 +152,8 @@ public class Survival implements State{
 		public void draw(){
 			Vector2 playerPos = Core.graphics.project(player.getPosition());
 			Vector2 pickupPos = Core.graphics.project(pickup.getPosition());
-			if(!Util.isInsideRect(playerPos, pickupPos, getWidth(), getHeight())){
-				Vector2 indicatorPos = Util.getBoundryPoint(playerPos, pickupPos, getWidth() - 40, getHeight() - 40);
+			if(!Util.isInsideRect(playerPos, pickupPos, Gdx.graphics.getWidth(), Gdx.graphics.getHeight())){
+				Vector2 indicatorPos = Util.getBoundryPoint(playerPos, pickupPos, Gdx.graphics.getWidth() - 40, Gdx.graphics.getHeight() - 40);
 				arrowIndicator.draw(indicatorPos, pickupPos.sub(playerPos).angleRad(), Color.LIME);
 			}
 			

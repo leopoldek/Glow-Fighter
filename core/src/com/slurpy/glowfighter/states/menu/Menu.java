@@ -1,21 +1,23 @@
-package com.slurpy.glowfighter.states;
+package com.slurpy.glowfighter.states.menu;
 
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.Core;
-import com.slurpy.glowfighter.managers.AssetManager.FontAsset;
+import com.slurpy.glowfighter.gui.Button;
+import com.slurpy.glowfighter.gui.Gui;
+import com.slurpy.glowfighter.gui.Position;
+import com.slurpy.glowfighter.gui.Slider;
+import com.slurpy.glowfighter.states.State;
+import com.slurpy.glowfighter.states.Survival;
 import com.slurpy.glowfighter.utils.SoundType;
-import com.slurpy.glowfighter.utils.Util;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.Task;
 import com.slurpy.glowfighter.utils.tasks.TaskBuilder;
 
-public class Menu extends Gui implements State, InputProcessor{//TODO Refactor class into smaller menu state classes.
+public class Menu implements Gui, State, InputProcessor{//TODO Refactor class into smaller menu state classes.
 	
 	private static final float titleCenter = 0.85f;
 	private static final float titleTop = 1.2f;
@@ -415,98 +417,6 @@ public class Menu extends Gui implements State, InputProcessor{//TODO Refactor c
 	@Override
 	public Gui getGui() {
 		return this;
-	}
-	
-	private class Button{
-		
-		private final String text;
-		private final Position position;
-		private float w, h;
-		private final float fontW, fontH;
-		private Color color;
-		private final float size;
-		
-		private Button(String text, Position pos, int w, int h, Color color, float size) {
-			this.text = text;
-			this.position = pos;
-			this.w = w;
-			this.h = h;
-			Vector2 fontSize = Util.getTextSize(FontAsset.CatV, text, size);
-			fontW = fontSize.x;
-			fontH = fontSize.y;
-			this.color = color.cpy();
-			this.size = size;
-		}
-		
-		private boolean contains(int x, int y){
-			Vector2 pos = position.getPosition();
-			return x > pos.x && x < pos.x + w && y > pos.y && y < pos.y + h;
-		}
-		
-		private void draw(){
-			Vector2 pos = position.getPosition();
-			Core.graphics.drawRectangle(pos.x, pos.y, w, h, 10, color);
-			pos.add(w/2, h/2).sub(fontW/2, -fontH/2);
-			Core.graphics.drawText(text, pos, size, color);
-		}
-		
-		private void animateColor(int x, int y, Color selected, Color normal){
-			if(contains(x, y)){
-				color.set(selected);
-			}else{
-				color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
-			}
-		}
-	}
-	
-	private class Slider{
-		
-		private static final float width = 8f;
-		private static final float sliderWidth = 12f;
-		
-		private final Position position;
-		private final float length;
-		
-		private float sliderPosition = 1f;
-		private boolean isMoving = false;
-		
-		private Slider(Position position, float length) {
-			this.position = position;
-			this.length = length;
-		}
-		
-		private boolean sliderPressed(int x, int y){
-			Vector2 pos = position.getPosition();
-			Vector2 center = pos.cpy().add(length / 2, 0);
-			if(!Util.isInsideRect(center, new Vector2(x, y), length + 2*sliderWidth, 2*sliderWidth))return false;
-			sliderPosition = (x - pos.x) / length;
-			sliderPosition = MathUtils.clamp(sliderPosition, 0f, 1f);
-			isMoving = true;
-			return true;
-		}
-		
-		private boolean sliderDragged(int newX, int newY){
-			if(!isMoving)return false;
-			Vector2 pos = position.getPosition();
-			sliderPosition = (newX - pos.x) / length;
-			sliderPosition = MathUtils.clamp(sliderPosition, 0f, 1f);
-			return true;
-		}
-		
-		private boolean sliderReleased(){
-			boolean released = isMoving;
-			isMoving = false;
-			return released;
-		}
-		
-		private void draw(){
-			Vector2 start = position.getPosition();
-			Vector2 end = new Vector2(start).add(length, 0);
-			Core.graphics.drawLine(start, end, width, Color.WHITE);
-			
-			end.set(start).add(length * sliderPosition, 0);
-			Core.graphics.drawCircle(end, sliderWidth, Color.GRAY.cpy().lerp(Color.RED, sliderPosition));
-		}
 	}
 	
 	private enum MenuState{

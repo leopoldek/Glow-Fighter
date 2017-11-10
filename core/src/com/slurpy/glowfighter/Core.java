@@ -11,7 +11,7 @@ import com.slurpy.glowfighter.managers.GraphicsManager;
 import com.slurpy.glowfighter.managers.PhysicsManager;
 import com.slurpy.glowfighter.managers.StateManager;
 import com.slurpy.glowfighter.managers.TaskManager;
-import com.slurpy.glowfighter.states.Menu;
+import com.slurpy.glowfighter.states.menu.Menu;
 import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.Constants;
 import com.slurpy.glowfighter.utils.KeyBindings;

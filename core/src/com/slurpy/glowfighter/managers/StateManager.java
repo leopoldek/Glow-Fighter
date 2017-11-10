@@ -1,7 +1,7 @@
 package com.slurpy.glowfighter.managers;
 
 import com.badlogic.gdx.Gdx;
-import com.slurpy.glowfighter.states.Gui;
+import com.slurpy.glowfighter.gui.Gui;
 import com.slurpy.glowfighter.states.State;
 
 public class StateManager {
