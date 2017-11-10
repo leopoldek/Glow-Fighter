@@ -185,6 +185,7 @@ public class Menu extends Gui implements State, InputProcessor{//TODO Refactor c
 					Core.audio.setVolume(SoundType.userInterface, interfaceVolume.sliderPosition);
 					return true;
 				}else if(soundBackButton.contains(screenX, screenY)){
+					Core.audio.saveVolumes();
 					soundToOptions();
 					return true;
 				}

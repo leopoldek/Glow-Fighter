@@ -12,4 +12,6 @@ public class Constants {
 	public static final int POSITION_ITERATIONS = 2;
 	
 	public static final float MAX_SHAKE = 0.5f;
+	
+	public static final String SETTINGS_FILE = "com.slurpy.glowfighter.settings";
 }
