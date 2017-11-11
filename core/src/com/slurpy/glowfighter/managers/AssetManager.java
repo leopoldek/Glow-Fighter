@@ -94,7 +94,7 @@ public class AssetManager implements Disposable{
 		
 		public final String file;
 		public final SoundType type;
-		public static final Class<MusicAsset> clazz = MusicAsset.class;
+		public static final Class<Music> clazz = Music.class;
 		
 		private MusicAsset(String file, SoundType type){
 			this.file = "songs/" + file;
@@ -103,13 +103,16 @@ public class AssetManager implements Disposable{
 	}
 	
 	public enum SoundAsset{
-		Shoot("Shoot.wav", SoundType.effect), Hit("Hit.wav", SoundType.effect),
+		Activated("Activated.wav", SoundType.effect), Blip("Blip.wav", SoundType.effect),
+		Electricity("Electricity.wav", SoundType.effect), Hit("Hit.wav", SoundType.effect),
 		PlayerDie("Player Die.wav", SoundType.effect), Pulse("Pulse.wav", SoundType.effect),
-		Activated("Activated.wav", SoundType.effect);
+		Select("UI Sounds/Select.mp3", SoundType.userInterface), Shoot("Shoot.wav", SoundType.effect),
+		Warning("Warning.wav", SoundType.userInterface), Pickup("UI Sounds/Pickup.mp3", SoundType.effect),
+		Saved("UI Sounds/Saved.mp3", SoundType.userInterface);
 		
 		public final String file;
 		public final SoundType type;
-		public static final Class<MusicAsset> clazz = MusicAsset.class;
+		public static final Class<Sound> clazz = Sound.class;
 		
 		private SoundAsset(String file, SoundType type){
 			this.file = "sounds/" + file;
@@ -121,7 +124,7 @@ public class AssetManager implements Disposable{
 		WhitePixel("WhitePixel.png");
 		
 		public final String file;
-		public static final Class<MusicAsset> clazz = MusicAsset.class;
+		public static final Class<Texture> clazz = Texture.class;
 		
 		private TextureAsset(String file){
 			this.file = "textures/" + file;

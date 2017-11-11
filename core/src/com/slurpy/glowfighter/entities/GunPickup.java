@@ -3,8 +3,10 @@ package com.slurpy.glowfighter.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
 import com.slurpy.glowfighter.guns.Gun;
+import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.parts.CirclePart;
 import com.slurpy.glowfighter.parts.Part;
 
@@ -27,6 +29,7 @@ public class GunPickup extends Entity implements KnockbackMultiplier{
 		if(other instanceof Player){
 			Player player = (Player)other;
 			player.setGun(gun);
+			Core.audio.playSound(SoundAsset.Pickup);
 			delete();
 		}
 	}

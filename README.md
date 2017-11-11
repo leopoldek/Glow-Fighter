@@ -4,7 +4,8 @@ Glow Fighter is an arcade shooter written in Java using LibGDX. It runs on Deskt
 ## Credits
  - Music by [Eric Matyas](http://www.soundimage.org)
  - Font by [HolyBlackCat](https://www.fontlibrary.org/en/font/catv-6x12-9)
- - Sounds made with [Bfxr](http://www.bfxr.net/)
+ - UI sounds by [Michael Vogler](https://www.youtube.com/watch?v=dYt8hb7TCZY)
+ - Other sounds made by me with [Bfxr](http://www.bfxr.net/)
 
 ## Setup
 Clone this repository. If you just want to run the project, open the command line and navigate to the local repository and type `gradlew desktop:run`. For setup in an IDE:

@@ -11,6 +11,7 @@ import com.slurpy.glowfighter.gui.Button;
 import com.slurpy.glowfighter.gui.Gui;
 import com.slurpy.glowfighter.gui.Position;
 import com.slurpy.glowfighter.gui.Slider;
+import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.utils.SoundType;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.Task;
@@ -48,7 +49,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Position guiBox = new Position(right, 0.5f, -250, -180);
 	private final float guiBoxWidth = 500, guiBoxHeight = 130;
 	private final Button showGuiButton = new Button("SHOW GUI", new Position(right, 0.5f, -230, -100), 215, 30, Color.WHITE, 20f);
-	private final Button showPickupIndicatorButton = new Button("SHOW PICKUP IND.", new Position(right, 0.5f, 15, -100), 215, 30, Color.WHITE, 20f);
+	private final Button showPickupIndicatorButton = new Button("SHOW PICKUP INDICATOR", new Position(right, 0.5f, 15, -100), 215, 30, Color.WHITE, 20f);
 	private final Button showFPSButton = new Button("SHOW FPS", new Position(right, 0.5f, -230, -160), 215, 30, Color.WHITE, 20f);
 	private final Button showDamageButton = new Button("SHOW DAMAGE", new Position(right, 0.5f, 15, -160), 215, 30, Color.WHITE, 20f);
 	private final Button gameBackButton = new Button("BACK", new Position(right, 0.5f, -250, -270), 500, 60, Color.WHITE, 48f);
@@ -65,10 +66,14 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Button soundBackButton = new Button("BACK", new Position(right, 0.5f, -250, -210), 500, 60, Color.WHITE, 48f);
 	
 	//Graphics Menu
-	
+	  
 	
 	//Keybindings Menu
 	
+	
+	//Saved
+	private final Position savedPos = new Position(1f, 0f, -144f, 64f);
+	private final Color savedColor = Color.YELLOW.cpy();
 	
 	public Menu(){
 		TaskBuilder builder = new TaskBuilder();
@@ -89,11 +94,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		titleColorShift = builder.build();
 		titleColorShift.loop(true);
 		
-		//Set volumes
-		masterVolume.sliderPosition = Core.audio.getMasterVolume();
-		effectVolume.sliderPosition = Core.audio.getVolume(SoundType.effect);
-		musicVolume.sliderPosition = Core.audio.getVolume(SoundType.music);
-		interfaceVolume.sliderPosition = Core.audio.getVolume(SoundType.userInterface);
+		savedColor.a = 0f;
 		
 		menuState = MenuState.main;
 	}
@@ -167,6 +168,8 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		showFPSButton.draw();
 		showDamageButton.draw();
 		gameBackButton.draw();
+		
+		Core.graphics.drawText("SAVED", savedPos.getPosition(), 42f, savedColor);
 	}
 	
 	@Override
@@ -180,6 +183,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				}
 				if(optionsButton.contains(screenX, screenY)){
 					mainToOptions();
+					Core.audio.playSound(SoundAsset.Select);
 					return true;
 				}
 				if(exitButton.contains(screenX, screenY)){
@@ -189,18 +193,22 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 			}else if(menuState == MenuState.options){
 				if(gameButton.contains(screenX, screenY)){
 					optionsToGame();
+					Core.audio.playSound(SoundAsset.Select);
 					return true;
 				}
 				if(soundButton.contains(screenX, screenY)){
 					optionsToSound();
+					Core.audio.playSound(SoundAsset.Select);
 					return true;
 				}
 				if(graphicsButton.contains(screenX, screenY)){
 					
+					Core.audio.playSound(SoundAsset.Select);
 					return true;
 				}
 				if(optionsBackButton.contains(screenX, screenY)){
 					optionsToMain();
+					//Core.audio.playSound(SoundAsset.Select);
 					return true;
 				}
 			}else if(menuState == MenuState.sound){
@@ -218,6 +226,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 					return true;
 				}else if(soundBackButton.contains(screenX, screenY)){
 					Core.audio.saveVolumes();
+					saved();
 					soundToOptions();
 					return true;
 				}
@@ -231,7 +240,12 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 					return true;
 				}
 				if(resetPreferencesButton.contains(screenX, screenY)){
-					
+					Core.audio.setMasterVolume(1f);
+					for(SoundType type : SoundType.values()){
+						Core.audio.setVolume(type, 1f);
+					}
+					Core.audio.saveVolumes();
+					saved();
 					return true;
 				}
 				if(showGuiButton.contains(screenX, screenY)){
@@ -257,6 +271,23 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 			}
 		}
 		return false;
+	}
+	
+	private void saved(){
+		Core.audio.playSound(SoundAsset.Saved);
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame((progress, frameProgress) -> savedColor.a = Interpolation.circleOut.apply(frameProgress), 0.75f);
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void act(float progress, float frameProgress) {
+				savedColor.a = Interpolation.circleOut.apply(1f - frameProgress);
+			}
+			@Override
+			public void end() {
+				savedColor.a = 0f;
+			}
+		}, 0.75f);
+		Core.tasks.addTask(builder);
 	}
 	
 	@Override
@@ -468,6 +499,12 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 			@Override
 			public void start() {
 				menuState = MenuState.switching;
+				
+				//Set volumes
+				masterVolume.sliderPosition = Core.audio.getMasterVolume();
+				effectVolume.sliderPosition = Core.audio.getVolume(SoundType.effect);
+				musicVolume.sliderPosition = Core.audio.getVolume(SoundType.music);
+				interfaceVolume.sliderPosition = Core.audio.getVolume(SoundType.userInterface);
 			}
 			@Override
 			public void act(float progress, float frameProgress) {
