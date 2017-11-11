@@ -1,17 +1,16 @@
-package com.slurpy.glowfighter.states.menu;
+package com.slurpy.glowfighter.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.gui.Button;
 import com.slurpy.glowfighter.gui.Gui;
 import com.slurpy.glowfighter.gui.Position;
 import com.slurpy.glowfighter.gui.Slider;
-import com.slurpy.glowfighter.states.State;
-import com.slurpy.glowfighter.states.Survival;
 import com.slurpy.glowfighter.utils.SoundType;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.Task;
@@ -43,15 +42,16 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Button optionsBackButton = new Button("BACK", new Position(right, 0.4f, -250, -135), 500, 60, Color.WHITE, 48f);
 	
 	//Game Menu
-	private final Button keyBindingsButton = new Button("KEY BINDINGS", new Position(right, 0.5f, -250, 150), 500, 60, Color.WHITE, 48f);
-	private final Button creditsButton = new Button("CREDITS", new Position(right, 0.5f, -250, 50), 500, 60, Color.WHITE, 48f);
-	private final Button resetPreferencesButton = new Button("RESET PREFERENCES", new Position(right, 0.5f, -250, -50), 500, 60, Color.WHITE, 48f);
-	private final Position guiBox = new Position(right, 0.5f, -270, -270);
-	private final float width = 520, height = 140;
-	private final Button showGuiButton = new Button("SHOW GUI", new Position(right, 0.5f, -250, -150), 500, 60, Color.WHITE, 48f);
-	private final Button showPickupIndicatorButton = new Button("SHOW PICKUP INDICATOR", new Position(right, 0.5f, -250, -150), 500, 60, Color.WHITE, 48f);
-	private final Button showFPSButton = new Button("SHOW FPS", new Position(right, 0.5f, -250, -250), 500, 60, Color.WHITE, 48f);
-	private final Button showDamageButton = new Button("SHOW DAMAGE", new Position(right, 0.5f, -250, -250), 500, 60, Color.WHITE, 48f);
+	private final Button keyBindingsButton = new Button("KEY BINDINGS", new Position(right, 0.5f, -250, 160), 500, 60, Color.WHITE, 48f);
+	private final Button creditsButton = new Button("CREDITS", new Position(right, 0.5f, -250, 70), 500, 60, Color.WHITE, 48f);
+	private final Button resetPreferencesButton = new Button("RESET PREFERENCES", new Position(right, 0.5f, -250, -20), 500, 60, Color.WHITE, 48f);
+	private final Position guiBox = new Position(right, 0.5f, -250, -180);
+	private final float guiBoxWidth = 500, guiBoxHeight = 130;
+	private final Button showGuiButton = new Button("SHOW GUI", new Position(right, 0.5f, -230, -100), 215, 30, Color.WHITE, 20f);
+	private final Button showPickupIndicatorButton = new Button("SHOW PICKUP IND.", new Position(right, 0.5f, 15, -100), 215, 30, Color.WHITE, 20f);
+	private final Button showFPSButton = new Button("SHOW FPS", new Position(right, 0.5f, -230, -160), 215, 30, Color.WHITE, 20f);
+	private final Button showDamageButton = new Button("SHOW DAMAGE", new Position(right, 0.5f, 15, -160), 215, 30, Color.WHITE, 20f);
+	private final Button gameBackButton = new Button("BACK", new Position(right, 0.5f, -250, -270), 500, 60, Color.WHITE, 48f);
 	
 	//Sound Menu
 	private final Position masterLabelPos = new Position(right, 0.5f, -368, 100);
@@ -108,20 +108,31 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	public void update() {
 		final Color selected = Color.RED;
 		final Color normal = Color.WHITE;
-		final int screenX = Gdx.graphics.getWidth() - Gdx.input.getX();
-		final int screenY = Gdx.graphics.getHeight() - Gdx.input.getY();
+		final int x = Gdx.input.getX();
+		final int y = Gdx.graphics.getHeight() - Gdx.input.getY();
 		//Main
-		playButton.animateColor(screenX, screenY, selected, normal);
-		optionsButton.animateColor(screenX, screenY, selected, normal);
-		exitButton.animateColor(screenX, screenY, selected, normal);
+		playButton.animateColor(x, y, selected, normal);
+		optionsButton.animateColor(x, y, selected, normal);
+		exitButton.animateColor(x, y, selected, normal);
 		
 		//Options
-		gameButton.animateColor(screenX, screenY, selected, normal);
-		soundButton.animateColor(screenX, screenY, selected, normal);
-		graphicsButton.animateColor(screenX, screenY, selected, normal);
-		optionsBackButton.animateColor(screenX, screenY, selected, normal);
+		gameButton.animateColor(x, y, selected, normal);
+		soundButton.animateColor(x, y, selected, normal);
+		graphicsButton.animateColor(x, y, selected, normal);
+		optionsBackButton.animateColor(x, y, selected, normal);
 		
-		soundBackButton.animateColor(screenX, screenY, selected, normal);
+		//Sound
+		soundBackButton.animateColor(x, y, selected, normal);
+		
+		//Game
+		keyBindingsButton.animateColor(x, y, selected, normal);
+		creditsButton.animateColor(x, y, selected, normal);
+		resetPreferencesButton.animateColor(x, y, selected, normal);
+		showGuiButton.animateColor(x, y, selected, normal);
+		showPickupIndicatorButton.animateColor(x, y, selected, normal);
+		showFPSButton.animateColor(x, y, selected, normal);
+		showDamageButton.animateColor(x, y, selected, normal);
+		gameBackButton.animateColor(x, y, selected, normal);
 	}
 	
 	@Override
@@ -145,6 +156,17 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		musicVolume.draw();
 		interfaceVolume.draw();
 		soundBackButton.draw();
+		
+		keyBindingsButton.draw();
+		creditsButton.draw();
+		resetPreferencesButton.draw();
+		Vector2 guiBoxPos = guiBox.getPosition();
+		Core.graphics.drawRectangle(guiBoxPos.x, guiBoxPos.y, guiBoxWidth, guiBoxHeight, 10, Color.BLUE);
+		showGuiButton.draw();
+		showPickupIndicatorButton.draw();
+		showFPSButton.draw();
+		showDamageButton.draw();
+		gameBackButton.draw();
 	}
 	
 	@Override
@@ -166,7 +188,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				}
 			}else if(menuState == MenuState.options){
 				if(gameButton.contains(screenX, screenY)){
-					
+					optionsToGame();
 					return true;
 				}
 				if(soundButton.contains(screenX, screenY)){
@@ -197,6 +219,39 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				}else if(soundBackButton.contains(screenX, screenY)){
 					Core.audio.saveVolumes();
 					soundToOptions();
+					return true;
+				}
+			}else if(menuState == MenuState.game){
+				if(keyBindingsButton.contains(screenX, screenY)){
+					
+					return true;
+				}
+				if(creditsButton.contains(screenX, screenY)){
+					
+					return true;
+				}
+				if(resetPreferencesButton.contains(screenX, screenY)){
+					
+					return true;
+				}
+				if(showGuiButton.contains(screenX, screenY)){
+					
+					return true;
+				}
+				if(showPickupIndicatorButton.contains(screenX, screenY)){
+					
+					return true;
+				}
+				if(showFPSButton.contains(screenX, screenY)){
+					
+					return true;
+				}
+				if(showDamageButton.contains(screenX, screenY)){
+					
+					return true;
+				}
+				if(gameBackButton.contains(screenX, screenY)){
+					gameToOptions();
 					return true;
 				}
 			}
@@ -312,6 +367,100 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		Core.tasks.addTask(builder);
 	}
 	
+	private void optionsToGame(){
+		if(menuState != MenuState.options)throw new IllegalArgumentException("Must be in options state!");
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				gameButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				soundButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				graphicsButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				optionsBackButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				
+				keyBindingsButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				creditsButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				resetPreferencesButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				guiBox.rx = Interpolation.sine.apply(right, center, frameProgress);
+				showGuiButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				showPickupIndicatorButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				showFPSButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				showDamageButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				gameBackButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.game;
+				
+				gameButton.position.rx = left;
+				soundButton.position.rx = left;
+				graphicsButton.position.rx = left;
+				optionsBackButton.position.rx = left;
+				
+				keyBindingsButton.position.rx = center;
+				creditsButton.position.rx = center;
+				resetPreferencesButton.position.rx = center;
+				showGuiButton.position.rx = center;
+				showPickupIndicatorButton.position.rx = center;
+				showFPSButton.position.rx = center;
+				showDamageButton.position.rx = center;
+				gameBackButton.position.rx = center;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
+	}
+	
+	private void gameToOptions(){
+		if(menuState != MenuState.game)throw new IllegalArgumentException("Must be in game state!");
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				gameButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				soundButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				graphicsButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				optionsBackButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				
+				keyBindingsButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				creditsButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				resetPreferencesButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				guiBox.rx = Interpolation.sine.apply(center, right, frameProgress);
+				showGuiButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				showPickupIndicatorButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				showFPSButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				showDamageButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				gameBackButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.options;
+				
+				gameButton.position.rx = center;
+				soundButton.position.rx = center;
+				graphicsButton.position.rx = center;
+				optionsBackButton.position.rx = center;
+				
+				keyBindingsButton.position.rx = right;
+				creditsButton.position.rx = right;
+				resetPreferencesButton.position.rx = right;
+				showGuiButton.position.rx = right;
+				showPickupIndicatorButton.position.rx = right;
+				showFPSButton.position.rx = right;
+				showDamageButton.position.rx = right;
+				gameBackButton.position.rx = right;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
+	}
+	
 	private void optionsToSound(){
 		if(menuState != MenuState.options)throw new IllegalArgumentException("Must be in options state!");
 		TaskBuilder builder = new TaskBuilder();
@@ -420,7 +569,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	}
 	
 	private enum MenuState{
-		main, options, sound, switching
+		main, options, game, bindings, sound, graphics, switching
 	}
 
 	@Override
