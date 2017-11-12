@@ -71,12 +71,12 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	
 	
 	//Credits
-	private final String credits1 = "Game designed and programmed by Daniel Eliasinski(Mr. Slurpy)";
+	private final String credits1 = "Game designed and programmed by Daniel Eliasinski";
 	private final String credits2 = "Music by Eric Matyas";
 	private final String credits3 = "Font by HolyBlackCat";
 	private final String credits4 = "UI sounds by Michael Vogler";
 	private final String credits5 = "Other sounds made by Daniel Eliasinski with Bfxr";
-	private final Position credits1Pos = new Position(right, 0.6f, -400, 100);
+	private final Position credits1Pos = new Position(right, 0.6f, -350, 100);
 	private final Position credits2Pos = new Position(right, 0.6f, -150, 50);
 	private final Position credits3Pos = new Position(right, 0.6f, -150, 0);
 	private final Position credits4Pos = new Position(right, 0.6f, -200, -50);

@@ -1,5 +1,6 @@
 package com.slurpy.glowfighter.desktop;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.slurpy.glowfighter.Core;
@@ -8,7 +9,9 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Glow Fighter";
-		//config.addIcon(path, fileType);
+		config.addIcon("icons/128x128.png", FileType.Internal);
+		config.addIcon("icons/32x32.png", FileType.Internal);
+		config.addIcon("icons/16x16.png", FileType.Internal);
 		
 		config.vSyncEnabled = true;
 		//config.vSyncEnabled = false;  
