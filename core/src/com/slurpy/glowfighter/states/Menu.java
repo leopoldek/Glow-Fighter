@@ -5,11 +5,11 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Vector2;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.gui.Button;
 import com.slurpy.glowfighter.gui.Gui;
 import com.slurpy.glowfighter.gui.Position;
+import com.slurpy.glowfighter.gui.Rectangle;
 import com.slurpy.glowfighter.gui.Slider;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.utils.SoundType;
@@ -46,8 +46,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Button keyBindingsButton = new Button("KEY BINDINGS", new Position(right, 0.5f, -250, 160), 500, 60, Color.WHITE, 48f);
 	private final Button creditsButton = new Button("CREDITS", new Position(right, 0.5f, -250, 70), 500, 60, Color.WHITE, 48f);
 	private final Button resetPreferencesButton = new Button("RESET PREFERENCES", new Position(right, 0.5f, -250, -20), 500, 60, Color.WHITE, 48f);
-	private final Position guiBox = new Position(right, 0.5f, -250, -180);
-	private final float guiBoxWidth = 500, guiBoxHeight = 130;
+	private final Rectangle guiBox = new Rectangle(new Position(right, 0.5f, -250, -180) ,500, 130, Color.BLUE.cpy(), 10);
 	private final Button showGuiButton = new Button("SHOW GUI", new Position(right, 0.5f, -230, -100), 215, 30, Color.WHITE, 20f);
 	private final Button showPickupIndicatorButton = new Button("SHOW PICKUP INDICATOR", new Position(right, 0.5f, 15, -100), 215, 30, Color.WHITE, 20f);
 	private final Button showFPSButton = new Button("SHOW FPS", new Position(right, 0.5f, -230, -160), 215, 30, Color.WHITE, 20f);
@@ -70,6 +69,19 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	
 	//Keybindings Menu
 	
+	
+	//Credits
+	private final String credits1 = "Game designed and programmed by Daniel Eliasinski(Mr. Slurpy)";
+	private final String credits2 = "Music by Eric Matyas";
+	private final String credits3 = "Font by HolyBlackCat";
+	private final String credits4 = "UI sounds by Michael Vogler";
+	private final String credits5 = "Other sounds made by Daniel Eliasinski with Bfxr";
+	private final Position credits1Pos = new Position(right, 0.6f, -400, 100);
+	private final Position credits2Pos = new Position(right, 0.6f, -150, 50);
+	private final Position credits3Pos = new Position(right, 0.6f, -150, 0);
+	private final Position credits4Pos = new Position(right, 0.6f, -200, -50);
+	private final Position credits5Pos = new Position(right, 0.6f, -350, -100);
+	private final Color creditsColor = new Color(Color.CHARTREUSE);
 	
 	//Saved
 	private final Position savedPos = new Position(1f, 0f, -144f, 64f);
@@ -138,16 +150,19 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	
 	@Override
 	public void draw() {
+		//Play
 		Core.graphics.drawText("GLOW FIGHTER", titlePos.getPosition(), 100, titleColor);
 		playButton.draw();
 		optionsButton.draw();
 		exitButton.draw();
 		
+		//Options
 		gameButton.draw();
 		soundButton.draw();
 		graphicsButton.draw();
 		optionsBackButton.draw();
 		
+		//Sound
 		Core.graphics.drawText("Master:", masterLabelPos.getPosition(), 32, Color.WHITE);
 		Core.graphics.drawText("Effects:", effectLabelPos.getPosition(), 32, Color.WHITE);
 		Core.graphics.drawText("Music:", musicLabelPos.getPosition(), 32, Color.WHITE);
@@ -161,13 +176,19 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		keyBindingsButton.draw();
 		creditsButton.draw();
 		resetPreferencesButton.draw();
-		Vector2 guiBoxPos = guiBox.getPosition();
-		Core.graphics.drawRectangle(guiBoxPos.x, guiBoxPos.y, guiBoxWidth, guiBoxHeight, 10, Color.BLUE);
+		guiBox.draw();
 		showGuiButton.draw();
 		showPickupIndicatorButton.draw();
 		showFPSButton.draw();
 		showDamageButton.draw();
 		gameBackButton.draw();
+		
+		//Credits
+		Core.graphics.drawText(credits1, credits1Pos.getPosition(), 28, creditsColor);
+		Core.graphics.drawText(credits2, credits2Pos.getPosition(), 28, creditsColor);
+		Core.graphics.drawText(credits3, credits3Pos.getPosition(), 28, creditsColor);
+		Core.graphics.drawText(credits4, credits4Pos.getPosition(), 28, creditsColor);
+		Core.graphics.drawText(credits5, credits5Pos.getPosition(), 28, creditsColor);
 		
 		Core.graphics.drawText("SAVED", savedPos.getPosition(), 42f, savedColor);
 	}
@@ -236,7 +257,8 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 					return true;
 				}
 				if(creditsButton.contains(screenX, screenY)){
-					
+					gameToCredits();
+					Core.audio.playSound(SoundAsset.Select);
 					return true;
 				}
 				if(resetPreferencesButton.contains(screenX, screenY)){
@@ -266,6 +288,11 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				}
 				if(gameBackButton.contains(screenX, screenY)){
 					gameToOptions();
+					return true;
+				}
+			}else if(menuState == MenuState.credits){
+				if(gameBackButton.contains(screenX, screenY)){
+					creditsToGame();
 					return true;
 				}
 			}
@@ -416,7 +443,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				keyBindingsButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
 				creditsButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
 				resetPreferencesButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
-				guiBox.rx = Interpolation.sine.apply(right, center, frameProgress);
+				guiBox.position.rx = Interpolation.sine.apply(right, center, frameProgress);
 				showGuiButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
 				showPickupIndicatorButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
 				showFPSButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
@@ -463,7 +490,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				keyBindingsButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				creditsButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				resetPreferencesButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
-				guiBox.rx = Interpolation.sine.apply(center, right, frameProgress);
+				guiBox.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				showGuiButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				showPickupIndicatorButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				showFPSButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
@@ -594,6 +621,110 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		Core.tasks.addTask(builder);
 	}
 	
+	private void gameToBindings(){
+		
+	}
+	
+	private void bindingsToGame(){
+		
+	}
+	
+	private void gameToCredits(){
+		if(menuState != MenuState.game)throw new IllegalArgumentException("Must be in sound state!");
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				keyBindingsButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				creditsButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				resetPreferencesButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				guiBox.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				showGuiButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				showPickupIndicatorButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				showFPSButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				showDamageButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				
+				credits1Pos.rx = Interpolation.sine.apply(right, center, frameProgress);
+				credits2Pos.rx = Interpolation.sine.apply(right, center, frameProgress);
+				credits3Pos.rx = Interpolation.sine.apply(right, center, frameProgress);
+				credits4Pos.rx = Interpolation.sine.apply(right, center, frameProgress);
+				credits5Pos.rx = Interpolation.sine.apply(right, center, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.credits;
+				
+				keyBindingsButton.position.rx = left;
+				creditsButton.position.rx = left;
+				resetPreferencesButton.position.rx = left;
+				guiBox.position.rx = left;
+				showGuiButton.position.rx = left;
+				showPickupIndicatorButton.position.rx = left;
+				showFPSButton.position.rx = left;
+				showDamageButton.position.rx = left;
+				
+				credits1Pos.rx = center;
+				credits2Pos.rx = center;
+				credits3Pos.rx = center;
+				credits4Pos.rx = center;
+				credits5Pos.rx = center;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
+	}
+	
+	private void creditsToGame(){
+		if(menuState != MenuState.credits)throw new IllegalArgumentException("Must be in sound state!");
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				keyBindingsButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				creditsButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				resetPreferencesButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				guiBox.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				showGuiButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				showPickupIndicatorButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				showFPSButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				showDamageButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				
+				credits1Pos.rx = Interpolation.sine.apply(center, right, frameProgress);
+				credits2Pos.rx = Interpolation.sine.apply(center, right, frameProgress);
+				credits3Pos.rx = Interpolation.sine.apply(center, right, frameProgress);
+				credits4Pos.rx = Interpolation.sine.apply(center, right, frameProgress);
+				credits5Pos.rx = Interpolation.sine.apply(center, right, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.game;
+				
+				keyBindingsButton.position.rx = center;
+				creditsButton.position.rx = center;
+				resetPreferencesButton.position.rx = center;
+				guiBox.position.rx = center;
+				showGuiButton.position.rx = center;
+				showPickupIndicatorButton.position.rx = center;
+				showFPSButton.position.rx = center;
+				showDamageButton.position.rx = center;
+				
+				credits1Pos.rx = right;
+				credits2Pos.rx = right;
+				credits3Pos.rx = right;
+				credits4Pos.rx = right;
+				credits5Pos.rx = right;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
+	}
+	
 	@Override
 	public void end() {
 		Core.bindings.removeProcessor(this);
@@ -606,7 +737,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	}
 	
 	private enum MenuState{
-		main, options, game, bindings, sound, graphics, switching
+		main, options, game, sound, graphics, bindings, credits, switching
 	}
 
 	@Override

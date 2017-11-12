@@ -11,7 +11,7 @@ public class Button{
 	
 	public final String text;//TODO Make private and non-final later and recalculate fontWidth/Height when setter called.
 	public final Position position;
-	public float w, h;
+	public int w, h;
 	public final float fontW, fontH;
 	public Color color;
 	public final float size;
