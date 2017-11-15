@@ -15,8 +15,9 @@ public class Button{
 	public final float fontW, fontH;
 	public Color color;
 	public final float size;
+	public float lineWidth;
 	
-	public Button(String text, Position pos, int w, int h, Color color, float size) {
+	public Button(String text, Position pos, int w, int h, Color color, float size, float lineWidth) {
 		this.text = text;
 		this.position = pos;
 		this.w = w;
@@ -26,6 +27,7 @@ public class Button{
 		fontH = fontSize.y;
 		this.color = color.cpy();
 		this.size = size;
+		this.lineWidth = lineWidth;
 	}
 	
 	public boolean contains(int x, int y){
@@ -35,7 +37,7 @@ public class Button{
 	
 	public void draw(){
 		Vector2 pos = position.getPosition();
-		Core.graphics.drawRectangle(pos.x, pos.y, w, h, 10, color);
+		Core.graphics.drawRectangle(pos.x, pos.y, w, h, lineWidth, color);
 		pos.add(w/2, h/2).sub(fontW/2, -fontH/2);
 		Core.graphics.drawText(text, pos, size, color);
 	}

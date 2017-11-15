@@ -12,6 +12,7 @@ import com.slurpy.glowfighter.gui.Position;
 import com.slurpy.glowfighter.gui.Rectangle;
 import com.slurpy.glowfighter.gui.Slider;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
+import com.slurpy.glowfighter.utils.Constants;
 import com.slurpy.glowfighter.utils.SoundType;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.Task;
@@ -32,26 +33,26 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Position titlePos = new Position(center, titleCenter, -280, 0);
 	private final Color titleColor = new Color();
 	private final Task titleColorShift;
-	private final Button playButton = new Button("PLAY", new Position(center, 0.5f, -250, -30),  500, 60, Color.WHITE, 48f);
-	private final Button optionsButton = new Button("OPTIONS", new Position(center, 0.5f, -250, -120),  500, 60, Color.WHITE, 48f);
-	private final Button exitButton = new Button("EXIT", new Position(center, 0.5f, -250, -210),  500, 60, Color.WHITE, 48f);
+	private final Button playButton = new Button("PLAY", new Position(center, 0.5f, -250, -30),  500, 60, Color.WHITE, 48f, 10f);
+	private final Button optionsButton = new Button("OPTIONS", new Position(center, 0.5f, -250, -120),  500, 60, Color.WHITE, 48f, 10f);
+	private final Button exitButton = new Button("EXIT", new Position(center, 0.5f, -250, -210),  500, 60, Color.WHITE, 48f, 10f);
 	
 	//Options Menu
-	private final Button gameButton = new Button("GAME SETTINGS", new Position(right, 0.4f, -250, 135), 500, 60, Color.WHITE, 48f);
-	private final Button soundButton = new Button("SOUND SETTINGS", new Position(right, 0.4f, -250, 45), 500, 60, Color.WHITE, 48f);
-	private final Button graphicsButton = new Button("GRAPHICS SETTINGS", new Position(right, 0.4f, -250, -45), 500, 60, Color.WHITE, 48f);
-	private final Button optionsBackButton = new Button("BACK", new Position(right, 0.4f, -250, -135), 500, 60, Color.WHITE, 48f);
+	private final Button gameButton = new Button("GAME SETTINGS", new Position(right, 0.4f, -250, 135), 500, 60, Color.WHITE, 48f, 10f);
+	private final Button soundButton = new Button("SOUND SETTINGS", new Position(right, 0.4f, -250, 45), 500, 60, Color.WHITE, 48f, 10f);
+	private final Button graphicsButton = new Button("GRAPHICS SETTINGS", new Position(right, 0.4f, -250, -45), 500, 60, Color.WHITE, 48f, 10f);
+	private final Button optionsBackButton = new Button("BACK", new Position(right, 0.4f, -250, -135), 500, 60, Color.WHITE, 48f, 10f);
 	
 	//Game Menu
-	private final Button keyBindingsButton = new Button("KEY BINDINGS", new Position(right, 0.5f, -250, 160), 500, 60, Color.WHITE, 48f);
-	private final Button creditsButton = new Button("CREDITS", new Position(right, 0.5f, -250, 70), 500, 60, Color.WHITE, 48f);
-	private final Button resetPreferencesButton = new Button("RESET PREFERENCES", new Position(right, 0.5f, -250, -20), 500, 60, Color.WHITE, 48f);
+	private final Button keyBindingsButton = new Button("KEY BINDINGS", new Position(right, 0.5f, -250, 160), 500, 60, Color.WHITE, 48f, 10f);
+	private final Button creditsButton = new Button("CREDITS", new Position(right, 0.5f, -250, 70), 500, 60, Color.WHITE, 48f, 10f);
+	private final Button resetPreferencesButton = new Button("RESET PREFERENCES", new Position(right, 0.5f, -250, -20), 500, 60, Color.WHITE, 48f, 10f);
 	private final Rectangle guiBox = new Rectangle(new Position(right, 0.5f, -250, -180) ,500, 130, Color.BLUE.cpy(), 10);
-	private final Button showGuiButton = new Button("SHOW GUI", new Position(right, 0.5f, -230, -100), 215, 30, Color.WHITE, 20f);
-	private final Button showPickupIndicatorButton = new Button("SHOW PICKUP INDICATOR", new Position(right, 0.5f, 15, -100), 215, 30, Color.WHITE, 20f);
-	private final Button showFPSButton = new Button("SHOW FPS", new Position(right, 0.5f, -230, -160), 215, 30, Color.WHITE, 20f);
-	private final Button showDamageButton = new Button("SHOW DAMAGE", new Position(right, 0.5f, 15, -160), 215, 30, Color.WHITE, 20f);
-	private final Button gameBackButton = new Button("BACK", new Position(right, 0.5f, -250, -270), 500, 60, Color.WHITE, 48f);
+	private final Button showGuiButton = new Button("SHOW GUI", new Position(right, 0.5f, -235, -105), 225, 40, Color.GRAY, 20f, 5f);
+	private final Button showPickupIndicatorButton = new Button("SHOW PICKUP INDICATOR", new Position(right, 0.5f, 10, -105), 225, 40, Color.GRAY, 20f, 5f);
+	private final Button showFPSButton = new Button("SHOW FPS", new Position(right, 0.5f, -235, -165), 225, 40, Color.GRAY, 20f, 5f);
+	private final Button showDamageButton = new Button("SHOW DAMAGE", new Position(right, 0.5f, 10, -165), 225, 40, Color.GRAY, 20f, 5f);
+	private final Button gameBackButton = new Button("BACK", new Position(right, 0.5f, -250, -270), 500, 60, Color.WHITE, 48f, 10f);
 	
 	//Sound Menu
 	private final Position masterLabelPos = new Position(right, 0.5f, -368, 100);
@@ -62,10 +63,10 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Slider effectVolume = new Slider(new Position(right, 0.5f, -250, 30), 500f);
 	private final Slider musicVolume = new Slider(new Position(right, 0.5f, -250, -30), 500f);
 	private final Slider interfaceVolume = new Slider(new Position(right, 0.5f, -250, -90), 500f);
-	private final Button soundBackButton = new Button("BACK", new Position(right, 0.5f, -250, -210), 500, 60, Color.WHITE, 48f);
+	private final Button soundBackButton = new Button("BACK", new Position(right, 0.5f, -250, -210), 500, 60, Color.WHITE, 48f, 10f);
 	
 	//Graphics Menu
-	  
+	
 	
 	//Keybindings Menu
 	
@@ -141,10 +142,10 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		keyBindingsButton.animateColor(x, y, selected, normal);
 		creditsButton.animateColor(x, y, selected, normal);
 		resetPreferencesButton.animateColor(x, y, selected, normal);
-		showGuiButton.animateColor(x, y, selected, normal);
-		showPickupIndicatorButton.animateColor(x, y, selected, normal);
-		showFPSButton.animateColor(x, y, selected, normal);
-		showDamageButton.animateColor(x, y, selected, normal);
+		showGuiButton.animateColor(x, y, Constants.SHOW_GUI ? Color.CYAN : Color.RED, Constants.SHOW_GUI ? Color.GREEN : Color.GRAY);
+		showPickupIndicatorButton.animateColor(x, y, Constants.SHOW_INDICATOR ? Color.CYAN : Color.RED, Constants.SHOW_INDICATOR ? Color.GREEN : Color.GRAY);
+		showFPSButton.animateColor(x, y, Constants.SHOW_FPS ? Color.CYAN : Color.RED, Constants.SHOW_FPS ? Color.GREEN : Color.GRAY);
+		showDamageButton.animateColor(x, y, Constants.SHOW_DAMAGE ? Color.CYAN : Color.RED, Constants.SHOW_DAMAGE ? Color.GREEN : Color.GRAY);
 		gameBackButton.animateColor(x, y, selected, normal);
 	}
 	
@@ -223,7 +224,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 					return true;
 				}
 				if(graphicsButton.contains(screenX, screenY)){
-					
+					optionsToGraphics();
 					Core.audio.playSound(SoundAsset.Select);
 					return true;
 				}
@@ -253,7 +254,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				}
 			}else if(menuState == MenuState.game){
 				if(keyBindingsButton.contains(screenX, screenY)){
-					
+					Core.audio.playSound(SoundAsset.Select);
 					return true;
 				}
 				if(creditsButton.contains(screenX, screenY)){
@@ -271,19 +272,19 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 					return true;
 				}
 				if(showGuiButton.contains(screenX, screenY)){
-					
+					Constants.SHOW_GUI = !Constants.SHOW_GUI;
 					return true;
 				}
 				if(showPickupIndicatorButton.contains(screenX, screenY)){
-					
+					Constants.SHOW_INDICATOR = !Constants.SHOW_INDICATOR;
 					return true;
 				}
 				if(showFPSButton.contains(screenX, screenY)){
-					
+					Constants.SHOW_FPS = !Constants.SHOW_FPS;
 					return true;
 				}
 				if(showDamageButton.contains(screenX, screenY)){
-					
+					Constants.SHOW_DAMAGE = !Constants.SHOW_DAMAGE;
 					return true;
 				}
 				if(gameBackButton.contains(screenX, screenY)){
@@ -723,6 +724,14 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 			}
 		}, 0.6f);
 		Core.tasks.addTask(builder);
+	}
+	
+	private void optionsToGraphics(){
+		
+	}
+	
+	private void graphicsToOptions(){
+		
 	}
 	
 	@Override

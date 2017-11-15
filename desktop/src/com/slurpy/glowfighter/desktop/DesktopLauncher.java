@@ -13,9 +13,11 @@ public class DesktopLauncher {
 		config.addIcon("icons/32x32.png", FileType.Internal);
 		config.addIcon("icons/16x16.png", FileType.Internal);
 		
+		//Gdx.app.getPreferences("");
+		
 		config.vSyncEnabled = true;
 		//config.vSyncEnabled = false;  
-		//config.foregroundFPS = 120;
+		//config.foregroundFPS = 120;	
 		//config.foregroundFPS = 0;
 		//config.backgroundFPS = 120;
 		config.backgroundFPS = -1;

@@ -25,6 +25,7 @@ import com.slurpy.glowfighter.guns.Shotgun;
 import com.slurpy.glowfighter.guns.SniperRifle;
 import com.slurpy.glowfighter.managers.AssetManager.MusicAsset;
 import com.slurpy.glowfighter.parts.PolygonPart;
+import com.slurpy.glowfighter.utils.Constants;
 import com.slurpy.glowfighter.utils.SoundType;
 import com.slurpy.glowfighter.utils.Util;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
@@ -150,11 +151,14 @@ public class Survival implements State{
 		
 		@Override
 		public void draw(){
-			Vector2 playerPos = Core.graphics.project(player.getPosition());
-			Vector2 pickupPos = Core.graphics.project(pickup.getPosition());
-			if(!Util.isInsideRect(playerPos, pickupPos, Gdx.graphics.getWidth(), Gdx.graphics.getHeight())){
-				Vector2 indicatorPos = Util.getBoundryPoint(playerPos, pickupPos, Gdx.graphics.getWidth() - 40, Gdx.graphics.getHeight() - 40);
-				arrowIndicator.draw(indicatorPos, pickupPos.sub(playerPos).angleRad(), Color.LIME);
+			if(!Constants.SHOW_GUI)return;
+			if(Constants.SHOW_INDICATOR){
+				Vector2 playerPos = Core.graphics.project(player.getPosition());
+				Vector2 pickupPos = Core.graphics.project(pickup.getPosition());
+				if(!Util.isInsideRect(playerPos, pickupPos, Gdx.graphics.getWidth(), Gdx.graphics.getHeight())){
+					Vector2 indicatorPos = Util.getBoundryPoint(playerPos, pickupPos, Gdx.graphics.getWidth() - 40, Gdx.graphics.getHeight() - 40);
+					arrowIndicator.draw(indicatorPos, pickupPos.sub(playerPos).angleRad(), Color.LIME);
+				}
 			}
 			
 			Vector2 start = healthBarPos.getPosition();
@@ -171,7 +175,7 @@ public class Survival implements State{
 				Core.graphics.drawText(gun.getName(), start.add(0, 40), 32, Color.NAVY);
 			}
 			
-			Core.graphics.drawText(Integer.toString(Gdx.graphics.getFramesPerSecond()), fpsPos.getPosition(), 24, Color.GRAY);
+			if(Constants.SHOW_FPS)Core.graphics.drawText(Integer.toString(Gdx.graphics.getFramesPerSecond()), fpsPos.getPosition(), 24, Color.GRAY);
 			Core.graphics.drawText("Level " + level, levelPos.getPosition(), levelTextSize, Color.WHITE);
 		}
 		
