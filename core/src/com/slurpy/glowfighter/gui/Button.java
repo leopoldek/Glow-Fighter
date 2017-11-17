@@ -13,7 +13,7 @@ public class Button{
 	public final Position position;
 	public int w, h;
 	public final float fontW, fontH;
-	public Color color;
+	public final Color color;
 	public final float size;
 	public float lineWidth;
 	

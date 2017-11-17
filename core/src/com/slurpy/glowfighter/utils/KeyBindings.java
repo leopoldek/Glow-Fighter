@@ -5,7 +5,8 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class KeyBindings extends InputAdapter{
@@ -20,18 +21,18 @@ public class KeyBindings extends InputAdapter{
 	
 	private final InputMultiplexer multiplexer;
 	
-	private ObjectMap<Integer, Action> keyBindings;
-	private ObjectMap<Action, Array<Integer>> actionBindings;
+	private IntMap<Action> keyBindings;
+	private ObjectMap<Action, IntArray> actionBindings;
 	
 	private ObjectMap<Action, ActionListener> listeners;
 	
 	private KeyBindings(){
 		multiplexer = new InputMultiplexer(this);
 		
-		keyBindings = new ObjectMap<>();
+		keyBindings = new IntMap<>();
 		actionBindings = new ObjectMap<>();
 		for(Action action : Action.values()){
-			actionBindings.put(action, new Array<Integer>(false, 4));
+			actionBindings.put(action, new IntArray(false, 4));
 		}
 		
 		listeners = new ObjectMap<>();
@@ -63,7 +64,7 @@ public class KeyBindings extends InputAdapter{
 		if(!keyBindings.containsKey(bind))return;
 		Action action = keyBindings.get(bind);
 		keyBindings.remove(bind);
-		actionBindings.get(action).removeValue(bind, false);
+		actionBindings.get(action).removeValue(bind);
 	}
 	
 	public void clearBindings(Action action){
@@ -72,7 +73,7 @@ public class KeyBindings extends InputAdapter{
 	
 	public boolean isActionPressed(Action action){
 		if(!actionBindings.containsKey(action))return false;
-		for(int bind : actionBindings.get(action)){
+		for(int bind : actionBindings.get(action).items){
 			if(bind < -5){//Scroll
 				throw new IllegalArgumentException("Must use listener for scroll wheel(For now...)");
 			}else if(bind < 0){//Button
@@ -126,11 +127,15 @@ public class KeyBindings extends InputAdapter{
 		}
 	}
 	
+	public IntArray getKeys(Action action){
+		return new IntArray(actionBindings.get(action));
+	}
+	
 	public static KeyBindings load(FileHandle file){
 		throw new UnsupportedOperationException("File/json loading not available yet.");
 	}
 	
-	public static KeyBindings createNewBinding(){
+	public static KeyBindings createDefaultBinding(){
 		return new KeyBindings();
 	}
 }

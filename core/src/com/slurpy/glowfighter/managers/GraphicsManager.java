@@ -136,6 +136,10 @@ public class GraphicsManager implements Disposable{
 		drawPolygon(points, lineWidth, color);
 	}
 	
+	public void fillRectangle(float x, float y, float w, float h, Color color){
+		shapeBatch.rect(x, y, w, h, color, color, color, color);
+	}
+	
 	public void drawPolyline(Vector2[] points, float w, Color color){
 		
 	}

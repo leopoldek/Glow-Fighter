@@ -11,7 +11,14 @@ public final class Position{
 	public float y;
 
 	private final Vector2 pos = new Vector2();
-
+	
+	public Position(){
+		rx = 0;
+		ry = 0;
+		x = 0;
+		y = 0;
+	}
+	
 	public Position(float rx, float ry, float x, float y){
 		this.rx = rx;
 		this.ry = ry;

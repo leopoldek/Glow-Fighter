@@ -42,7 +42,7 @@ public class Core extends ApplicationAdapter {
 		tasks = new TaskManager();
 		state = new StateManager();
 		
-		bindings = KeyBindings.createNewBinding();
+		bindings = KeyBindings.createDefaultBinding();
 		bindings.bind();
 		bindings.addBinding(Action.moveUp, Keys.W);
 		bindings.addBinding(Action.moveLeft, Keys.A);
