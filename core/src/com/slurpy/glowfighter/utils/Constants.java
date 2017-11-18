@@ -15,6 +15,9 @@ public class Constants {
 	
 	public static final String SETTINGS_FILE = "com.slurpy.glowfighter.settings";
 	
+	public static final int minWidth = 1000;
+	public static final int minHeight = 700;
+	
 	public static boolean SHOW_GUI = true;
 	public static boolean SHOW_INDICATOR = true;
 	public static boolean SHOW_FPS = false;

@@ -4,10 +4,14 @@ import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.slurpy.glowfighter.Core;
+import com.slurpy.glowfighter.utils.Constants;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		
+		//TODO Error dialog and quit if screen size is smaller than minimum.
+		
 		config.title = "Glow Fighter";
 		config.addIcon("icons/128x128.png", FileType.Internal);
 		config.addIcon("icons/32x32.png", FileType.Internal);
@@ -24,8 +28,8 @@ public class DesktopLauncher {
 		//config.samples = 8;//DOES NOT AFFECT FBO
 		//config.useGL30 = true;//Don't use! Crashes due to shader errors. Fix maybe?
 		
-		config.width = 1000;
-		config.height = 700;
+		config.width = Constants.minWidth;
+		config.height = Constants.minHeight;
 		//config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
 		//config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
 		config.fullscreen = false;

@@ -15,7 +15,7 @@ import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 
-public class Rocket extends Entity implements Damage{//TODO Make abstract class for all bullets later.
+public class Rocket extends Entity implements Damage{
 	
 	private static final float DELTA = 1600f;
 	

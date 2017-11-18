@@ -11,7 +11,7 @@ import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.parts.CirclePart;
 import com.slurpy.glowfighter.parts.Part;
 
-public class BuckShot extends Entity implements Damage{//TODO Make abstract class for all bullets later.
+public class BuckShot extends Entity implements Damage{
 	
 	private final float damage;
 	

@@ -2,7 +2,6 @@ package com.slurpy.glowfighter;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
 import com.slurpy.glowfighter.managers.AssetManager;
 import com.slurpy.glowfighter.managers.AudioManager;
@@ -12,7 +11,6 @@ import com.slurpy.glowfighter.managers.PhysicsManager;
 import com.slurpy.glowfighter.managers.StateManager;
 import com.slurpy.glowfighter.managers.TaskManager;
 import com.slurpy.glowfighter.states.Menu;
-import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.Constants;
 import com.slurpy.glowfighter.utils.KeyBindings;
 
@@ -41,8 +39,8 @@ public class Core extends ApplicationAdapter {
 		entities = new EntityManager();
 		tasks = new TaskManager();
 		state = new StateManager();
-		
 		bindings = new KeyBindings();
+		
 		bindings.bind();
 		
 		state.setState(new Menu());
@@ -61,7 +59,20 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void resize(int width, int height) {
-		graphics.resize(width, height);
+		boolean undo = false;//TODO Later change window to unresizable and add resize option in graphics settings.
+		if(width < Constants.minWidth){
+			width = Constants.minWidth;
+			undo = true;
+		}
+		if(height < Constants.minHeight){
+			height = Constants.minHeight;
+			undo = true;
+		}
+		if(undo){
+			Gdx.graphics.setWindowedMode(width, height);
+		}else{
+			graphics.resize(width, height);
+		}
 	}
 	
 	public static void reset(){

@@ -12,7 +12,7 @@ import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 
-public class PiercingShot extends Entity implements Damage{//TODO Make abstract class for all bullets later.
+public class PiercingShot extends Entity implements Damage{
 	
 	private final float damage;
 	private final int penetration;
