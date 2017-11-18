@@ -23,18 +23,18 @@ public class Label {
 		this.size = size;
 	}
 	
+	public void draw(){
+		Vector2 pos = position.getPosition();
+		pos.sub(fontW/2, -fontH/2);
+		Core.graphics.drawText(text, pos, size, color);
+	}
+	
 	public void setText(String text, float size){
 		this.text = text;
 		this.size = size;
 		Vector2 fontSize = Util.getTextSize(FontAsset.CatV, text, size);
 		fontW = fontSize.x;
 		fontH = fontSize.y;
-	}
-	
-	public void draw(){
-		Vector2 pos = position.getPosition();
-		pos.sub(fontW/2, -fontH/2);
-		Core.graphics.drawText(text, pos, size, color);
 	}
 	
 	public String getText(){

@@ -1,10 +1,11 @@
 package com.slurpy.glowfighter.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -26,18 +27,48 @@ public class KeyBindings extends InputAdapter{
 	
 	private ObjectMap<Action, ActionListener> listeners;
 	
-	private KeyBindings(){
+	public KeyBindings(){
 		multiplexer = new InputMultiplexer(this);
 		
 		keyBindings = new IntMap<>();
 		actionBindings = new ObjectMap<>();
 		for(Action action : Action.values()){
-			actionBindings.put(action, new IntArray(false, 4));
+			actionBindings.put(action, new IntArray(true, 4));
 		}
 		
 		listeners = new ObjectMap<>();
 		for(Action action : Action.values()){
 			listeners.put(action, null);
+		}
+		
+		Preferences pref = Gdx.app.getPreferences(Constants.SETTINGS_FILE);
+		setBinding(Action.moveUp, 0, pref.getInteger(Action.moveUp.name() + '0', Keys.W));
+		if(pref.contains(Action.moveUp.name() + '1')){
+			setBinding(Action.moveUp, 1, pref.getInteger(Action.moveUp.name() + '1'));
+		}
+		setBinding(Action.moveDown, 0, pref.getInteger(Action.moveDown.name() + '0', Keys.S));
+		if(pref.contains(Action.moveDown.name() + '1')){
+			setBinding(Action.moveDown, 1, pref.getInteger(Action.moveDown.name() + '1'));
+		}
+		setBinding(Action.moveLeft, 0, pref.getInteger(Action.moveLeft.name() + '0', Keys.A));
+		if(pref.contains(Action.moveLeft.name() + '1')){
+			setBinding(Action.moveLeft, 1, pref.getInteger(Action.moveLeft.name() + '1'));
+		}
+		setBinding(Action.moveRight, 0, pref.getInteger(Action.moveRight.name() + '0', Keys.D));
+		if(pref.contains(Action.moveRight.name() + '1')){
+			setBinding(Action.moveRight, 1, pref.getInteger(Action.moveRight.name() + '1'));
+		}
+		setBinding(Action.primary, 0, pref.getInteger(Action.primary.name() + '0', KeyBindings.LEFT));
+		if(pref.contains(Action.primary.name() + '1')){
+			setBinding(Action.primary, 1, pref.getInteger(Action.primary.name() + '1'));
+		}
+		setBinding(Action.boost, 0, pref.getInteger(Action.boost.name() + '0', Keys.SPACE));
+		if(pref.contains(Action.boost.name() + '1')){
+			setBinding(Action.boost, 1, pref.getInteger(Action.boost.name() + '1'));
+		}
+		setBinding(Action.moveSlow, 0, pref.getInteger(Action.moveSlow.name() + '0', Keys.SHIFT_LEFT));
+		if(pref.contains(Action.moveSlow.name() + '1')){
+			setBinding(Action.moveSlow, 1, pref.getInteger(Action.moveSlow.name() + '1'));
 		}
 	}
 	
@@ -55,16 +86,19 @@ public class KeyBindings extends InputAdapter{
 		multiplexer.removeProcessor(processor);
 	}
 	
-	public void addBinding(Action action, int bind){
-		keyBindings.put(bind, action);
-		actionBindings.get(action).add(bind);
-	}
-	
 	public void deleteBinding(int bind){
 		if(!keyBindings.containsKey(bind))return;
 		Action action = keyBindings.get(bind);
 		keyBindings.remove(bind);
 		actionBindings.get(action).removeValue(bind);
+	}
+	
+	public void setBinding(Action action, int index, int bind){
+		IntArray bindings = actionBindings.get(action);
+		if(index > bindings.size)throw new IndexOutOfBoundsException("index can't be > size: " + index + " > " + bindings.size);
+		keyBindings.put(bind, action);
+		if(index == bindings.size)bindings.add(bind);
+		else bindings.set(index, bind);
 	}
 	
 	public void clearBindings(Action action){
@@ -131,11 +165,76 @@ public class KeyBindings extends InputAdapter{
 		return new IntArray(actionBindings.get(action));
 	}
 	
-	public static KeyBindings load(FileHandle file){
-		throw new UnsupportedOperationException("File/json loading not available yet.");
+	public void save(){
+		Preferences pref = Gdx.app.getPreferences(Constants.SETTINGS_FILE);
+		IntArray bindings;
+		
+		bindings = actionBindings.get(Action.moveUp);
+		pref.putInteger(Action.moveUp.name() + '0', bindings.get(0));
+		if(bindings.size > 1)pref.putInteger(Action.moveUp.name() + '1', bindings.get(1));
+		
+		bindings = actionBindings.get(Action.moveDown);
+		pref.putInteger(Action.moveDown.name() + '0', bindings.get(0));
+		if(bindings.size > 1)pref.putInteger(Action.moveDown.name() + '1', bindings.get(1));
+		
+		bindings = actionBindings.get(Action.moveLeft);
+		pref.putInteger(Action.moveLeft.name() + '0', bindings.get(0));
+		if(bindings.size > 1)pref.putInteger(Action.moveLeft.name() + '1', bindings.get(1));
+		
+		bindings = actionBindings.get(Action.moveRight);
+		pref.putInteger(Action.moveRight.name() + '0', bindings.get(0));
+		if(bindings.size > 1)pref.putInteger(Action.moveRight.name() + '1', bindings.get(1));
+		
+		bindings = actionBindings.get(Action.primary);
+		pref.putInteger(Action.primary.name() + '0', bindings.get(0));
+		if(bindings.size > 1)pref.putInteger(Action.primary.name() + '1', bindings.get(1));
+		
+		bindings = actionBindings.get(Action.boost);
+		pref.putInteger(Action.boost.name() + '0', bindings.get(0));
+		if(bindings.size > 1)pref.putInteger(Action.boost.name() + '1', bindings.get(1));
+		
+		bindings = actionBindings.get(Action.moveSlow);
+		pref.putInteger(Action.moveSlow.name() + '0', bindings.get(0));
+		if(bindings.size > 1)pref.putInteger(Action.moveSlow.name() + '1', bindings.get(1));
+		
+		pref.flush();
 	}
 	
-	public static KeyBindings createDefaultBinding(){
-		return new KeyBindings();
+	public void reset(){
+		keyBindings.clear();
+		actionBindings.forEach(entry -> entry.value.clear());
+		
+		setBinding(Action.moveUp, 0, Keys.W);
+		setBinding(Action.moveDown, 0, Keys.S);
+		setBinding(Action.moveLeft, 0, Keys.A);
+		setBinding(Action.moveRight, 0, Keys.D);
+		setBinding(Action.primary, 0, KeyBindings.LEFT);
+		setBinding(Action.boost, 0, Keys.SPACE);
+		setBinding(Action.moveSlow, 0, Keys.SHIFT_LEFT);
+	}
+	
+	public static int convertMouseBinding(int bind){
+		return -bind - 1;
+	}
+
+	public static String toString(int binding) {
+		switch(binding){
+		case -1:{
+			return "LMB";
+		}
+		case -2:{
+			return "RMB";
+		}
+		case -3:{
+			return "MMB";
+		}
+		case -4:{
+			return "SCROLL DOWN";
+		}
+		case -5:{
+			return "SCROLL UP";
+		}
+		}
+		throw new IllegalArgumentException("Binding must be between -1 and -5 inclusive!");
 	}
 }

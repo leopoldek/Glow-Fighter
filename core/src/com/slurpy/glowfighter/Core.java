@@ -42,19 +42,8 @@ public class Core extends ApplicationAdapter {
 		tasks = new TaskManager();
 		state = new StateManager();
 		
-		bindings = KeyBindings.createDefaultBinding();
+		bindings = new KeyBindings();
 		bindings.bind();
-		bindings.addBinding(Action.moveUp, Keys.W);
-		bindings.addBinding(Action.moveLeft, Keys.A);
-		bindings.addBinding(Action.moveDown, Keys.S);
-		bindings.addBinding(Action.moveRight, Keys.D);
-		bindings.addBinding(Action.moveSlow, Keys.SHIFT_LEFT);
-		bindings.addBinding(Action.primary, KeyBindings.LEFT);
-		bindings.addBinding(Action.nextWeapon, KeyBindings.SCROLLED_UP);
-		bindings.addBinding(Action.nextWeapon, Keys.E);
-		bindings.addBinding(Action.lastWeapon, KeyBindings.SCROLLED_DOWN);
-		bindings.addBinding(Action.lastWeapon, Keys.Q);
-		bindings.addBinding(Action.boost, Keys.SPACE);
 		
 		state.setState(new Menu());
 	}

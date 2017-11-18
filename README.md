@@ -2,6 +2,7 @@
 Glow Fighter is an arcade shooter written in Java using LibGDX. It runs on Desktop. Technically it runs in browser albeit a little buggy at the moment.
 
 ## Credits
+ - Game designed and programmed by [Daniel Eliasinski](https://github.com/Mr-Slurpy)(me)
  - Music by [Eric Matyas](http://www.soundimage.org)
  - Font by [HolyBlackCat](https://www.fontlibrary.org/en/font/catv-6x12-9)
  - UI sounds by [Michael Vogler](https://www.youtube.com/watch?v=dYt8hb7TCZY)

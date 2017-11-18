@@ -2,17 +2,22 @@ package com.slurpy.glowfighter.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.utils.IntArray;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.gui.Button;
 import com.slurpy.glowfighter.gui.Gui;
+import com.slurpy.glowfighter.gui.Label;
 import com.slurpy.glowfighter.gui.Position;
 import com.slurpy.glowfighter.gui.Rectangle;
 import com.slurpy.glowfighter.gui.Slider;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
+import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.Constants;
+import com.slurpy.glowfighter.utils.KeyBindings;
 import com.slurpy.glowfighter.utils.SoundType;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.Task;
@@ -69,7 +74,35 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	
 	
 	//Keybindings Menu
-	
+	private final Label moveUpLabel = new Label(Action.moveUp.toString(), new Position(right, 0.6f, -300, 210), Color.WHITE, 32);
+	private final Label moveDownLabel = new Label(Action.moveDown.toString(), new Position(right, 0.6f, -300, 140), Color.WHITE, 32);
+	private final Label moveLeftLabel = new Label(Action.moveLeft.toString(), new Position(right, 0.6f, -300, 70), Color.WHITE, 32);
+	private final Label moveRightLabel = new Label(Action.moveRight.toString(), new Position(right, 0.6f, -300, 0), Color.WHITE, 32);
+	private final Label primaryLabel = new Label(Action.primary.toString(), new Position(right, 0.6f, -300, -70), Color.WHITE, 32);
+	private final Label boostLabel = new Label(Action.boost.toString(), new Position(right, 0.6f, -300, -140), Color.WHITE, 32);
+	private final Label moveSlowLabel = new Label(Action.moveSlow.toString(), new Position(right, 0.6f, -300, -210), Color.WHITE, 32);
+	//Binding buttons
+	private final Button moveUpBinding1Button = new Button("No Binding", new Position(right, 0.6f, -180, 190), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button moveUpBinding2Button = new Button("No Binding", new Position(right, 0.6f, 100, 190), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button moveDownBinding1Button = new Button("No Binding", new Position(right, 0.6f, -180, 120), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button moveDownBinding2Button = new Button("No Binding", new Position(right, 0.6f, 100, 120), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button moveLeftBinding1Button = new Button("No Binding", new Position(right, 0.6f, -180, 50), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button moveLeftBinding2Button = new Button("No Binding", new Position(right, 0.6f, 100, 50), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button moveRightBinding1Button = new Button("No Binding", new Position(right, 0.6f, -180, -20), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button moveRightBinding2Button = new Button("No Binding", new Position(right, 0.6f, 100, -20), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button primaryBinding1Button = new Button("No Binding", new Position(right, 0.6f, -180, -90), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button primaryBinding2Button = new Button("No Binding", new Position(right, 0.6f, 100, -90), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button boostBinding1Button = new Button("No Binding", new Position(right, 0.6f, -180, -160), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button boostBinding2Button = new Button("No Binding", new Position(right, 0.6f, 100, -160), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button moveSlowBinding1Button = new Button("No Binding", new Position(right, 0.6f, -180, -230), 220, 40, Color.WHITE, 32f, 7f);
+	private final Button moveSlowBinding2Button = new Button("No Binding", new Position(right, 0.6f, 100, -230), 220, 40, Color.WHITE, 32f, 7f);
+	//Back button
+	private final Button bindingsBackButton = new Button("BACK", new Position(right, 0.5f, -250, -290), 500, 60, Color.WHITE, 48f, 10f);
+	//Bind key dialog
+	private Action bindingAction;
+	private int bindingIndex;
+	private boolean currentlyBinding = false;
+	private Button currentlyBindingButton;
 	
 	//Credits
 	private final String credits1 = "Game designed and programmed by Daniel Eliasinski";
@@ -147,6 +180,23 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		showFPSButton.animateColor(x, y, Constants.SHOW_FPS ? Color.CYAN : Color.RED, Constants.SHOW_FPS ? Color.GREEN : Color.GRAY);
 		showDamageButton.animateColor(x, y, Constants.SHOW_DAMAGE ? Color.CYAN : Color.RED, Constants.SHOW_DAMAGE ? Color.GREEN : Color.GRAY);
 		gameBackButton.animateColor(x, y, selected, normal);
+		
+		//Bindings
+		moveUpBinding1Button.animateColor(x, y, selected, normal);
+		moveUpBinding2Button.animateColor(x, y, selected, normal);
+		moveDownBinding1Button.animateColor(x, y, selected, normal);
+		moveDownBinding2Button.animateColor(x, y, selected, normal);
+		moveLeftBinding1Button.animateColor(x, y, selected, normal);
+		moveLeftBinding2Button.animateColor(x, y, selected, normal);
+		moveRightBinding1Button.animateColor(x, y, selected, normal);
+		moveRightBinding2Button.animateColor(x, y, selected, normal);
+		primaryBinding1Button.animateColor(x, y, selected, normal);
+		primaryBinding2Button.animateColor(x, y, selected, normal);
+		boostBinding1Button.animateColor(x, y, selected, normal);
+		boostBinding2Button.animateColor(x, y, selected, normal);
+		moveSlowBinding1Button.animateColor(x, y, selected, normal);
+		moveSlowBinding2Button.animateColor(x, y, selected, normal);
+		bindingsBackButton.animateColor(x, y, selected, normal);
 	}
 	
 	@Override
@@ -191,11 +241,41 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		Core.graphics.drawText(credits4, credits4Pos.getPosition(), 28, creditsColor);
 		Core.graphics.drawText(credits5, credits5Pos.getPosition(), 28, creditsColor);
 		
+		//Bindings
+		moveUpLabel.draw();
+		moveDownLabel.draw();
+		moveLeftLabel.draw();
+		moveRightLabel.draw();
+		primaryLabel.draw();
+		boostLabel.draw();
+		moveSlowLabel.draw();
+		moveUpBinding1Button.draw();
+		moveUpBinding2Button.draw();
+		moveDownBinding1Button.draw();
+		moveDownBinding2Button.draw();
+		moveLeftBinding1Button.draw();
+		moveLeftBinding2Button.draw();
+		moveRightBinding1Button.draw();
+		moveRightBinding2Button.draw();
+		primaryBinding1Button.draw();
+		primaryBinding2Button.draw();
+		boostBinding1Button.draw();
+		boostBinding2Button.draw();
+		moveSlowBinding1Button.draw();
+		moveSlowBinding2Button.draw();
+		bindingsBackButton.draw();
+		
+		//Saved
 		Core.graphics.drawText("SAVED", savedPos.getPosition(), 42f, savedColor);
 	}
 	
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if(currentlyBinding){
+			endBinding(KeyBindings.convertMouseBinding(button));
+			return true;
+		}
+		
 		screenY = Gdx.graphics.getHeight() - screenY;
 		if(button == Buttons.LEFT){
 			if(menuState == MenuState.main){
@@ -219,6 +299,12 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 					return true;
 				}
 				if(soundButton.contains(screenX, screenY)){
+					//Set volumes
+					masterVolume.sliderPosition = Core.audio.getMasterVolume();
+					effectVolume.sliderPosition = Core.audio.getVolume(SoundType.effect);
+					musicVolume.sliderPosition = Core.audio.getVolume(SoundType.music);
+					interfaceVolume.sliderPosition = Core.audio.getVolume(SoundType.userInterface);
+					
 					optionsToSound();
 					Core.audio.playSound(SoundAsset.Select);
 					return true;
@@ -254,6 +340,80 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				}
 			}else if(menuState == MenuState.game){
 				if(keyBindingsButton.contains(screenX, screenY)){
+					//Set bindings
+					IntArray bindings;
+					int binding;
+					bindings = Core.bindings.getKeys(Action.moveUp);
+					binding = bindings.get(0);
+					moveUpBinding1Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					if(bindings.size > 1){
+						binding = bindings.get(1);
+						moveUpBinding2Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					}else{
+						moveUpBinding2Button.setText("NO BINDING", 32f);
+					}
+					
+					bindings = Core.bindings.getKeys(Action.moveDown);
+					binding = bindings.get(0);
+					moveDownBinding1Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					if(bindings.size > 1){
+						binding = bindings.get(1);
+						moveDownBinding2Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					}else{
+						moveDownBinding2Button.setText("NO BINDING", 32f);
+					}
+					
+					bindings = Core.bindings.getKeys(Action.moveLeft);
+					binding = bindings.get(0);
+					moveLeftBinding1Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					if(bindings.size > 1){
+						binding = bindings.get(1);
+						moveLeftBinding2Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					}else{
+						moveLeftBinding2Button.setText("NO BINDING", 32f);
+					}
+					
+					bindings = Core.bindings.getKeys(Action.moveRight);
+					binding = bindings.get(0);
+					moveRightBinding1Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					if(bindings.size > 1){
+						binding = bindings.get(1);
+						moveRightBinding2Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					}else{
+						moveRightBinding2Button.setText("NO BINDING", 32f);
+					}
+					
+					bindings = Core.bindings.getKeys(Action.primary);
+					binding = bindings.get(0);
+					primaryBinding1Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					if(bindings.size > 1){
+						binding = bindings.get(1);
+						primaryBinding2Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					}else{
+						primaryBinding2Button.setText("NO BINDING", 32f);
+					}
+					
+					bindings = Core.bindings.getKeys(Action.boost);
+					binding = bindings.get(0);
+					boostBinding1Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					if(bindings.size > 1){
+						binding = bindings.get(1);
+						boostBinding2Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					}else{
+						boostBinding2Button.setText("NO BINDING", 32f);
+					}
+					
+					bindings = Core.bindings.getKeys(Action.moveSlow);
+					binding = bindings.get(0);
+					moveSlowBinding1Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					if(bindings.size > 1){
+						binding = bindings.get(1);
+						moveSlowBinding2Button.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+					}else{
+						moveSlowBinding2Button.setText("NO BINDING", 32f);
+					}
+					
+					gameToBindings();
 					Core.audio.playSound(SoundAsset.Select);
 					return true;
 				}
@@ -268,6 +428,12 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 						Core.audio.setVolume(type, 1f);
 					}
 					Core.audio.saveVolumes();
+					
+					Core.bindings.reset();
+					Core.bindings.save();
+					
+					
+					
 					saved();
 					return true;
 				}
@@ -296,9 +462,86 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 					creditsToGame();
 					return true;
 				}
+			}else if(menuState == MenuState.bindings){
+				if(moveUpBinding1Button.contains(screenX, screenY)){
+					startBinding(Action.moveUp, 0, moveUpBinding1Button);
+					return true;
+				}
+				if(moveUpBinding2Button.contains(screenX, screenY)){
+					startBinding(Action.moveUp, 1, moveUpBinding2Button);
+					return true;
+				}
+				if(moveDownBinding1Button.contains(screenX, screenY)){
+					startBinding(Action.moveDown, 0, moveDownBinding1Button);
+					return true;
+				}
+				if(moveDownBinding2Button.contains(screenX, screenY)){
+					startBinding(Action.moveDown, 1, moveDownBinding2Button);
+					return true;
+				}
+				if(moveLeftBinding1Button.contains(screenX, screenY)){
+					startBinding(Action.moveLeft, 0, moveLeftBinding1Button);
+					return true;
+				}
+				if(moveLeftBinding2Button.contains(screenX, screenY)){
+					startBinding(Action.moveLeft, 1, moveLeftBinding2Button);
+					return true;
+				}
+				if(moveRightBinding1Button.contains(screenX, screenY)){
+					startBinding(Action.moveRight, 0, moveRightBinding1Button);
+					return true;
+				}
+				if(moveRightBinding2Button.contains(screenX, screenY)){
+					startBinding(Action.moveRight, 1, moveRightBinding2Button);
+					return true;
+				}
+				if(primaryBinding1Button.contains(screenX, screenY)){
+					startBinding(Action.primary, 0, primaryBinding1Button);
+					return true;
+				}
+				if(primaryBinding2Button.contains(screenX, screenY)){
+					startBinding(Action.primary, 1, primaryBinding2Button);
+					return true;
+				}
+				if(boostBinding1Button.contains(screenX, screenY)){
+					startBinding(Action.boost, 0, boostBinding1Button);
+					return true;
+				}
+				if(boostBinding2Button.contains(screenX, screenY)){
+					startBinding(Action.boost, 1, boostBinding2Button);
+					return true;
+				}
+				if(moveSlowBinding1Button.contains(screenX, screenY)){
+					startBinding(Action.moveSlow, 0, moveSlowBinding1Button);
+					return true;
+				}
+				if(moveSlowBinding2Button.contains(screenX, screenY)){
+					startBinding(Action.moveSlow, 1, moveSlowBinding2Button);
+					return true;
+				}
+				if(bindingsBackButton.contains(screenX, screenY)){
+					bindingsToGame();
+					Core.bindings.save();
+					saved();
+					return true;
+				}
 			}
 		}
 		return false;
+	}
+	
+	private void startBinding(Action action, int index, Button bindButton){
+		bindingAction = action;
+		bindingIndex = index;
+		currentlyBinding = true;
+		currentlyBindingButton = bindButton;
+		bindButton.setText("Press something...", 22f);
+	}
+	
+	private void endBinding(int binding){
+		Core.bindings.setBinding(bindingAction, bindingIndex, binding);
+		currentlyBindingButton.setText(binding < 0 ? KeyBindings.toString(binding) : Keys.toString(binding), 32f);
+		currentlyBinding = false;
 	}
 	
 	private void saved(){
@@ -527,12 +770,6 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 			@Override
 			public void start() {
 				menuState = MenuState.switching;
-				
-				//Set volumes
-				masterVolume.sliderPosition = Core.audio.getMasterVolume();
-				effectVolume.sliderPosition = Core.audio.getVolume(SoundType.effect);
-				musicVolume.sliderPosition = Core.audio.getVolume(SoundType.music);
-				interfaceVolume.sliderPosition = Core.audio.getVolume(SoundType.userInterface);
 			}
 			@Override
 			public void act(float progress, float frameProgress) {
@@ -623,11 +860,171 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	}
 	
 	private void gameToBindings(){
-		
+		if(menuState != MenuState.game)throw new IllegalArgumentException("Must be in options state!");
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				keyBindingsButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				creditsButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				resetPreferencesButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				guiBox.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				showGuiButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				showPickupIndicatorButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				showFPSButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				showDamageButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				gameBackButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				
+				moveUpLabel.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveDownLabel.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveLeftLabel.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveRightLabel.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				primaryLabel.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				boostLabel.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveSlowLabel.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveUpBinding1Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveUpBinding2Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveDownBinding1Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveDownBinding2Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveLeftBinding1Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveLeftBinding2Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveRightBinding1Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveRightBinding2Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				primaryBinding1Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				primaryBinding2Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				boostBinding1Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				boostBinding2Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveSlowBinding1Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				moveSlowBinding2Button.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				bindingsBackButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.bindings;
+				
+				keyBindingsButton.position.rx = left;
+				creditsButton.position.rx = left;
+				resetPreferencesButton.position.rx = left;
+				guiBox.position.rx = left;
+				showGuiButton.position.rx = left;
+				showPickupIndicatorButton.position.rx = left;
+				showFPSButton.position.rx = left;
+				showDamageButton.position.rx = left;
+				gameBackButton.position.rx = left;
+				
+				moveUpLabel.position.rx = center;
+				moveDownLabel.position.rx = center;
+				moveLeftLabel.position.rx = center;
+				moveRightLabel.position.rx = center;
+				primaryLabel.position.rx = center;
+				boostLabel.position.rx = center;
+				moveSlowLabel.position.rx = center;
+				moveUpBinding1Button.position.rx = center;
+				moveUpBinding2Button.position.rx = center;
+				moveDownBinding1Button.position.rx = center;
+				moveDownBinding2Button.position.rx = center;
+				moveLeftBinding1Button.position.rx = center;
+				moveLeftBinding2Button.position.rx = center;
+				moveRightBinding1Button.position.rx = center;
+				moveRightBinding2Button.position.rx = center;
+				primaryBinding1Button.position.rx = center;
+				primaryBinding2Button.position.rx = center;
+				boostBinding1Button.position.rx = center;
+				boostBinding2Button.position.rx = center;
+				moveSlowBinding1Button.position.rx = center;
+				moveSlowBinding2Button.position.rx = center;
+				bindingsBackButton.position.rx = center;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
 	}
 	
 	private void bindingsToGame(){
-		
+		if(menuState != MenuState.bindings)throw new IllegalArgumentException("Must be in options state!");
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				keyBindingsButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				creditsButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				resetPreferencesButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				guiBox.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				showGuiButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				showPickupIndicatorButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				showFPSButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				showDamageButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				gameBackButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				
+				moveUpLabel.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveDownLabel.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveLeftLabel.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveRightLabel.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				primaryLabel.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				boostLabel.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveSlowLabel.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveUpBinding1Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveUpBinding2Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveDownBinding1Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveDownBinding2Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveLeftBinding1Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveLeftBinding2Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveRightBinding1Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveRightBinding2Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				primaryBinding1Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				primaryBinding2Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				boostBinding1Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				boostBinding2Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveSlowBinding1Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				moveSlowBinding2Button.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				bindingsBackButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.game;
+				
+				keyBindingsButton.position.rx = center;
+				creditsButton.position.rx = center;
+				resetPreferencesButton.position.rx = center;
+				guiBox.position.rx = center;
+				showGuiButton.position.rx = center;
+				showPickupIndicatorButton.position.rx = center;
+				showFPSButton.position.rx = center;
+				showDamageButton.position.rx = center;
+				gameBackButton.position.rx = center;
+				
+				moveUpLabel.position.rx = left;
+				moveDownLabel.position.rx = left;
+				moveLeftLabel.position.rx = left;
+				moveRightLabel.position.rx = left;
+				primaryLabel.position.rx = left;
+				boostLabel.position.rx = left;
+				moveSlowLabel.position.rx = left;
+				moveUpBinding1Button.position.rx = left;
+				moveUpBinding2Button.position.rx = left;
+				moveDownBinding1Button.position.rx = left;
+				moveDownBinding2Button.position.rx = left;
+				moveLeftBinding1Button.position.rx = left;
+				moveLeftBinding2Button.position.rx = left;
+				moveRightBinding1Button.position.rx = left;
+				moveRightBinding2Button.position.rx = left;
+				primaryBinding1Button.position.rx = left;
+				primaryBinding2Button.position.rx = left;
+				boostBinding1Button.position.rx = left;
+				boostBinding2Button.position.rx = left;
+				moveSlowBinding1Button.position.rx = left;
+				moveSlowBinding2Button.position.rx = left;
+				bindingsBackButton.position.rx = left;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
 	}
 	
 	private void gameToCredits(){
@@ -735,6 +1132,17 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	}
 	
 	@Override
+	public boolean keyDown(int keycode) {
+		if(currentlyBinding){
+			if(keycode == Keys.ESCAPE)return false;
+			endBinding(keycode);
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	@Override
 	public void end() {
 		Core.bindings.removeProcessor(this);
 		Core.reset();
@@ -747,11 +1155,6 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	
 	private enum MenuState{
 		main, options, game, sound, graphics, bindings, credits, switching
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-		return false;
 	}
 
 	@Override

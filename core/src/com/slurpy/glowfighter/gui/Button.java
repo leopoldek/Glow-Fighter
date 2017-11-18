@@ -9,12 +9,12 @@ import com.slurpy.glowfighter.utils.Util;
 
 public class Button{
 	
-	public final String text;//TODO Make private and non-final later and recalculate fontWidth/Height when setter called.
+	private String text;//TODO Make private and non-final later and recalculate fontWidth/Height when setter called.
 	public final Position position;
 	public int w, h;
-	public final float fontW, fontH;
+	private float fontW, fontH;
 	public final Color color;
-	public final float size;
+	private float size;
 	public float lineWidth;
 	
 	public Button(String text, Position pos, int w, int h, Color color, float size, float lineWidth) {
@@ -48,5 +48,29 @@ public class Button{
 		}else{
 			color.lerp(normal, 1.5f * Gdx.graphics.getDeltaTime());
 		}
+	}
+	
+	public void setText(String text, float size){
+		this.text = text;
+		this.size = size;
+		Vector2 fontSize = Util.getTextSize(FontAsset.CatV, text, size);
+		fontW = fontSize.x;
+		fontH = fontSize.y;
+	}
+	
+	public String getText(){
+		return text;
+	}
+
+	public float getFontW() {
+		return fontW;
+	}
+
+	public float getFontH() {
+		return fontH;
+	}
+
+	public float getSize() {
+		return size;
 	}
 }
