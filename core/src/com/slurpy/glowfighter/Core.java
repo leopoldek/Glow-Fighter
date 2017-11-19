@@ -82,6 +82,18 @@ public class Core extends ApplicationAdapter {
 		graphics.clearDrawCalls();
 	}
 	
+	public static void setPaused(boolean paused){
+		tasks.setPaused(paused);
+		state.setPaused(paused);
+		entities.setPaused(paused);
+		physics.setPaused(paused);
+		/*try {
+			Gdx.graphics.getClass().getField("deltaTime").setFloat(Gdx.graphics, 0f);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}*/
+	}
+	
 	@Override
 	public void dispose () {
 		physics.dispose();

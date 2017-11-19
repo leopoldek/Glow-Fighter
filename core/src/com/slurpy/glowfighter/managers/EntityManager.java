@@ -10,15 +10,10 @@ import com.slurpy.glowfighter.entities.Entity;
 
 public class EntityManager {
 	
-	private static EntityManager singleton;
-	
-	public static EntityManager getEntityManager(){
-		if(singleton == null)singleton = new EntityManager();
-		return singleton;
-	}
-	
 	private Array<Entity> entities = new Array<>(false, 200);
 	private ObjectMap<String, ObjectSet<Entity>> groups = new ObjectMap<>();
+	
+	private boolean paused = false;
 	
 	public void addEntity(Entity entity){
 		entities.add(entity);
@@ -43,7 +38,7 @@ public class EntityManager {
 	public void update(){
 		for(Iterator<Entity> i = entities.iterator(); i.hasNext();){
 			Entity entity = i.next();
-			if(!entity.isDeleted())entity.update();
+			if(!entity.isDeleted() && !paused)entity.update();
 			if(entity.isDeleted()){
 				i.remove();
 				for(Iterator<ObjectSet<Entity>> groupIt = groups.values().iterator(); groupIt.hasNext();){
@@ -73,5 +68,13 @@ public class EntityManager {
 		}
 		entities.clear();
 		groups.clear();
+	}
+	
+	public void setPaused(boolean paused){
+		this.paused = paused;
+	}
+	
+	public boolean isPaused(){
+		return paused;
 	}
 }

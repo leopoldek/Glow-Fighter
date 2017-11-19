@@ -7,6 +7,7 @@ import com.slurpy.glowfighter.states.State;
 public class StateManager {
 	
 	private State state = null;
+	private boolean paused = false;
 	
 	public void setState(State newState){
 		if(newState == null)throw new IllegalArgumentException("You can't pass a null state!");
@@ -19,10 +20,19 @@ public class StateManager {
 	}
 	
 	public void update(){
+		if(paused)return;
 		state.update();
 	}
 	
 	public Gui getGui(){
 		return state.getGui();
+	}
+	
+	public void setPaused(boolean paused){
+		this.paused = paused;
+	}
+	
+	public boolean isPaused(){
+		return paused;
 	}
 }

@@ -1,6 +1,8 @@
 package com.slurpy.glowfighter.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
@@ -14,8 +16,11 @@ import com.slurpy.glowfighter.entities.enemies.BallLaunchingEnemy;
 import com.slurpy.glowfighter.entities.enemies.DiveStabber;
 import com.slurpy.glowfighter.entities.enemies.MissileEnemy;
 import com.slurpy.glowfighter.entities.enemies.TurretEnemy;
+import com.slurpy.glowfighter.gui.Button;
 import com.slurpy.glowfighter.gui.Gui;
+import com.slurpy.glowfighter.gui.Label;
 import com.slurpy.glowfighter.gui.Position;
+import com.slurpy.glowfighter.gui.Rectangle;
 import com.slurpy.glowfighter.guns.BurstGun;
 import com.slurpy.glowfighter.guns.Gun;
 import com.slurpy.glowfighter.guns.Minigun;
@@ -31,7 +36,7 @@ import com.slurpy.glowfighter.utils.Util;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.TaskBuilder;
 
-public class Survival implements State, Gui{
+public class Survival implements State, Gui, InputProcessor{
 	
 	private static final float length = 70;
 	private static final float height = 50;
@@ -47,22 +52,6 @@ public class Survival implements State, Gui{
 	
 	private GunPickup pickup;
 	
-	//Gui
-	private static final float INDICATOR_SIZE = 15;
-	
-	private final Position healthBarPos = new Position(1, 0, -50, 50);
-	private final Position gunStatsPos = new Position(0, 0, 50, 50);
-	private final Position fpsPos = new Position(0, 1, 10, -10);
-	private final Position levelPos = new Position(0.5f, 1, -40, -10);
-	
-	private final PolygonPart arrowIndicator = new PolygonPart(new Vector2[]{
-			new Vector2(INDICATOR_SIZE, 0),
-			new Vector2(-INDICATOR_SIZE, -INDICATOR_SIZE),
-			new Vector2(-INDICATOR_SIZE, INDICATOR_SIZE)
-	}, 6);
-	
-	private float levelTextSize = 32;
-	
 	public Survival(){
 		
 	}
@@ -75,7 +64,7 @@ public class Survival implements State, Gui{
 		Core.entities.addEntity(new LineWall(new Vector2(length, 0), height, wallWidth, MathUtils.PI / 2, Color.WHITE));
 		
 		player = new Player(new Vector2(), 0);
-		Core.entities.addEntity(player, "player");
+		Core.entities.addEntity(player);
 		Core.graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
 		
@@ -90,6 +79,8 @@ public class Survival implements State, Gui{
 		timer = 0.2f;
 		
 		spawnPickup();
+		
+		Core.bindings.addProcessor(this);
 	}
 
 	@Override
@@ -114,6 +105,7 @@ public class Survival implements State, Gui{
 	
 	@Override
 	public void end() {
+		Core.bindings.removeProcessor(this);
 		Core.reset();
 	}
 	
@@ -138,9 +130,44 @@ public class Survival implements State, Gui{
 		Core.entities.addEntity(pickup);
 	}
 	
+	private static final float INDICATOR_SIZE = 15;
+	private static final float center = 0.5f;
+	
+	private final Position healthBarPos = new Position(1, 0, -50, 50);
+	private final Position gunStatsPos = new Position(0, 0, 50, 50);
+	private final Position fpsPos = new Position(0, 1, 10, -10);
+	private final Position levelPos = new Position(0.5f, 1, -40, -10);
+	
+	private final PolygonPart arrowIndicator = new PolygonPart(new Vector2[]{
+			new Vector2(INDICATOR_SIZE, 0),
+			new Vector2(-INDICATOR_SIZE, -INDICATOR_SIZE),
+			new Vector2(-INDICATOR_SIZE, INDICATOR_SIZE)
+	}, 6);
+	
+	private float levelTextSize = 32;
+	
+	private final Rectangle menu = new Rectangle(new Position(center, center, -150, -110), 300, 240, Color.CHARTREUSE, 20f);
+	private final Label pausedLabel = new Label("PAUSED", new Position(center, center, 0, 100), Color.WHITE, 48f);
+	private final Button continueButton = new Button("CONTINUE", new Position(center, center, -130, 0), 260, 60, Color.WHITE, 36f, 10f);
+	private final Button quitButton = new Button("QUIT TO MENU", new Position(center, center, -130, -90), 260, 60, Color.WHITE, 36f, 10f);
+	
 	@Override
 	public void draw(){
+		if(Core.state.isPaused()){
+			menu.draw();
+			Vector2 pos = menu.position.getPosition();
+			Core.graphics.fillRectangle(pos.x, pos.y, menu.w, menu.h, Color.BLACK);
+			pausedLabel.draw();
+			int x = Gdx.input.getX();
+			int y = Gdx.graphics.getHeight() - Gdx.input.getY();
+			continueButton.animateColor(x, y, Color.RED, Color.WHITE);
+			quitButton.animateColor(x, y, Color.RED, Color.WHITE);
+			continueButton.draw();
+			quitButton.draw();
+		}
+		
 		if(!Constants.SHOW_GUI)return;
+		
 		if(Constants.SHOW_INDICATOR){
 			Vector2 playerPos = Core.graphics.project(player.getPosition());
 			Vector2 pickupPos = Core.graphics.project(pickup.getPosition());
@@ -223,5 +250,61 @@ public class Survival implements State, Gui{
 			}
 		}, 1.2f);
 		Core.tasks.addTask(builder);
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		if(keycode == Keys.ESCAPE){
+			Core.setPaused(!Core.state.isPaused());
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		screenY = Gdx.graphics.getHeight() - screenY;
+		if(Core.state.isPaused()){
+			if(continueButton.contains(screenX, screenY)){
+				Core.setPaused(false);
+				return true;
+			}
+			if(quitButton.contains(screenX, screenY)){
+				Core.setPaused(false);
+				Core.state.setState(new Menu());
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		return false;
 	}
 }

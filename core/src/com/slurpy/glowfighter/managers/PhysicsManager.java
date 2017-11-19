@@ -25,6 +25,7 @@ public class PhysicsManager implements Disposable{
 	
 	private float accumulator = 0;
 	private Array<Body> queuedDelete = new Array<>(false, 8);
+	private boolean paused = false;
 	
 	public PhysicsManager(){
 		world = new World(new Vector2(), false);
@@ -111,7 +112,7 @@ public class PhysicsManager implements Disposable{
 			world.destroyBody(queuedDelete.first());
 			queuedDelete.removeIndex(0);
 		}
-		
+		if(paused)return;
 		// fixed time step
 	    // max frame time to avoid spiral of death (on slow devices)
 	    float frameTime = Math.min(Gdx.graphics.getDeltaTime(), 0.25f);
@@ -136,7 +137,15 @@ public class PhysicsManager implements Disposable{
 		}
 		
 	}*/
-
+	
+	public void setPaused(boolean paused){
+		this.paused = paused;
+	}
+	
+	public boolean isPaused(){
+		return paused;
+	}
+	
 	@Override
 	public void dispose() {
 		world.dispose();

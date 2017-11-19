@@ -9,11 +9,14 @@ public class TaskManager{
 	
 	private ObjectSet<Task> tasks = new ObjectSet<>();
 	
+	private boolean paused = false;
+	
 	public TaskManager(){
 		
 	}
 	
 	public void update(){
+		if(paused)return;
 		for(ObjectSetIterator<Task> i = tasks.iterator(); i.hasNext;){
 			Task a = i.next();
 			a.update();
@@ -36,5 +39,13 @@ public class TaskManager{
 	
 	public void clear(){
 		tasks.clear();
+	}
+	
+	public void setPaused(boolean paused){
+		this.paused = paused;
+	}
+	
+	public boolean isPaused(){
+		return paused;
 	}
 }
