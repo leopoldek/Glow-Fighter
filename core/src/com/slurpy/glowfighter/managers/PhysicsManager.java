@@ -1,6 +1,8 @@
 package com.slurpy.glowfighter.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -12,12 +14,14 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.entities.traits.Knockback;
 import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
 import com.slurpy.glowfighter.utils.Constants;
+import com.slurpy.glowfighter.utils.tasks.TaskBuilder;
 
 public class PhysicsManager implements Disposable{
 	
@@ -71,8 +75,38 @@ public class PhysicsManager implements Disposable{
 					entityB.body.applyLinearImpulse(normal.x * knockback, normal.y * knockback, pos.x, pos.y, true);
 				}
 				
-				if(entityA instanceof Health && entityB instanceof Damage)((Health)entityA).takeDamage(((Damage)entityB).getDamage());
-				if(entityB instanceof Health && entityA instanceof Damage)((Health)entityB).takeDamage(((Damage)entityA).getDamage());
+				if(entityA instanceof Health && entityB instanceof Damage){
+					final float dmg = ((Damage)entityB).getDamage();
+					((Health)entityA).takeDamage(dmg);
+					
+					if(Constants.SHOW_DAMAGE){
+						final String num = Integer.toString((int)dmg);
+						final Vector2 collision = contact.getWorldManifold().getPoints()[0].cpy();
+						TaskBuilder builder = new TaskBuilder();
+						builder.addKeyFrame((progress, frameProgress) -> {
+							frameProgress = Interpolation.circleOut.apply(frameProgress);
+							Core.graphics.drawText(num, new Vector2(collision).add(0, frameProgress * 6),
+									0.7f, Color.WHITE.cpy().lerp(Color.CLEAR, frameProgress));
+						}, 4f);
+						Core.tasks.addTask(builder);
+					}
+				}
+				if(entityB instanceof Health && entityA instanceof Damage){
+					float dmg = ((Damage)entityA).getDamage();
+					((Health)entityB).takeDamage(dmg);
+					
+					if(Constants.SHOW_DAMAGE){
+						final String num = Integer.toString((int)dmg);
+						final Vector2 collision = contact.getWorldManifold().getPoints()[0].cpy();
+						TaskBuilder builder = new TaskBuilder();
+						builder.addKeyFrame((progress, frameProgress) -> {
+							frameProgress = Interpolation.circleOut.apply(frameProgress);
+							Core.graphics.drawText(num, new Vector2(collision).add(0, frameProgress * 6),
+									0.7f, Color.WHITE.cpy().lerp(Color.CLEAR, frameProgress));
+						}, 4f);
+						Core.tasks.addTask(builder);
+					}
+				}
 			}
 		});
 	}
