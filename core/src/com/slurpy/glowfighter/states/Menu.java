@@ -1,11 +1,13 @@
 package com.slurpy.glowfighter.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.IntArray;
 import com.slurpy.glowfighter.Core;
 import com.slurpy.glowfighter.gui.Button;
@@ -19,6 +21,7 @@ import com.slurpy.glowfighter.utils.Action;
 import com.slurpy.glowfighter.utils.Constants;
 import com.slurpy.glowfighter.utils.KeyBindings;
 import com.slurpy.glowfighter.utils.SoundType;
+import com.slurpy.glowfighter.utils.Util;
 import com.slurpy.glowfighter.utils.tasks.KeyFrame;
 import com.slurpy.glowfighter.utils.tasks.Task;
 import com.slurpy.glowfighter.utils.tasks.TaskBuilder;
@@ -71,7 +74,17 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Button soundBackButton = new Button("BACK", new Position(right, 0.5f, -250, -210), 500, 60, Color.WHITE, 48f, 10f);
 	
 	//Graphics Menu
-	
+	private final Label[] displayLabels;
+	private final Button leftButton = new Button("<", new Position(right, 0.5f, -250, 0), 235, 60, Color.WHITE, 48f, 10f);
+	private final Button rightButton = new Button(">", new Position(right, 0.5f, 15, 0), 235, 60, Color.WHITE, 48f, 10f);
+	private final Button fullscreenButton = new Button("FULLSCREEN", new Position(right, 0.5f, -250, -90), 500, 60, Color.WHITE, 48f, 10f);
+	private final Button vsyncButton = new Button("VSYNC", new Position(right, 0.5f, -250, -180), 500, 60, Color.WHITE, 48f, 10f);
+	private final Button graphicsBackButton = new Button("BACK", new Position(right, 0.5f, -250, -270), 500, 60, Color.WHITE, 48f, 10f);
+	private final Label graphicsInfoLabel;
+	private final DisplayMode[] displays;
+	private int selectedDisplayMode;
+	private boolean useFullscreen = false;
+	private boolean useVsync = true;
 	
 	//Keybindings Menu
 	private final Label moveUpLabel = new Label(Action.moveUp.toString(), new Position(right, 0.6f, -300, 210), Color.WHITE, 32);
@@ -142,6 +155,21 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		
 		savedColor.a = 0f;
 		
+		displays = Util.getDisplayModes(Gdx.graphics.getPrimaryMonitor());
+		displayLabels = new Label[displays.length];
+		DisplayMode currentDisplayMode = Gdx.graphics.getDisplayMode(Gdx.graphics.getPrimaryMonitor());
+		for(int i = 0; i < displayLabels.length; i++){
+			DisplayMode display = displays[i];
+			if(display.width == currentDisplayMode.width
+					&& display.height == currentDisplayMode.height)this.selectedDisplayMode = i;
+			String text = display.width + "x" + display.height + "|" + display.refreshRate + "hz";
+			displayLabels[i] = new Label(text, new Position(right, 0.5f, 0, 0), Color.WHITE, 48f);
+		}
+		
+		graphicsInfoLabel = new Label(Gdx.graphics.getGLVersion().getDebugVersionString(), new Position(-1f, 0f, 0f, 0f), Color.GRAY, 24f);
+		graphicsInfoLabel.position.x = graphicsInfoLabel.getFontW()/2 + 20;
+		graphicsInfoLabel.position.y = graphicsInfoLabel.getFontH()/2 + 20;
+		
 		menuState = MenuState.main;
 	}
 	
@@ -167,9 +195,6 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		soundButton.animateColor(x, y, selected, normal);
 		graphicsButton.animateColor(x, y, selected, normal);
 		optionsBackButton.animateColor(x, y, selected, normal);
-		
-		//Sound
-		soundBackButton.animateColor(x, y, selected, normal);
 		
 		//Game
 		keyBindingsButton.animateColor(x, y, selected, normal);
@@ -197,6 +222,29 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		moveSlowBinding1Button.animateColor(x, y, selected, normal);
 		moveSlowBinding2Button.animateColor(x, y, selected, normal);
 		bindingsBackButton.animateColor(x, y, selected, normal);
+		
+		//Sound
+		soundBackButton.animateColor(x, y, selected, normal);
+		
+		//Graphics
+		final int range = 4;
+		for(int i = 0; i < displayLabels.length; i++){
+			Label displayLabel = displayLabels[i];
+			float target = MathUtils.clamp(i - selectedDisplayMode, -range, range) / (float)range;
+			float actual =  1 - displayLabel.color.a;
+			if(displayLabel.position.x < 0)actual = -actual;
+			float a = actual + ((target - actual) / 2) * Math.min(Gdx.graphics.getDeltaTime() * 10, 2f);
+			displayLabel.position.x = a * 400;
+			displayLabel.position.y = a * 200 + 200;
+			a = 1 - Math.abs(a);
+			displayLabel.color.a = a;
+			displayLabel.setText(displayLabel.getText(), Math.max(a * 48, 12));
+		}
+		leftButton.animateColor(x, y, selected, normal);
+		rightButton.animateColor(x, y, selected, normal);
+		fullscreenButton.animateColor(x, y, useFullscreen ? Color.CYAN : Color.RED, useFullscreen ? Color.GREEN : Color.GRAY);
+		vsyncButton.animateColor(x, y, useVsync ? Color.CYAN : Color.RED, useVsync ? Color.GREEN : Color.GRAY);
+		graphicsBackButton.animateColor(x, y, selected, normal);
 	}
 	
 	@Override
@@ -264,6 +312,17 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		moveSlowBinding1Button.draw();
 		moveSlowBinding2Button.draw();
 		bindingsBackButton.draw();
+		
+		//Graphics
+		for(Label displayLabel : displayLabels){
+			displayLabel.draw();
+		}
+		leftButton.draw();
+		rightButton.draw();
+		fullscreenButton.draw();
+		vsyncButton.draw();
+		graphicsBackButton.draw();
+		graphicsInfoLabel.draw();
 		
 		//Saved
 		Core.graphics.drawText("SAVED", savedPos.getPosition(), 42f, savedColor);
@@ -523,6 +582,38 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 					bindingsToGame();
 					Core.bindings.save();
 					saved();
+					return true;
+				}
+			}else if(menuState == MenuState.graphics){
+				if(leftButton.contains(screenX, screenY)){
+					selectedDisplayMode--;
+					if(selectedDisplayMode < 0)selectedDisplayMode = 0;
+					return true;
+				}
+				if(rightButton.contains(screenX, screenY)){
+					selectedDisplayMode++;
+					if(selectedDisplayMode >= displays.length)selectedDisplayMode = displays.length - 1;
+					return true;
+				}
+				if(fullscreenButton.contains(screenX, screenY)){
+					useFullscreen = !useFullscreen;
+					return true;
+				}
+				if(vsyncButton.contains(screenX, screenY)){
+					useVsync = !useVsync;
+					return true;
+				}
+				if(graphicsBackButton.contains(screenX, screenY)){
+					graphicsToOptions();
+					if(useFullscreen){
+						if(!Gdx.graphics.isFullscreen() || Gdx.graphics.getDisplayMode() != displays[selectedDisplayMode])
+							Gdx.graphics.setFullscreenMode(displays[selectedDisplayMode]);
+					}else{
+						if(Gdx.graphics.isFullscreen())
+							Gdx.graphics.setWindowedMode(Constants.minWidth, Constants.minHeight);
+					}
+					Gdx.graphics.setVSync(useVsync);
+					//TODO Save graphics settings!
 					return true;
 				}
 			}
@@ -1124,11 +1215,99 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	}
 	
 	private void optionsToGraphics(){
-		
+		if(menuState != MenuState.options)throw new IllegalArgumentException("Must be in options state!");
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				gameButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				soundButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				graphicsButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				optionsBackButton.position.rx = Interpolation.sine.apply(center, left, frameProgress);
+				
+				for(Label displayLabel : displayLabels){
+					displayLabel.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				}
+				leftButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				rightButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				fullscreenButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				vsyncButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				graphicsBackButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				graphicsInfoLabel.position.rx = Interpolation.sine.apply(-1f, 0f, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.graphics;
+				
+				gameButton.position.rx = left;
+				soundButton.position.rx = left;
+				graphicsButton.position.rx = left;
+				optionsBackButton.position.rx = left;
+				
+				for(Label displayLabel : displayLabels){
+					displayLabel.position.rx = center;
+				}
+				leftButton.position.rx = center;
+				rightButton.position.rx = center;
+				fullscreenButton.position.rx = center;
+				vsyncButton.position.rx = center;
+				graphicsBackButton.position.rx = center;
+				graphicsInfoLabel.position.rx = 0f;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
 	}
 	
 	private void graphicsToOptions(){
-		
+		if(menuState != MenuState.graphics)throw new IllegalArgumentException("Must be in options state!");
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void start() {
+				menuState = MenuState.switching;
+			}
+			@Override
+			public void act(float progress, float frameProgress) {
+				gameButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				soundButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				graphicsButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				optionsBackButton.position.rx = Interpolation.sine.apply(left, center, frameProgress);
+				
+				for(Label displayLabel : displayLabels){
+					displayLabel.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				}
+				leftButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				rightButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				fullscreenButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				vsyncButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				graphicsBackButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				graphicsInfoLabel.position.rx = Interpolation.sine.apply(0f, -1f, frameProgress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.options;
+				
+				gameButton.position.rx = center;
+				soundButton.position.rx = center;
+				graphicsButton.position.rx = center;
+				optionsBackButton.position.rx = center;
+				
+				for(Label displayLabel : displayLabels){
+					displayLabel.position.rx = right;
+				}
+				leftButton.position.rx = right;
+				rightButton.position.rx = right;
+				fullscreenButton.position.rx = right;
+				vsyncButton.position.rx = right;
+				graphicsBackButton.position.rx = right;
+				graphicsInfoLabel.position.rx = -1;
+			}
+		}, 0.6f);
+		Core.tasks.addTask(builder);
 	}
 	
 	@Override

@@ -30,6 +30,7 @@ public class Label {
 	}
 	
 	public void setText(String text, float size){
+		if(text == this.text && size == this.size)return;
 		this.text = text;
 		this.size = size;
 		Vector2 fontSize = Util.getTextSize(FontAsset.CatV, text, size);

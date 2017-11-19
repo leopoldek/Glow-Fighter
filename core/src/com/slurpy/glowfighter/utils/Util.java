@@ -1,6 +1,8 @@
 package com.slurpy.glowfighter.utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter.ScaledNumericValue;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.slurpy.glowfighter.Core;
@@ -100,5 +103,54 @@ public class Util{
 				"(?<=[^A-Z])(?=[A-Z])",
 				"(?<=[A-Za-z])(?=[^A-Za-z])"),
 				" ");
+	}
+	
+	public static DisplayMode[] getDisplayModes(Monitor monitor){
+		Array<DisplayMode> displays = new Array<>(Gdx.graphics.getDisplayModes(monitor));
+		
+		for(int i = displays.size - 1; i >= 0; i--){
+			DisplayMode display = displays.get(i);
+			//Removes modes that are smaller than Constants.minWidth x Constants.minHeight
+			if(display.width < Constants.minWidth || display.height < Constants.minHeight){
+				displays.removeIndex(i);
+			}
+			//Removes modes that have a refresh rate lower than 50hz
+			if(display.refreshRate < 50){
+				displays.removeIndex(i);
+			}
+		}
+		
+		//Removes display modes that have same settings except for refresh rate. Assume same bpp.
+		for(int i = displays.size - 1; i >= 0; i--){
+			DisplayMode display1 = displays.get(i);
+			for(int nested = 0; nested < displays.size; nested++){
+				DisplayMode display2 = displays.get(nested);
+				if(display1 != display2 && display1.width == display2.width
+						&& display1.height == display2.height
+						&& display1.refreshRate <= display2.refreshRate){
+					displays.removeIndex(i);
+					break;
+				}
+			}
+		}
+		
+		//Sorts display modes by width, then height.
+		displays.sort((DisplayMode display1, DisplayMode display2) -> {
+			if(display1.width > display2.width){
+				return 1;
+			}else if(display1.width < display2.width){
+				return -1;
+			}else{
+				if(display1.height > display2.height){
+					return 1;
+				}else if(display1.height < display2.height){
+					return -1;
+				}else{
+					return 0;
+				}
+			}
+		});
+		
+		return displays.toArray(DisplayMode.class);
 	}
 }

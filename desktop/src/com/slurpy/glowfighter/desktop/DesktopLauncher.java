@@ -22,7 +22,7 @@ public class DesktopLauncher {
 		config.vSyncEnabled = true;
 		//config.vSyncEnabled = false;  
 		//config.foregroundFPS = 120;	
-		//config.foregroundFPS = 0;
+		config.foregroundFPS = 240;
 		//config.backgroundFPS = 120;
 		config.backgroundFPS = -1;
 		//config.samples = 8;//DOES NOT AFFECT FBO
