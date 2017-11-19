@@ -83,8 +83,6 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Label graphicsInfoLabel;
 	private final DisplayMode[] displays;
 	private int selectedDisplayMode;
-	private boolean useFullscreen = false;
-	private boolean useVsync = true;
 	
 	//Keybindings Menu
 	private final Label moveUpLabel = new Label(Action.moveUp.toString(), new Position(right, 0.6f, -300, 210), Color.WHITE, 32);
@@ -242,8 +240,8 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		}
 		leftButton.animateColor(x, y, selected, normal);
 		rightButton.animateColor(x, y, selected, normal);
-		fullscreenButton.animateColor(x, y, useFullscreen ? Color.CYAN : Color.RED, useFullscreen ? Color.GREEN : Color.GRAY);
-		vsyncButton.animateColor(x, y, useVsync ? Color.CYAN : Color.RED, useVsync ? Color.GREEN : Color.GRAY);
+		fullscreenButton.animateColor(x, y, Constants.useFullscreen ? Color.CYAN : Color.RED, Constants.useFullscreen ? Color.GREEN : Color.GRAY);
+		vsyncButton.animateColor(x, y, Constants.useVsync ? Color.CYAN : Color.RED, Constants.useVsync ? Color.GREEN : Color.GRAY);
 		graphicsBackButton.animateColor(x, y, selected, normal);
 	}
 	
@@ -596,23 +594,23 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 					return true;
 				}
 				if(fullscreenButton.contains(screenX, screenY)){
-					useFullscreen = !useFullscreen;
+					Constants.useFullscreen = !Constants.useFullscreen;
 					return true;
 				}
 				if(vsyncButton.contains(screenX, screenY)){
-					useVsync = !useVsync;
+					Constants.useVsync = !Constants.useVsync;
 					return true;
 				}
 				if(graphicsBackButton.contains(screenX, screenY)){
 					graphicsToOptions();
-					if(useFullscreen){
+					if(Constants.useFullscreen){
 						if(!Gdx.graphics.isFullscreen() || Gdx.graphics.getDisplayMode() != displays[selectedDisplayMode])
 							Gdx.graphics.setFullscreenMode(displays[selectedDisplayMode]);
 					}else{
 						if(Gdx.graphics.isFullscreen())
 							Gdx.graphics.setWindowedMode(Constants.minWidth, Constants.minHeight);
 					}
-					Gdx.graphics.setVSync(useVsync);
+					Gdx.graphics.setVSync(Constants.useVsync);
 					//TODO Save graphics settings!
 					return true;
 				}

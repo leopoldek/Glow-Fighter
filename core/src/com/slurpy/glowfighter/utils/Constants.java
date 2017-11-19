@@ -22,4 +22,7 @@ public class Constants {
 	public static boolean SHOW_INDICATOR = true;
 	public static boolean SHOW_FPS = false;
 	public static boolean SHOW_DAMAGE = true;
+	
+	public static boolean useVsync = true;
+	public static boolean useFullscreen = false;
 }
