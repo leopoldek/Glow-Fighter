@@ -70,12 +70,10 @@ public class Survival implements State, Gui, InputProcessor{
 		Core.graphics.follow(player);
 		//graphics.look(new Vector2(100, 100));
 		
-		Music music = Core.audio.getMusic(MusicAsset.BackgroundTechno);
+		final Music music = Core.audio.getMusic(MusicAsset.BackgroundTechno);
 		music.setLooping(true);
+		music.setVolume(0f);
 		music.play();
-		
-		Core.audio.setMasterVolume(0.2f);
-		Core.audio.setVolume(SoundType.effect, 0.42f);
 		
 		//timer = Core.properties.getDifficultyProperty("SpawnRate", difficulty);
 		timer = 0.2f;
@@ -83,6 +81,27 @@ public class Survival implements State, Gui, InputProcessor{
 		spawnPickup();
 		
 		Core.bindings.addProcessor(this);
+		
+		Core.graphics.setZoom(300f);
+		
+		TaskBuilder builder = new TaskBuilder();
+		builder.addKeyFrame((float progress, float frameProgress) -> {
+			Core.graphics.setZoom(Interpolation.linear.apply(300f, 5f, frameProgress));
+			music.setVolume(Interpolation.linear.apply(0f, Core.audio.getActualVolume(SoundType.music), progress));
+		}, 0.7f);
+		builder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void act(float progress, float frameProgress) {
+				Core.graphics.setZoom(Interpolation.exp10Out.apply(5f, 1f, frameProgress));
+				music.setVolume(Interpolation.linear.apply(0f, Core.audio.getActualVolume(SoundType.music), progress));
+			}
+			@Override
+			public void end() {
+				Core.graphics.setZoom(1f);
+				music.setVolume(Core.audio.getActualVolume(SoundType.music));
+			}
+		}, 1.5f);
+		Core.tasks.addTask(builder);
 	}
 
 	@Override
@@ -113,10 +132,6 @@ public class Survival implements State, Gui, InputProcessor{
 			
 			TaskBuilder builder = new TaskBuilder();
 			builder.addKeyFrame(new KeyFrame(){
-				@Override
-				public void start() {
-					
-				}
 				@Override
 				public void act(float progress, float frameProgress) {
 					continueButton.position.rx = Interpolation.sine.apply(-0.5f, center, frameProgress);

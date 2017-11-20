@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
@@ -299,6 +300,10 @@ public class GraphicsManager implements Disposable{
 	
 	public Vector2 unproject(Vector2 pos){
 		return viewport.unproject(pos);
+	}
+	
+	public void setZoom(float zoom){
+		((OrthographicCamera)viewport.getCamera()).zoom = zoom;
 	}
 	
 	public void resize(int width, int height){
