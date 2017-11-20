@@ -38,12 +38,12 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private MenuState menuState;
 	
 	//Main Menu
-	private final Position titlePos = new Position(center, titleCenter, -280, 0);
+	private final Position titlePos = new Position(center, titleTop, -280, 0);
 	private final Color titleColor = new Color();
 	private final Task titleColorShift;
-	private final Button playButton = new Button("PLAY", new Position(center, 0.5f, -250, -30),  500, 60, Color.WHITE, 48f, 10f);
-	private final Button optionsButton = new Button("OPTIONS", new Position(center, 0.5f, -250, -120),  500, 60, Color.WHITE, 48f, 10f);
-	private final Button exitButton = new Button("EXIT", new Position(center, 0.5f, -250, -210),  500, 60, Color.WHITE, 48f, 10f);
+	private final Button playButton = new Button("PLAY", new Position(right, 0.5f, -250, -30),  500, 60, Color.WHITE, 48f, 10f);
+	private final Button optionsButton = new Button("OPTIONS", new Position(right, 0.5f, -250, -120),  500, 60, Color.WHITE, 48f, 10f);
+	private final Button exitButton = new Button("EXIT", new Position(right, 0.5f, -250, -210),  500, 60, Color.WHITE, 48f, 10f);
 	
 	//Options Menu
 	private final Button gameButton = new Button("GAME SETTINGS", new Position(right, 0.4f, -250, 135), 500, 60, Color.WHITE, 48f, 10f);
@@ -168,13 +168,85 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		graphicsInfoLabel.position.x = graphicsInfoLabel.getFontW()/2 + 20;
 		graphicsInfoLabel.position.y = graphicsInfoLabel.getFontH()/2 + 20;
 		
-		menuState = MenuState.main;
+		menuState = MenuState.switching;
 	}
 	
 	@Override
 	public void start() {
 		Core.bindings.addProcessor(this);
 		Core.tasks.addTask(titleColorShift);
+		
+		TaskBuilder exitButtonBuilder = new TaskBuilder();
+		exitButtonBuilder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void act(float progress, float frameProgress) {
+				exitButton.position.rx = Interpolation.swingOut.apply(right, center, progress);
+			}
+			@Override
+			public void end() {
+				menuState = MenuState.main;
+				exitButton.position.rx = center;
+			}
+		}, 1f);
+		
+		TaskBuilder optionsButtonBuilder = new TaskBuilder();
+		optionsButtonBuilder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void act(float progress, float frameProgress) {
+				optionsButton.position.rx = Interpolation.swingOut.apply(right, center, progress);
+			}
+			@Override
+			public void end() {
+				Core.tasks.addTask(exitButtonBuilder);
+			}
+		}, 0.25f);
+		optionsButtonBuilder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void act(float progress, float frameProgress) {
+				optionsButton.position.rx = Interpolation.swingOut.apply(right, center, progress);
+			}
+			@Override
+			public void end() {
+				optionsButton.position.rx = center;
+			}
+		}, 0.75f);
+		
+		TaskBuilder playButtonBuilder = new TaskBuilder();
+		playButtonBuilder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void act(float progress, float frameProgress) {
+				playButton.position.rx = Interpolation.swingOut.apply(right, center, progress);
+			}
+			@Override
+			public void end() {
+				Core.tasks.addTask(optionsButtonBuilder);
+			}
+		}, 0.25f);
+		playButtonBuilder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void act(float progress, float frameProgress) {
+				playButton.position.rx = Interpolation.swingOut.apply(right, center, progress);
+			}
+			@Override
+			public void end() {
+				playButton.position.rx = center;
+			}
+		}, 0.75f);
+		
+		TaskBuilder titleBuilder = new TaskBuilder();
+		titleBuilder.addKeyFrame(new KeyFrame(){
+			@Override
+			public void act(float progress, float frameProgress) {
+				titlePos.ry = Interpolation.bounceOut.apply(titleTop, titleCenter, frameProgress);
+			}
+			@Override
+			public void end() {
+				titlePos.ry = titleCenter;
+			}
+		}, 1.5f);
+		
+		Core.tasks.addTask(playButtonBuilder);
+		Core.tasks.addTask(titleBuilder);
 	}
 	
 	@Override
