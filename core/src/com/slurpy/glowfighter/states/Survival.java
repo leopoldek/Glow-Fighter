@@ -52,6 +52,8 @@ public class Survival implements State, Gui, InputProcessor{
 	
 	private GunPickup pickup;
 	
+	private boolean gameOver = false;
+	
 	public Survival(){
 		
 	}
@@ -101,6 +103,35 @@ public class Survival implements State, Gui, InputProcessor{
 			}
 		}
 		timer = 1 / (1 / timer + 0.0000001f / Gdx.graphics.getDeltaTime());
+		
+		if(player.isDead() && !gameOver){
+			menuLabel.setText("GAME OVER", 48f);
+			continueButton.setText("NEW GAME", 36f);
+			
+			continueButton.position.rx = -0.5f;
+			quitButton.position.rx = 1.5f;
+			
+			TaskBuilder builder = new TaskBuilder();
+			builder.addKeyFrame(new KeyFrame(){
+				@Override
+				public void start() {
+					
+				}
+				@Override
+				public void act(float progress, float frameProgress) {
+					continueButton.position.rx = Interpolation.sine.apply(-0.5f, center, frameProgress);
+					quitButton.position.rx = Interpolation.sine.apply(1.5f, center, frameProgress);
+				}
+				@Override
+				public void end() {
+					continueButton.position.rx = center;
+					quitButton.position.rx = center;
+				}
+			}, 0.6f);
+			Core.tasks.addTask(builder);
+			
+			gameOver = true;
+		}
 	}
 	
 	@Override
@@ -147,17 +178,25 @@ public class Survival implements State, Gui, InputProcessor{
 	private float levelTextSize = 32;
 	
 	private final Rectangle menu = new Rectangle(new Position(center, center, -150, -110), 300, 240, Color.CHARTREUSE, 20f);
-	private final Label pausedLabel = new Label("PAUSED", new Position(center, center, 0, 100), Color.WHITE, 48f);
+	private final Label menuLabel = new Label("PAUSED", new Position(center, center, 0, 100), Color.WHITE, 48f);
 	private final Button continueButton = new Button("CONTINUE", new Position(center, center, -130, 0), 260, 60, Color.WHITE, 36f, 10f);
 	private final Button quitButton = new Button("QUIT TO MENU", new Position(center, center, -130, -90), 260, 60, Color.WHITE, 36f, 10f);
 	
 	@Override
 	public void draw(){
-		if(Core.state.isPaused()){
+		if(gameOver){
+			menuLabel.draw();
+			int x = Gdx.input.getX();
+			int y = Gdx.graphics.getHeight() - Gdx.input.getY();
+			continueButton.animateColor(x, y, Color.RED, Color.WHITE);
+			quitButton.animateColor(x, y, Color.RED, Color.WHITE);
+			continueButton.draw();
+			quitButton.draw();
+		}else if(Core.state.isPaused()){
 			menu.draw();
 			Vector2 pos = menu.position.getPosition();
 			Core.graphics.fillRectangle(pos.x, pos.y, menu.w, menu.h, Color.BLACK);
-			pausedLabel.draw();
+			menuLabel.draw();
 			int x = Gdx.input.getX();
 			int y = Gdx.graphics.getHeight() - Gdx.input.getY();
 			continueButton.animateColor(x, y, Color.RED, Color.WHITE);
@@ -254,7 +293,7 @@ public class Survival implements State, Gui, InputProcessor{
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if(keycode == Keys.ESCAPE){
+		if(keycode == Keys.ESCAPE && !gameOver){
 			Core.setPaused(!Core.state.isPaused());
 			return true;
 		}
@@ -274,7 +313,17 @@ public class Survival implements State, Gui, InputProcessor{
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		screenY = Gdx.graphics.getHeight() - screenY;
-		if(Core.state.isPaused()){
+		if(gameOver){
+			if(continueButton.contains(screenX, screenY)){
+				Core.state.setState(new Survival());
+				return true;
+			}
+			if(quitButton.contains(screenX, screenY)){
+				Core.setPaused(false);
+				Core.state.setState(new Menu());
+				return true;
+			}
+		}else if(Core.state.isPaused()){
 			if(continueButton.contains(screenX, screenY)){
 				Core.setPaused(false);
 				return true;

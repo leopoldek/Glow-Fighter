@@ -136,6 +136,10 @@ public class Player extends Entity implements Health, Knockback{
 		return health;
 	}
 	
+	public boolean isDead(){
+		return dead;
+	}
+	
 	public Gun getGun(){
 		return gun == null ? defaultGun : gun;
 	}
