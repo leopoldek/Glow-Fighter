@@ -113,6 +113,7 @@ public class Util{
 			//Removes modes that are smaller than Constants.minWidth x Constants.minHeight
 			if(display.width < Constants.minWidth || display.height < Constants.minHeight){
 				displays.removeIndex(i);
+				continue;
 			}
 			//Removes modes that have a refresh rate lower than 50hz
 			if(display.refreshRate < 50){
