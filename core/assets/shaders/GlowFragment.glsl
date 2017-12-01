@@ -1,3 +1,4 @@
+#version 130
 
 uniform bool horizontal;
 //uniform float weight[6] = float[] (0.198596, 0.175713, 0.121703, 0.065984, 0.028002, 0.0093);

@@ -58,4 +58,9 @@ public class BurstGun extends Gun{
 	public void end() {
 		
 	}
+
+	@Override
+	public String getName() {
+		return "Burst Gun";
+	}
 }

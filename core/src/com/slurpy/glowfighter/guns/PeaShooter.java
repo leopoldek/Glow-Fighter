@@ -42,4 +42,9 @@ public class PeaShooter extends Gun{
 	public void end() {
 		
 	}
+
+	@Override
+	public String getName() {
+		return "Pea Shooter";
+	}
 }

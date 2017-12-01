@@ -10,4 +10,7 @@
 	<entry-point class='com.slurpy.glowfighter.client.HtmlLauncher' />
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 	<set-configuration-property name="gdx.assetpath" value="../core/assets" />
+	
+	<extend-configuration-property name="gdx.reflect.include" value="com.slurpy.glowfighter.utils.tasks.KeyFrame"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.Graphics"/>
 </module>

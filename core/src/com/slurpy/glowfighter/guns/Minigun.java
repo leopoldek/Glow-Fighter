@@ -44,4 +44,9 @@ public class Minigun extends Gun{
 	public void end() {
 		
 	}
+
+	@Override
+	public String getName() {
+		return "Minigun";
+	}
 }

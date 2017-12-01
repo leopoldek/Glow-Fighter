@@ -12,5 +12,8 @@
     
 	<add-linker name="xsiframe"/>	
 	<set-configuration-property name="devModeRedirectEnabled" value="true"/>
-	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>	
+	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
+	
+	<extend-configuration-property name="gdx.reflect.include" value="com.slurpy.glowfighter.utils.tasks.KeyFrame"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.Graphics"/>
 </module>

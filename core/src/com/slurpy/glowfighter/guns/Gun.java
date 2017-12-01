@@ -26,15 +26,5 @@ public abstract class Gun {
 		return timer;
 	}
 	
-	public String getName(){
-		String name = this.getClass().getSimpleName();
-		StringBuilder builder = new StringBuilder();
-		builder.append(name.charAt(0));
-		for(int i = 1; i < name.length(); i++){
-			char letter = name.charAt(i);
-			if(Character.isUpperCase(letter))builder.append(' ');
-			builder.append(letter);
-		}
-		return builder.toString();
-	}
+	public abstract String getName();
 }

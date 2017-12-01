@@ -59,15 +59,15 @@ public class PiercingShot extends Entity implements Damage{
 	private static EntityDef getEntityDef(Vector2 pos, float rot, Color color, Team team){
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
-		entityDef.parts = new Part[]{new LinePart(new Vector2(depth * 10, 0), new Vector2(height, 0), width)};
+		entityDef.parts = new Part[]{new LinePart(new Vector2(depth, 0), new Vector2(height, 0), width)};
 		entityDef.setColor(color);
 		entityDef.team = team;
 		return entityDef;
 	}
 	
 	private static float height = 0.05f;
-	private static float depth = -0.2f;
-	private static float width = 0.15f;
+	private static float depth = -2.8f;
+	private static float width = 0.1f;
 	private static Vector2[] polygon = new Vector2[]{
 			new Vector2(height, width),
 			new Vector2(height, -width),

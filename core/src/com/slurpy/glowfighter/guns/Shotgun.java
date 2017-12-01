@@ -49,4 +49,9 @@ public class Shotgun extends Gun{
 	public void end() {
 		
 	}
+
+	@Override
+	public String getName() {
+		return "Shotgun";
+	}
 }

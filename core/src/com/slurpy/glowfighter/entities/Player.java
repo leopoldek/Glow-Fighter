@@ -22,9 +22,9 @@ import com.slurpy.glowfighter.utils.Action;
 
 public class Player extends Entity implements Health, Knockback{
 	
-	private static final float speed = 6000;
+	private static final float speed = 120;
 	private static final float slowSpeed = speed * 0.4f;
-	private static final float boost = 40;
+	private static final float boost = 80;
 	private static final float maxHealth = 100;
 	
 	private Gun defaultGun = new PeaShooter();
@@ -79,7 +79,7 @@ public class Player extends Entity implements Health, Knockback{
 		}
 		move.nor().scl(Gdx.graphics.getDeltaTime() * (Core.bindings.isActionPressed(Action.moveSlow) ? slowSpeed : speed));
 		
-		body.applyForceToCenter(move, true);
+		body.applyLinearImpulse(move, body.getPosition(), true);
 		
 		/*Vector2 vel = body.getLinearVelocity();
 		if(Core.bindings.isActionPressed(Action.moveSlow)){
@@ -107,7 +107,7 @@ public class Player extends Entity implements Health, Knockback{
 	
 	@Override
 	public void hit(Entity other){
-		Core.graphics.shake(0.3f);
+		Core.graphics.shake(0.4f);
 	}
 	
 	@Override

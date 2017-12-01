@@ -43,4 +43,9 @@ public class RocketLauncher extends Gun{
 	public void end() {
 		
 	}
+
+	@Override
+	public String getName() {
+		return "Rocket Launcher";
+	}
 }

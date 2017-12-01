@@ -42,4 +42,9 @@ public class RocketRepeater extends Gun{
 	public void end() {
 		
 	}
+
+	@Override
+	public String getName() {
+		return "Rocket Repeater";
+	}
 }
