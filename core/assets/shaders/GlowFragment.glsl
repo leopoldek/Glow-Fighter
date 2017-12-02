@@ -1,46 +1,32 @@
-#version 130
+//Unfortunately, we have to use 1.2 because WebGL can't handle >= 1.3
+#version 100
+//#extension GL_EXT_gpu_shader4 : enable
+//#extension GL_EXT_framebuffer_multisample : enable
 
-uniform bool horizontal;
-//uniform float weight[6] = float[] (0.198596, 0.175713, 0.121703, 0.065984, 0.028002, 0.0093);
+#ifdef GL_ES
+precision mediump float;
+#endif
 
 varying vec4 v_color;
 varying vec2 v_texCoords;
 
+uniform bool horizontal;
 uniform sampler2D u_texture;
+uniform vec2 u_texelSize;//Size of single texel
 
-void main(){             
-    /*
-    vec2 tex_offset = 1.0 / textureSize(u_texture, 0); // gets size of single texel
-    vec3 result = texture(u_texture, v_texCoords).rgb * weight[0]; // current fragment's contribution
-    if(horizontal){
-        for(int i = 1; i < 6; ++i){
-            result += texture(u_texture, v_texCoords + vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
-            result += texture(u_texture, v_texCoords - vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
-        }
-    }else{
-        for(int i = 1; i < 6; ++i){
-            result += texture(u_texture, v_texCoords + vec2(0.0, tex_offset.y * i)).rgb * weight[i];
-            result += texture(u_texture, v_texCoords - vec2(0.0, tex_offset.y * i)).rgb * weight[i];
-        }
-    }
-    gl_FragColor = v_color * vec4(result, 1.0);
-    */
-	
-	
-	
-	
-	
-	vec2 tex_offset = 1.0 / textureSize(u_texture, 0); // gets size of single texel
-    vec3 result = texture(u_texture, v_texCoords).rgb; // current fragment's contribution
+void main(){
+    vec3 result = texture2D(u_texture, v_texCoords).rgb; // current fragment's contribution
     if(horizontal){
         for(int i = 1; i < 10; ++i){
-            result += texture(u_texture, v_texCoords + vec2(tex_offset.x * i, 0.0)).rgb;
-            result += texture(u_texture, v_texCoords - vec2(tex_offset.x * i, 0.0)).rgb;
+        	float iFloat = float(i);
+            result += texture2D(u_texture, v_texCoords + vec2(u_texelSize.x * iFloat, 0.0)).rgb;
+            result += texture2D(u_texture, v_texCoords - vec2(u_texelSize.x * iFloat, 0.0)).rgb;
         }
     }else{
         for(int i = 1; i < 10; ++i){
-            result += texture(u_texture, v_texCoords + vec2(0.0, tex_offset.y * i)).rgb;
-            result += texture(u_texture, v_texCoords - vec2(0.0, tex_offset.y * i)).rgb;
+        	float iFloat = float(i);
+            result += texture2D(u_texture, v_texCoords + vec2(0.0, u_texelSize.y * iFloat)).rgb;
+            result += texture2D(u_texture, v_texCoords - vec2(0.0, u_texelSize.y * iFloat)).rgb;
         }
     }
     gl_FragColor = v_color * vec4(result/19.0, 1.0);

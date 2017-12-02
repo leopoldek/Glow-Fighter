@@ -63,7 +63,8 @@ public class GraphicsManager implements Disposable{
 		
 		glowShader = new ShaderProgram(Gdx.files.internal("shaders/Vertex.glsl"), Gdx.files.internal("shaders/GlowFragment.glsl"));
 		//glowShader.pedantic = false;
-		if(!glowShader.isCompiled())System.out.println(glowShader.getLog());
+		if(glowShader.isCompiled())Gdx.app.log("Shader Log:\n", glowShader.getLog());
+		else Gdx.app.error("Shader Log:\n", glowShader.getLog());
 		
 		//Create BitMapFont
 		font = Core.assets.getFont(FontAsset.CatV);
@@ -218,6 +219,7 @@ public class GraphicsManager implements Disposable{
 		batch.flush();
 		screenFBO.end();
 		batch.setShader(glowShader);
+		glowShader.setUniformf("u_texelSize", new Vector2(1f / Gdx.graphics.getWidth() * Constants.FBO_SIZE_RATIO,  1f / Gdx.graphics.getHeight() * Constants.FBO_SIZE_RATIO));
 		
 		for(int i = 0; i < Constants.BLUR_PASSES; i++){
 			pingFBO.begin();

@@ -1,5 +1,6 @@
 package com.slurpy.glowfighter;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -28,6 +29,7 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		Gdx.app.setLogLevel(Application.LOG_ERROR);
 		//Create preference file if it doesn't exist now since it's a heavy task.
 		Preferences pref = Gdx.app.getPreferences(Constants.SETTINGS_FILE);
 		pref.flush();

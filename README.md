@@ -1,7 +1,7 @@
 # Glow Fighter
 ![Main Menu Image](https://media.giphy.com/media/l4EoYA2EkVNy6IyZO/giphy.gif "Main Menu")
 
-Glow Fighter is an arcade shooter written in Java using LibGDX. It runs on Desktop. Technically it runs in browser albeit a little buggy at the moment.
+Glow Fighter is an arcade shooter written in Java using LibGDX. It runs on desktop and on the web.
 
 ## Setup
 Clone this repository. If you just want to run the project, open the command line and navigate to the local repository and type `gradlew desktop:run`. For setup in an IDE:
