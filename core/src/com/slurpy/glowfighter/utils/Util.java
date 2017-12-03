@@ -97,7 +97,7 @@ public class Util{
 	
 	public static String splitCamelCase(String s) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(s.charAt(0));
+		builder.append(Character.toUpperCase(s.charAt(0)));
 		for(int i = 1; i < s.length(); i++){
 			char letter = s.charAt(i);
 			if(Character.isUpperCase(letter))builder.append(' ');
