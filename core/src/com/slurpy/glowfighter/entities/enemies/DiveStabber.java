@@ -15,10 +15,14 @@ import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
+import com.slurpy.glowfighter.parts.TrailPart;
 
 public class DiveStabber extends Entity implements Damage, Health{
 	
-	private static final float delay = 1f;
+	private static final float delay = 1.3f;
+	private static final float radius = 14f;
+	private static final Color standby = Color.NAVY;
+	private static final Color active = Color.RED;
 	
 	private float health;
 	
@@ -40,19 +44,22 @@ public class DiveStabber extends Entity implements Damage, Health{
 		if(diving)return;
 		float angle = player.getPosition().sub(body.getPosition()).angleRad();
 		body.setTransform(body.getPosition(), angle);
-		if(player.getPosition().dst(body.getPosition()) < 16f){
+		if(player.getPosition().dst(body.getPosition()) < radius){
 			if(!count){
 				count = true;
 				countdown = delay;
 			}
 		}else{
 			count = false;
+			colors[0].set(standby);
 		}
 		if(count){
 			countdown -= Gdx.graphics.getDeltaTime();
+			colors[0].set(active).lerp(standby, countdown / delay);
 			if(countdown <= 0){
 				body.setLinearVelocity(new Vector2(25f, 0).rotateRad(angle));
-				Core.audio.playSound2D(SoundAsset.Activated, body.getPosition(), 18f);
+				Core.audio.playSound2D(SoundAsset.Activated, body.getPosition(), radius + 2);
+				colors[0].set(active);
 				diving = true;
 			}
 		}
@@ -80,7 +87,10 @@ public class DiveStabber extends Entity implements Damage, Health{
 	
 	private static EntityDef getEntityDef(Vector2 pos){
 		entityDef.pos.set(pos);
-		entityDef.setColor(Color.RED.cpy());//TODO modulate color based on countdown.
+		entityDef.parts = new Part[]{
+				new TrailPart(new PolygonPart(entityDef.polygon, 0.15f), 0.3f, 1.2f)
+		};
+		entityDef.setColor(standby.cpy());//TODO modulate color based on countdown.
 		return entityDef;
 	}
 	
@@ -90,9 +100,6 @@ public class DiveStabber extends Entity implements Damage, Health{
 				new Vector2(0, -0.4f),
 				new Vector2(-1f, 0),
 				new Vector2(0, 0.4f)
-		};
-		entityDef.parts = new Part[]{
-				new PolygonPart(entityDef.polygon, 0.15f)
 		};
 		entityDef.category = Category.ENTITY;
 		entityDef.team = Team.ENEMY;
