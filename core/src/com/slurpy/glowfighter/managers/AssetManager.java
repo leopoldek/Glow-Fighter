@@ -2,7 +2,6 @@ package com.slurpy.glowfighter.managers;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
@@ -31,9 +30,9 @@ public class AssetManager implements Disposable{
 		for(SoundAsset sound : SoundAsset.values()){
 			assets.load(sound.file, Sound.class);
 		}
-		for(TextureAsset texture : TextureAsset.values()){
+		/*for(TextureAsset texture : TextureAsset.values()){
 			assets.load(texture.file, Texture.class);
-		}
+		}*/
 		assets.finishLoading();
 	}
 	
@@ -58,9 +57,9 @@ public class AssetManager implements Disposable{
 		return assets.get(music.file, Music.class);
 	}
 	
-	public Texture getTexture(TextureAsset texture){
+	/*public Texture getTexture(TextureAsset texture){
 		return assets.get(texture.file, Texture.class);
-	}
+	}*/
 
 	@Override
 	public void dispose() {
@@ -79,7 +78,7 @@ public class AssetManager implements Disposable{
 	}
 	
 	public enum EffectAsset{
-		Explosion("Missile Death.effect");
+		EnemyMissleDeath("Missile Death.effect"), RocketExplosion("explosion.effect");
 		
 		public final String file;
 		public static final Class<ParticleEffect> clazz = ParticleEffect.class;
@@ -120,7 +119,7 @@ public class AssetManager implements Disposable{
 		}
 	}
 	
-	public enum TextureAsset{
+	/*public enum TextureAsset{
 		WhitePixel("WhitePixel.png");
 		
 		public final String file;
@@ -129,5 +128,5 @@ public class AssetManager implements Disposable{
 		private TextureAsset(String file){
 			this.file = "textures/" + file;
 		}
-	}
+	}*/
 }

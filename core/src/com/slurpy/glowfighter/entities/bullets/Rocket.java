@@ -12,6 +12,7 @@ import com.slurpy.glowfighter.entities.EntityDef;
 import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.Health;
+import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
 import com.slurpy.glowfighter.parts.LinePart;
 import com.slurpy.glowfighter.parts.Part;
 
@@ -63,12 +64,13 @@ public class Rocket extends Entity implements Damage{
 			entity.hit(this);
 			if(entity instanceof Health)((Health)entity).takeDamage(damage);
 		}
+		Core.graphics.drawParticle(EffectAsset.RocketExplosion, body.getPosition(), radius * 2);
 	}
 	
 	@Override
 	public float getDamage() {
 		if(acceleration <= 0){
-			return 0;
+			return damage / 2;
 		}else{
 			return damage;
 		}

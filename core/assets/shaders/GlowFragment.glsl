@@ -1,4 +1,4 @@
-//Unfortunately, we have to use 1.2 because WebGL can't handle >= 1.3
+//Unfortunately, we have to use version 100 because WebGL 2.0 can't handle anything greater than that. :(
 #version 100
 //#extension GL_EXT_gpu_shader4 : enable
 //#extension GL_EXT_framebuffer_multisample : enable

@@ -48,7 +48,7 @@ public class MissileEnemy extends Entity implements Damage{
 
 	@Override
 	public void hit(Entity other) {
-		Core.graphics.drawParticle(EffectAsset.Explosion, body.getPosition());
+		Core.graphics.drawParticle(EffectAsset.EnemyMissleDeath, body.getPosition());
 		delete();
 	}
 	

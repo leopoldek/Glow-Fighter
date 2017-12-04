@@ -171,16 +171,24 @@ public class GraphicsManager implements Disposable{
 	
 	public void drawParticle(EffectAsset effect, Vector2 pos, float rot, float scl){
 		PooledEffect pooledEffect = Core.assets.getEffect(effect);
-		pooledEffect.setEmittersCleanUpBlendFunction(false);
+		//pooledEffect.setEmittersCleanUpBlendFunction(false);//TODO Change this later!
 		pooledEffect.setPosition(pos.x, pos.y);
 		Util.rotateEffect(pooledEffect, rot);
 		pooledEffect.scaleEffect(scl);
 		effectArray.add(pooledEffect);
 	}
 	
+	public void drawParticle(EffectAsset effect, Vector2 pos, float scl){
+		PooledEffect pooledEffect = Core.assets.getEffect(effect);
+		//pooledEffect.setEmittersCleanUpBlendFunction(false);
+		pooledEffect.setPosition(pos.x, pos.y);
+		pooledEffect.scaleEffect(scl);
+		effectArray.add(pooledEffect);
+	}
+	
 	public void drawParticle(EffectAsset effect, Vector2 pos){
 		PooledEffect pooledEffect = Core.assets.getEffect(effect);
-		pooledEffect.setEmittersCleanUpBlendFunction(false);
+		//pooledEffect.setEmittersCleanUpBlendFunction(false);
 		pooledEffect.setPosition(pos.x, pos.y);
 		effectArray.add(pooledEffect);
 	}
@@ -320,9 +328,9 @@ public class GraphicsManager implements Disposable{
 		}
 		float fboWidth = width / Constants.FBO_SIZE_RATIO;
 		float fboHeight = height / Constants.FBO_SIZE_RATIO;
-		screenFBO = new FrameBuffer(Format.RGBA4444, width, height, false, false);
-		pingFBO = new FrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
-		pongFBO = new FrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
+		screenFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, width, height, false, false);
+		pingFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
+		pongFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
 	}
 	
 	public void dispose(){

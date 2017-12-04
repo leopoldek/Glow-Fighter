@@ -96,6 +96,7 @@ public class Util{
 	}
 	
 	public static String splitCamelCase(String s) {
+		if(s.isEmpty())return s;
 		StringBuilder builder = new StringBuilder();
 		builder.append(Character.toUpperCase(s.charAt(0)));
 		for(int i = 1; i < s.length(); i++){
