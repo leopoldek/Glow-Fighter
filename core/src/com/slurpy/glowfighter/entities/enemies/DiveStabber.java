@@ -90,7 +90,7 @@ public class DiveStabber extends Entity implements Damage, Health{
 		entityDef.parts = new Part[]{
 				new TrailPart(new PolygonPart(entityDef.polygon, 0.15f), 0.3f, 1.2f)
 		};
-		entityDef.setColor(standby.cpy());//TODO modulate color based on countdown.
+		entityDef.setColor(standby.cpy());
 		return entityDef;
 	}
 	

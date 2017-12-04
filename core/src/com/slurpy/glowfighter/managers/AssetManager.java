@@ -107,7 +107,7 @@ public class AssetManager implements Disposable{
 		PlayerDie("Player Die.wav", SoundType.effect), Pulse("Pulse.wav", SoundType.effect),
 		Select("UI Sounds/Select.mp3", SoundType.userInterface), Shoot("Shoot.wav", SoundType.effect),
 		Warning("Warning.wav", SoundType.userInterface), Pickup("UI Sounds/Pickup.mp3", SoundType.effect),
-		Saved("UI Sounds/Saved.mp3", SoundType.userInterface);
+		Saved("UI Sounds/Saved.mp3", SoundType.userInterface), Explosion("Explosion.wav", SoundType.effect);
 		
 		public final String file;
 		public final SoundType type;

@@ -61,7 +61,7 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void resize(int width, int height) {
-		boolean undo = false;//TODO Later change window to unresizable and add resize option in graphics settings.
+		boolean undo = false;
 		if(width < Constants.minWidth){
 			width = Constants.minWidth;
 			undo = true;

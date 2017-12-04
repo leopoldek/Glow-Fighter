@@ -9,7 +9,7 @@ import com.slurpy.glowfighter.utils.Util;
 
 public class Button{
 	
-	private String text;//TODO Make private and non-final later and recalculate fontWidth/Height when setter called.
+	private String text;
 	public final Position position;
 	public int w, h;
 	private float fontW, fontH;

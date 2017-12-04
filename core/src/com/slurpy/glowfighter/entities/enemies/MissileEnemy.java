@@ -12,11 +12,12 @@ import com.slurpy.glowfighter.entities.EntityDef;
 import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
+import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
 import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 
-public class MissileEnemy extends Entity implements Damage{
+public class MissileEnemy extends Entity implements Damage, KnockbackMultiplier{
 	
 	private static final float SPEED = 10f;
 	
@@ -55,6 +56,11 @@ public class MissileEnemy extends Entity implements Damage{
 	@Override
 	public float getDamage() {
 		return 5f;
+	}
+	
+	@Override
+	public float getMultiplier() {
+		return 0.5f;
 	}
 	
 	private static EntityDef entityDef = new EntityDef();

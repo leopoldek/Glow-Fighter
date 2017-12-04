@@ -29,6 +29,7 @@ public class Player extends Entity implements Health, Knockback{
 	
 	private Gun defaultGun = new PeaShooter();
 	private Gun gun = null;
+	private boolean shoot = false;
 	
 	private float health = maxHealth;
 	private boolean dead = false;
@@ -53,6 +54,10 @@ public class Player extends Entity implements Health, Knockback{
 			}
 			
 			body.applyLinearImpulse(move.nor().scl(boost), body.getPosition(), true);
+		});
+		
+		Core.bindings.subscribe(Action.primary, () -> {
+			shoot = !shoot;
 		});
 	}
 
@@ -92,10 +97,10 @@ public class Player extends Entity implements Health, Knockback{
 		float angle = body.getAngle();
 		Vector2 pos = body.getPosition().cpy().add(cos(angle) * size * 2, sin(angle) * size * 2);
 		if(gun == null){
-			defaultGun.update(Core.bindings.isActionPressed(Action.primary), pos, angle);
+			defaultGun.update(shoot, pos, angle);
 		}else{
 			gun.tick(Gdx.graphics.getDeltaTime());
-			gun.update(Core.bindings.isActionPressed(Action.primary), pos, angle);
+			gun.update(shoot, pos, angle);
 			if(gun.getTimeLeft() <= 0)gun = null;
 		}
 		
