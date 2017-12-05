@@ -7,13 +7,14 @@ import static com.badlogic.gdx.math.MathUtils.sin;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class DeceptivePart extends Part{
 	
 	protected Part part;
-	protected int amount;
+	protected int spawnRate;
 	protected float stayTime;
 	protected float range;
 	protected boolean drawReal;
@@ -24,9 +25,9 @@ public class DeceptivePart extends Part{
 	
 	private Color tempColor = new Color();
 	
-	public DeceptivePart(Part part, int amount, float stayTime, float range, boolean drawReal) {
+	public DeceptivePart(Part part, int spawnRate, float stayTime, float range, boolean drawReal) {
 		this.part = part;
-		this.amount = amount;
+		this.spawnRate = spawnRate;//Chance to spawn per second.
 		this.stayTime = stayTime;
 		this.range = range;
 		this.drawReal = drawReal;
@@ -36,7 +37,7 @@ public class DeceptivePart extends Part{
 	}
 	
 	public void draw(Vector2 pos, float rot, Color color){
-		if(pastPos.size < Math.min(random(amount), random(amount))){//TODO Could be improved
+		if(MathUtils.randomBoolean(spawnRate * Gdx.graphics.getDeltaTime())){
 			float random = random(PI2);
 			float randomRange = random(range);
 			pastPos.add(new Vector2(pos).add(randomRange * cos(random), randomRange * sin(random)));
@@ -48,7 +49,7 @@ public class DeceptivePart extends Part{
 		for(int i = 0; i < pastPos.size; i++){
 			tempColor.a = alphas.get(i) * color.a;
 			part.draw(pastPos.get(i), pastRot.get(i), tempColor);
-			alphas.set(i, alphas.get(i) - (Gdx.graphics.getRawDeltaTime() / stayTime));
+			alphas.set(i, alphas.get(i) - (Gdx.graphics.getDeltaTime() / stayTime));
 			
 			if(alphas.get(i) <= 0){
 				pastPos.removeIndex(i);
