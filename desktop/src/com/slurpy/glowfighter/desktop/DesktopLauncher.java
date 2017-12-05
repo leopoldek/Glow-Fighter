@@ -1,6 +1,9 @@
 package com.slurpy.glowfighter.desktop;
 
+import javax.swing.JOptionPane;
+
 import com.badlogic.gdx.Files.FileType;
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.slurpy.glowfighter.Core;
@@ -10,7 +13,11 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		
-		//TODO Error dialog and quit if screen size is smaller than minimum.
+		DisplayMode display = LwjglApplicationConfiguration.getDesktopDisplayMode();	
+		if(display.width < Constants.minWidth || display.height < Constants.minHeight){
+			JOptionPane.showMessageDialog(null, "Your display is too small.\nThe game can not run.", "Error!", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		
 		config.title = "Glow Fighter";
 		config.addIcon("icons/128x128.png", FileType.Internal);
