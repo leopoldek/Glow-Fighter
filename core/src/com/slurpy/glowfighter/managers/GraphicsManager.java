@@ -171,7 +171,7 @@ public class GraphicsManager implements Disposable{
 	
 	public void drawParticle(EffectAsset effect, Vector2 pos, float rot, float scl){
 		PooledEffect pooledEffect = Core.assets.getEffect(effect);
-		//pooledEffect.setEmittersCleanUpBlendFunction(false);//TODO Change this later!
+		//pooledEffect.setEmittersCleanUpBlendFunction(false);
 		pooledEffect.setPosition(pos.x, pos.y);
 		Util.rotateEffect(pooledEffect, rot);
 		pooledEffect.scaleEffect(scl);

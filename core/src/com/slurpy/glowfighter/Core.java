@@ -50,6 +50,7 @@ public class Core extends ApplicationAdapter {
 	
 	@Override
 	public void render () {
+		entities.clean();
 		tasks.update();
 		state.update();
 		entities.update();
