@@ -60,18 +60,24 @@ public class EntityManager {
 		
 		for(int i = entities.size - 1; i >= 0; i--){
 			Entity entity = entities.get(i);
-			if(entity.isDeleted())entities.removeIndex(i);
-			for(Iterator<ObjectSet<Entity>> groupIt = groups.values().iterator(); groupIt.hasNext();){
-				ObjectSet<Entity> group = groupIt.next();
-				group.remove(entity);
-				if(group.size == 0)groupIt.remove();
+			if(entity.isDeleted()){
+				entities.removeIndex(i);
+				for(Iterator<ObjectSet<Entity>> groupIt = groups.values().iterator(); groupIt.hasNext();){
+					ObjectSet<Entity> group = groupIt.next();
+					group.remove(entity);
+					if(group.size == 0)groupIt.remove();
+				}
+				Core.physics.destroy(entity.body);
 			}
-			Core.physics.destroy(entity.body);
 		}
 	}
 	
 	public void draw(){
-		for(int i = 0; i < entities.size; i++){
+		for(int i = 0; i < decors.size; i++){
+			Decor decor = decors.get(i);
+			if(!decor.isDeleted())
+				decor.draw();
+		}for(int i = 0; i < entities.size; i++){
 			Entity entity = entities.get(i);
 			if(!entity.isDeleted())
 				entity.draw();
@@ -87,6 +93,7 @@ public class EntityManager {
 			Core.physics.destroy(entity.body);
 		}
 		entities.clear();
+		decors.clear();
 		groups.clear();
 	}
 	
