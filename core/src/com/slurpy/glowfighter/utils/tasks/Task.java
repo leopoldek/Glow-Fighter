@@ -34,7 +34,7 @@ public class Task {
 		if(paused)return;
 		timer += Gdx.graphics.getDeltaTime();
 		
-		while(timer >= cTimes[keyFrame]){
+		while(timer > cTimes[keyFrame]){
 			frames[keyFrame].end();
 			keyFrame++;
 			if(keyFrame == frames.length){
