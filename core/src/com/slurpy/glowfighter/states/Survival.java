@@ -15,6 +15,7 @@ import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.enemies.BallLaunchingEnemy;
 import com.slurpy.glowfighter.entities.enemies.DiveStabber;
 import com.slurpy.glowfighter.entities.enemies.MissileEnemy;
+import com.slurpy.glowfighter.entities.enemies.SneakEnemy;
 import com.slurpy.glowfighter.entities.enemies.TurretEnemy;
 import com.slurpy.glowfighter.gui.Button;
 import com.slurpy.glowfighter.gui.Gui;
@@ -114,6 +115,7 @@ public class Survival implements State, Gui, InputProcessor{
 		while(accumulator > timer){
 			Core.entities.addEntity(new MissileEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
 			if(MathUtils.randomBoolean(0.04f))Core.entities.addEntity(new DiveStabber(Util.randomTriangularVector(spawnRange), player));
+			if(MathUtils.randomBoolean(ticks / 600f))Core.entities.addEntity(new SneakEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
 			accumulator -= timer;
 			ticks++;
 			if(ticks > 200){
