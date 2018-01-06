@@ -7,11 +7,11 @@ import com.slurpy.glowfighter.Core;
 
 public class TexturePart extends Part {
 	
-	private TextureRegion region;
-	private Vector2 pos;
-	private Vector2 size;
-	private Vector2 origin;
-	private float rot;
+	public final TextureRegion region;
+	public final Vector2 pos;
+	public final Vector2 size;
+	public final Vector2 origin;
+	public float rot;
 	
 	private final Vector2 tempPos = new Vector2();
 	
@@ -35,5 +35,10 @@ public class TexturePart extends Part {
 	public void draw(Vector2 pos, float rot, Color color) {
 		tempPos.set(this.pos).rotateRad(rot).sub(origin).add(pos);
 		Core.graphics.drawTexture(region, tempPos, size, origin, rot + this.rot);
+	}
+
+	@Override
+	public TexturePart clone() {
+		return new TexturePart(new TextureRegion(region), pos.cpy(), size.cpy(), origin.cpy(), rot);
 	}
 }

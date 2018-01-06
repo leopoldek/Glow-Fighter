@@ -8,4 +8,5 @@ public abstract class Part {
 	public boolean visible = true;
 	
 	public abstract void draw(Vector2 pos, float rot, Color color);
+	public abstract Part clone();
 }

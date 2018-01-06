@@ -9,7 +9,7 @@ public class PolygonPart extends Part{
 	public Vector2[] points;
 	public float width;
 	
-	private Vector2[] pointsPos;
+	private final Vector2[] pointsPos;
 	
 	public PolygonPart(Vector2[] points, float width){
 		this.points = points;
@@ -29,5 +29,14 @@ public class PolygonPart extends Part{
 			pointsPos[i].add(pos);
 		}
 		Core.graphics.drawPolygon(pointsPos, width, color);
+	}
+
+	@Override
+	public PolygonPart clone() {
+		Vector2[] copy = new Vector2[points.length];
+		for(int i = 0; i < points.length; i++){
+			copy[i] = points[i].cpy();
+		}
+		return new PolygonPart(copy, width);
 	}
 }

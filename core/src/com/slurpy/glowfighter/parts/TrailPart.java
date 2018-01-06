@@ -7,25 +7,27 @@ import com.badlogic.gdx.utils.Array;
 
 public class TrailPart extends Part{
 	
-	protected Part part;
-	protected float stayTime;
-	protected float length;//Squared length
+	public Part part;
+	public float stayTime;
+	public float length;
 	
-	private Array<Vector2> pastPos;//Change to linked queue later.
-	private Array<Float> pastRot;
+	private Array<Vector2> pastPos;
+	private Array<Float> pastRot;//TODO Change to linked queue later or FloatArray
 	private Array<Float> alphas;
+	private Array<Part> parts;
 	
 	private Vector2 lastPos;
 	
-	private Color tempColor = new Color();
+	private final Color tempColor = new Color();
 	
 	public TrailPart(Part part, float stayTime, float length){
 		this.part = part;
 		this.stayTime = stayTime;
-		this.length = length * length;
+		this.length = length;
 		pastPos = new Array<>();
 		pastRot = new Array<>();
 		alphas = new Array<>();
+		parts = new Array<>();
 	}
 	
 	@Override
@@ -36,26 +38,33 @@ public class TrailPart extends Part{
 			return;
 		}
 		
-		if(lastPos.dst2(pos) > length){
+		if(lastPos.dst2(pos) > length * length){
 			lastPos.set(pos);
 			pastPos.add(new Vector2(pos));
 			pastRot.add(rot);
 			alphas.add(1.0f);
+			parts.add(part.clone());
 		}
 		
 		tempColor.set(color);
 		for(int i = 0; i < pastPos.size; i++){
 			tempColor.a = alphas.get(i) * color.a;
-			part.draw(pastPos.get(i), pastRot.get(i), tempColor);
+			parts.get(i).draw(pastPos.get(i), pastRot.get(i), tempColor);
 			alphas.set(i, alphas.get(i) - (Gdx.graphics.getDeltaTime() / stayTime));
 			if(alphas.get(i) <= 0){
 				pastPos.removeIndex(i);
 				pastRot.removeIndex(i);
 				alphas.removeIndex(i);
+				parts.removeIndex(i);
 				i--;
 			}
 		}
 		
 		part.draw(pos, rot, color);
+	}
+
+	@Override
+	public TrailPart clone() {
+		return new TrailPart(part.clone(), stayTime, length);
 	}
 }

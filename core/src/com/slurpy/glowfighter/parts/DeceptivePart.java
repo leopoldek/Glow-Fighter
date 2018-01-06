@@ -13,19 +13,20 @@ import com.badlogic.gdx.utils.Array;
 
 public class DeceptivePart extends Part{
 	
-	protected Part part;
-	protected int spawnRate;
-	protected float stayTime;
-	protected float range;
-	protected boolean drawReal;
+	public Part part;
+	public float spawnRate;
+	public float stayTime;
+	public float range;
+	public boolean drawReal;
 	
-	private Array<Vector2> pastPos;//Change to linked queue later.
-	private Array<Float> pastRot;
-	private Array<Float> alphas;
+	private final Array<Vector2> pastPos;//Change to linked queue later.
+	private final Array<Float> pastRot;//TODO Change to FloatArray
+	private final Array<Float> alphas;
+	private final Array<Part> parts;
 	
 	private Color tempColor = new Color();
 	
-	public DeceptivePart(Part part, int spawnRate, float stayTime, float range, boolean drawReal) {
+	public DeceptivePart(Part part, float spawnRate, float stayTime, float range, boolean drawReal) {
 		this.part = part;
 		this.spawnRate = spawnRate;//Chance to spawn per second.
 		this.stayTime = stayTime;
@@ -34,6 +35,7 @@ public class DeceptivePart extends Part{
 		pastPos = new Array<>();
 		pastRot = new Array<>();
 		alphas = new Array<>();
+		parts = new Array<>();
 	}
 	
 	public void draw(Vector2 pos, float rot, Color color){
@@ -43,23 +45,30 @@ public class DeceptivePart extends Part{
 			pastPos.add(new Vector2(pos).add(randomRange * cos(random), randomRange * sin(random)));
 			pastRot.add(rot);
 			alphas.add(1f);
+			parts.add(part.clone());
 		}
 		
 		tempColor.set(color);
 		for(int i = 0; i < pastPos.size; i++){
 			tempColor.a = alphas.get(i) * color.a;
-			part.draw(pastPos.get(i), pastRot.get(i), tempColor);
+			parts.get(i).draw(pastPos.get(i), pastRot.get(i), tempColor);
 			alphas.set(i, alphas.get(i) - (Gdx.graphics.getDeltaTime() / stayTime));
 			
 			if(alphas.get(i) <= 0){
 				pastPos.removeIndex(i);
 				pastRot.removeIndex(i);
 				alphas.removeIndex(i);
+				parts.removeIndex(i);
 				i--;
 			}
 		}
 		
 		if(drawReal)
 			part.draw(pos, rot, color);
+	}
+
+	@Override
+	public DeceptivePart clone() {
+		return new DeceptivePart(part.clone(), spawnRate, stayTime, range, drawReal);
 	}
 }

@@ -6,12 +6,12 @@ import com.slurpy.glowfighter.Core;
 
 public class LinePart extends Part{
 	
-	public Vector2 start;
-	public Vector2 end;
+	public final Vector2 start;
+	public final Vector2 end;
 	public float width;
 	
-	private Vector2 startPos = new Vector2();
-	private Vector2 endPos = new Vector2();
+	private final Vector2 startTemp = new Vector2();
+	private final Vector2 endTemp = new Vector2();
 	
 	public LinePart(Vector2 start, Vector2 end, float width) {
 		this.start = start;
@@ -21,13 +21,18 @@ public class LinePart extends Part{
 
 	@Override
 	public void draw(Vector2 pos, float rot, Color color) {
-		startPos.set(start);
-		endPos.set(end);
-		startPos.rotateRad(rot);
-		endPos.rotateRad(rot);
-		startPos.add(pos);
-		endPos.add(pos);
+		startTemp.set(start);
+		endTemp.set(end);
+		startTemp.rotateRad(rot);
+		endTemp.rotateRad(rot);
+		startTemp.add(pos);
+		endTemp.add(pos);
 		
-		Core.graphics.drawLine(startPos, endPos, width, color);
+		Core.graphics.drawLine(startTemp, endTemp, width, color);
+	}
+
+	@Override
+	public LinePart clone() {
+		return new LinePart(start.cpy(), end.cpy(), width);
 	}
 }

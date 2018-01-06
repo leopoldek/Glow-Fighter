@@ -6,7 +6,7 @@ import com.slurpy.glowfighter.Core;
 
 public class CirclePart extends Part{
 	
-	public Vector2 pos;
+	public final Vector2 pos;
 	public float radius;
 	
 	private final Vector2 temp = new Vector2();
@@ -19,5 +19,10 @@ public class CirclePart extends Part{
 	@Override
 	public void draw(Vector2 pos, float rot, Color color) {
 		Core.graphics.drawCircle(temp.set(this.pos).add(pos), radius, color);
+	}
+
+	@Override
+	public CirclePart clone() {
+		return new CirclePart(pos.cpy(), radius);
 	}
 }
