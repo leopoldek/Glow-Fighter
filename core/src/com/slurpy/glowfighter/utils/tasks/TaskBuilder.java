@@ -15,7 +15,7 @@ public class TaskBuilder {
 	}
 	
 	public TaskBuilder addKeyFrame(float time){
-		frames.add(new IdleKeyFrame());
+		frames.add((progress, frameProgress) -> {});
 		times.add(time);
 		return this;
 	}

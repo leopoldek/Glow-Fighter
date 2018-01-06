@@ -24,6 +24,7 @@ public class Label {
 	}
 	
 	public void draw(){
+		if(color.a == 0f)return;
 		Vector2 pos = position.getPosition();
 		pos.sub(fontW/2, -fontH/2);
 		Core.graphics.drawText(text, pos, size, color);

@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.Core;
+import com.slurpy.glowfighter.decor.DecorDef;
+import com.slurpy.glowfighter.decor.FadeDecor;
 import com.slurpy.glowfighter.entities.Category;
 import com.slurpy.glowfighter.entities.Entity;
 import com.slurpy.glowfighter.entities.EntityDef;
@@ -13,7 +15,6 @@ import com.slurpy.glowfighter.entities.Player;
 import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
-import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
 import com.slurpy.glowfighter.parts.DeceptivePart;
 import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
@@ -22,6 +23,7 @@ import com.slurpy.glowfighter.parts.PulsatingPart;
 public class SneakEnemy extends Entity implements Damage, KnockbackMultiplier{
 	
 	private static final float SPEED = 10f;
+	private static final DecorDef leftoverDecor = new DecorDef();
 	
 	private final Player player;
 	
@@ -46,7 +48,12 @@ public class SneakEnemy extends Entity implements Damage, KnockbackMultiplier{
 	
 	@Override
 	public void hit(Entity other) {
-		Core.graphics.drawParticle(EffectAsset.EnemyMissleDeath, body.getPosition());
+		leftoverDecor.pos.set(body.getPosition());
+		leftoverDecor.rot = body.getAngle();
+		leftoverDecor.parts = parts;
+		leftoverDecor.colors = colors;
+		Core.entities.addDecor(new FadeDecor(leftoverDecor));
+		
 		delete();
 	}
 	
@@ -57,7 +64,7 @@ public class SneakEnemy extends Entity implements Damage, KnockbackMultiplier{
 	
 	@Override
 	public float getMultiplier() {
-		return 0.5f;
+		return 0.7f;
 	}
 	
 	private static EntityDef entityDef = new EntityDef();
@@ -69,7 +76,12 @@ public class SneakEnemy extends Entity implements Damage, KnockbackMultiplier{
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
 		entityDef.parts = new Part[]{
-				new DeceptivePart(new PulsatingPart(new PolygonPart(polygon, 0.04f), 0.75f, 0.2f, 1f), 6f, 3f, 1f, false)
+				new DeceptivePart(new PulsatingPart(new PolygonPart(polygon, 0.04f), 1f, 0.2f, 1f){
+					@Override
+					public PulsatingPart clone() {
+						return new PulsatingPart(part.clone(), period, min, max, getTime());
+					}
+				}, 12f, 4f, 2f, false)
 		};
 		entityDef.setColor(Color.MAGENTA.cpy());
 		return entityDef;

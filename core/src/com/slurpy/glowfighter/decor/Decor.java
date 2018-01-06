@@ -16,6 +16,9 @@ public abstract class Decor {
 	
 	public Decor(DecorDef def){
 		pos = new Vector2(def.pos);
+		rot = def.rot;
+		parts = def.parts;
+		colors = def.colors;
 	}
 	
 	public abstract void update();

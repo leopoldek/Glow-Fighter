@@ -113,9 +113,14 @@ public class Survival implements State, Gui, InputProcessor{
 		
 		accumulator += Gdx.graphics.getDeltaTime();
 		while(accumulator > timer){
-			Core.entities.addEntity(new MissileEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
-			if(MathUtils.randomBoolean(0.04f))Core.entities.addEntity(new DiveStabber(Util.randomTriangularVector(spawnRange), player));
-			if(MathUtils.randomBoolean(ticks / 600f))Core.entities.addEntity(new SneakEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
+			if(level % 6 != 0){
+				Core.entities.addEntity(new MissileEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
+				if(MathUtils.randomBoolean(0.04f))Core.entities.addEntity(new DiveStabber(Util.randomTriangularVector(spawnRange), player));
+				if(MathUtils.randomBoolean(ticks / 3000f))Core.entities.addEntity(new SneakEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
+			}else{
+				Core.entities.addEntity(new SneakEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
+			}
+			
 			accumulator -= timer;
 			ticks++;
 			if(ticks > 200){
@@ -180,19 +185,19 @@ public class Survival implements State, Gui, InputProcessor{
 	
 	private static final float INDICATOR_SIZE = 15;
 	private static final float center = 0.5f;
+	private static final float specialTextSize = 34f;
 	
 	private final Position healthBarPos = new Position(1, 0, -50, 50);
 	private final Position gunStatsPos = new Position(0, 0, 50, 50);
 	private final Position fpsPos = new Position(0, 1, 10, -10);
-	private final Position levelPos = new Position(0.5f, 1, -40, -10);
+	private final Label levelInfoLabel = new Label("Level " + level, new Position(0.5f, 1f, 0, -20), Color.GRAY, 32f);
+	private final Label specialLevelLabel = new Label("", new Position(0.5f, 0.5f, 0, -70), new Color(1, 1, 1, 0), specialTextSize);
 	
 	private final PolygonPart arrowIndicator = new PolygonPart(new Vector2[]{
 			new Vector2(INDICATOR_SIZE, 0),
 			new Vector2(-INDICATOR_SIZE, -INDICATOR_SIZE),
 			new Vector2(-INDICATOR_SIZE, INDICATOR_SIZE)
 	}, 6);
-	
-	private float levelTextSize = 32;
 	
 	private final Rectangle menu = new Rectangle(new Position(center, center, -150, -110), 300, 240, Color.CHARTREUSE, 20f);
 	private final Label menuLabel = new Label("PAUSED", new Position(center, center, 0, 100), Color.WHITE, 48f);
@@ -248,7 +253,8 @@ public class Survival implements State, Gui, InputProcessor{
 		}
 		
 		if(Constants.SHOW_FPS)Core.graphics.drawText(Integer.toString(Gdx.graphics.getFramesPerSecond()), fpsPos.getPosition(), 24, Color.GRAY);
-		Core.graphics.drawText("Level " + level, levelPos.getPosition(), levelTextSize, Color.WHITE);
+		levelInfoLabel.draw();
+		specialLevelLabel.draw();
 	}
 	
 	@Override
@@ -260,49 +266,80 @@ public class Survival implements State, Gui, InputProcessor{
 		TaskBuilder builder = new TaskBuilder();
 		final float ryStart = 1f;
 		final float ryEnd = 0.5f;
-		final float xStart = -40;
-		final float xEnd = -55;
-		final float yStart = -10;
-		final float yEnd = 10;
+		final float yStart = -20;
+		final float yEnd = 0;
 		final float textSizeStart = 32;
 		final float textSizeEnd = 58;
 		builder.addKeyFrame(new KeyFrame(){
 			@Override
 			public void act(float progress, float frameProgress) {
-				levelPos.ry = Interpolation.circleOut.apply(ryStart, ryEnd, frameProgress);
-				levelPos.x = Interpolation.circleOut.apply(xStart, xEnd, frameProgress);
-				levelPos.y = Interpolation.linear.apply(yStart, yEnd, frameProgress);
-				levelTextSize = Interpolation.circleOut.apply(textSizeStart, textSizeEnd, frameProgress);
+				levelInfoLabel.position.ry = Interpolation.circleOut.apply(ryStart, ryEnd, frameProgress);
+				levelInfoLabel.position.y = Interpolation.circleOut.apply(yStart, yEnd, frameProgress);
+				levelInfoLabel.setText(levelInfoLabel.getText(), Interpolation.circleOut.apply(textSizeStart, textSizeEnd, frameProgress));
 			}
 			@Override
 			public void end() {
-				levelPos.ry = ryEnd;
-				levelPos.x = xEnd;
-				levelPos.y = yEnd;
-				levelTextSize = textSizeEnd;
-				
 				level++;
+				
+				levelInfoLabel.position.ry = ryEnd;
+				levelInfoLabel.position.y = yEnd;
+				levelInfoLabel.setText("Level " + level, textSizeEnd);
 				
 				Core.entities.addEntity(new BallLaunchingEnemy(new Vector2(spawnRange, 0)));
 				Core.entities.addEntity(new BallLaunchingEnemy(new Vector2(-spawnRange, 0)));
 				if(level % 5 == 0)Core.entities.addEntity(new TurretEnemy(new Vector2(), player));
+				
+				boolean specialLevel = false;
+				if(level % 5 == 0 && level % 6 == 0){
+					specialLevelLabel.setText("            Wow! You made it pretty far!\nBut now you have to fight the boss with a challenge!", specialTextSize);
+					specialLevel = true;
+				}else if(level % 5 == 0){
+					specialLevelLabel.setText("Boss Level!", specialTextSize);
+					specialLevel = true;
+				}else if(level % 6 == 0){//TODO Add multiple challenge levels. (Pick challenge at random)
+					specialLevelLabel.setText("Challenge Level!", specialTextSize);
+					specialLevel = true;
+				}
+				if(!specialLevel)return;
+				
+				TaskBuilder levelInfoBuilder = new TaskBuilder();
+				levelInfoBuilder.addKeyFrame(new KeyFrame(){
+					@Override
+					public void act(float progress, float frameProgress) {
+						specialLevelLabel.color.a = Interpolation.circleOut.apply(0f, 1f, frameProgress);
+					}
+					@Override
+					public void end() {
+						specialLevelLabel.color.a = 1f;
+					}
+				}, 0.35f);
+				levelInfoBuilder.addKeyFrame(1.7f);
+				levelInfoBuilder.addKeyFrame(new KeyFrame(){
+					@Override
+					public void act(float progress, float frameProgress) {
+						specialLevelLabel.color.a = Interpolation.circleIn.apply(1f, 0f, frameProgress);
+					}
+					@Override
+					public void end() {
+						specialLevelLabel.color.a = 0f;
+					}
+				}, 1.4f);
+				Core.tasks.addTask(levelInfoBuilder);
 			}
 		}, 1.1f);
 		builder.addKeyFrame(1.2f);
 		builder.addKeyFrame(new KeyFrame(){
 			@Override
 			public void act(float progress, float frameProgress) {
-				levelPos.ry = Interpolation.circleOut.apply(ryEnd, ryStart, frameProgress);
-				levelPos.x = Interpolation.circleOut.apply(xEnd, xStart, frameProgress);
-				levelPos.y = Interpolation.linear.apply(yEnd, yStart, frameProgress);
-				levelTextSize = Interpolation.circleOut.apply(textSizeEnd, textSizeStart, frameProgress);
+				levelInfoLabel.position.ry = Interpolation.circleOut.apply(ryEnd, ryStart, frameProgress);
+				levelInfoLabel.position.y = Interpolation.circleOut.apply(yEnd, yStart, frameProgress);
+				levelInfoLabel.setText(levelInfoLabel.getText(), Interpolation.circleOut.apply(textSizeEnd, textSizeStart, frameProgress));
 			}
 			@Override
 			public void end() {
-				levelPos.ry = ryStart;
-				levelPos.x = xStart;
-				levelPos.y = yStart;
-				levelTextSize = textSizeStart;
+				levelInfoLabel.position.ry = ryStart;
+				levelInfoLabel.position.y = yStart;
+				levelInfoLabel.setText(levelInfoLabel.getText(), textSizeStart);
 			}
 		}, 1.2f);
 		Core.tasks.addTask(builder);
