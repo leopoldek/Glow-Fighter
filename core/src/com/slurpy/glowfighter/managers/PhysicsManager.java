@@ -1,5 +1,7 @@
 package com.slurpy.glowfighter.managers;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -135,9 +138,23 @@ public class PhysicsManager implements Disposable{
 		return entities;
 	}
 	
-	//TODO Finish sight finder
 	public ObjectSet<Entity> getEntitiesInSight(final Vector2 pos, final float radius){
-		throw new UnsupportedOperationException();
+		final ObjectSet<Entity> entities = getEntitiesInRadius(pos, radius);
+		filter:for(Iterator<Entity> i = entities.iterator(); i.hasNext();){
+			Entity entity = i.next();
+			for(Fixture fixture : entity.body.getFixtureList()){
+				//We have to do this because raycast omits bodies inside the starting pos.
+				if(fixture.testPoint(pos))continue filter;
+			}
+			world.rayCast((fixture, point, normal, fraction) -> {
+				if(fixture.getBody().getUserData() != entity){
+					i.remove();
+					return 0;
+				}
+				return fraction;
+			}, pos, entity.getPosition());
+		}
+		return entities;
 	}
 	
 	public void update(){
