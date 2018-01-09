@@ -11,8 +11,8 @@ import com.slurpy.glowfighter.parts.Part;
 
 public abstract class Entity {
 	
-	protected Part[] parts;
-	protected Color[] colors;
+	public Part part;
+	public final Color color;
 	
 	public final Body body;
 	public final Category category;
@@ -21,8 +21,8 @@ public abstract class Entity {
 	private boolean deleted = false;
 	
 	public Entity(EntityDef entityDef){
-		parts = entityDef.parts;
-		colors = entityDef.colors;
+		part = entityDef.part;
+		color = entityDef.color;
 		category = entityDef.category;
 		team = entityDef.team;
 		
@@ -55,11 +55,7 @@ public abstract class Entity {
 	public abstract void update();
 	
 	public void draw(){
-		for(int i = 0; i < parts.length; i++){
-			Part part = parts[i];
-			if(part.visible)
-				part.draw(body.getPosition(), body.getAngle(), colors[i]);
-		}
+		if(part.visible)part.draw(body.getPosition(), body.getAngle(), color);
 	}
 	
 	public void hit(Entity other){}

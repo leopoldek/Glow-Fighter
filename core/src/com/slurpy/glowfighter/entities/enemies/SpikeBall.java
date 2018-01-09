@@ -9,7 +9,6 @@ import com.slurpy.glowfighter.entities.EntityDef;
 import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.Health;
-import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 
 public class SpikeBall extends Entity implements Damage, Health{
@@ -62,10 +61,8 @@ public class SpikeBall extends Entity implements Damage, Health{
 				radiusVector.rotate(-45f).cpy(),
 				radiusVector.rotate(-45f).cpy()
 		};
-		entityDef.parts = new Part[]{
-				new PolygonPart(entityDef.polygon, 0.1f)
-		};
-		entityDef.setColor(Color.ORANGE.cpy());
+		entityDef.part = new PolygonPart(entityDef.polygon, 0.1f);
+		entityDef.color = Color.ORANGE;
 		return entityDef;
 	}
 	

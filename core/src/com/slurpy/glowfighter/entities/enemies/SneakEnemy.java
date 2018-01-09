@@ -16,7 +16,6 @@ import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
 import com.slurpy.glowfighter.parts.DeceptivePart;
-import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 import com.slurpy.glowfighter.parts.PulsatingPart;
 
@@ -50,8 +49,8 @@ public class SneakEnemy extends Entity implements Damage, KnockbackMultiplier{
 	public void hit(Entity other) {
 		leftoverDecor.pos.set(body.getPosition());
 		leftoverDecor.rot = body.getAngle();
-		leftoverDecor.parts = parts;
-		leftoverDecor.colors = colors;
+		leftoverDecor.part = part;
+		leftoverDecor.color = color;
 		Core.entities.addDecor(new FadeDecor(leftoverDecor));
 		
 		delete();
@@ -75,15 +74,13 @@ public class SneakEnemy extends Entity implements Damage, KnockbackMultiplier{
 	private static EntityDef getEntityDef(Vector2 pos, float rot){
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
-		entityDef.parts = new Part[]{
-				new DeceptivePart(new PulsatingPart(new PolygonPart(polygon, 0.04f), 1f, 0.2f, 1f){
-					@Override
-					public PulsatingPart clone() {
-						return new PulsatingPart(part.clone(), period, min, max, getTime());
-					}
-				}, 12f, 4f, 2f, false)
-		};
-		entityDef.setColor(Color.MAGENTA.cpy());
+		entityDef.part = new DeceptivePart(new PulsatingPart(new PolygonPart(polygon, 0.04f), 1f, 0.2f, 1f){
+				@Override
+				public PulsatingPart clone() {
+					return new PulsatingPart(part.clone(), period, min, max, getTime());
+				}
+		}, 12f, 4f, 2f, false);
+		entityDef.color = Color.MAGENTA.cpy();
 		return entityDef;
 	}
 	

@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.parts.DeceptivePart;
-import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 
 public class TestEntity extends Entity{
@@ -29,8 +28,8 @@ public class TestEntity extends Entity{
 	private static EntityDef getEntityDef(Vector2 pos, float rot, Color color){
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
-		entityDef.parts = new Part[]{new DeceptivePart(new PolygonPart(polygon, 0.2f), 12, 3f, 6f, true)};
-		entityDef.setColor(color);
+		entityDef.part = new DeceptivePart(new PolygonPart(polygon, 0.2f), 12, 3f, 6f, true);
+		entityDef.color = color.cpy();
 		return entityDef;
 	}
 	

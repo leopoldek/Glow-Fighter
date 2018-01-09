@@ -15,8 +15,8 @@ import com.slurpy.glowfighter.guns.Gun;
 import com.slurpy.glowfighter.guns.PeaShooter;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.parts.LinePart;
-import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
+import com.slurpy.glowfighter.parts.SplitPart;
 import com.slurpy.glowfighter.parts.TrailPart;
 import com.slurpy.glowfighter.utils.Action;
 
@@ -64,7 +64,7 @@ public class Player extends Entity implements Health, Knockback{
 	@Override
 	public void update() {
 		if(dead){
-			colors[0].set(Color.DARK_GRAY);
+			color.set(Color.DARK_GRAY);
 			return;
 		}
 		body.setTransform(body.getPosition(), atan2(-(Gdx.input.getY() - Gdx.graphics.getHeight()/2), Gdx.input.getX() - Gdx.graphics.getWidth()/2));
@@ -107,7 +107,7 @@ public class Player extends Entity implements Health, Knockback{
 		health += 5f * Gdx.graphics.getDeltaTime();
 		if(health > maxHealth)health = maxHealth;
 		float color = health / maxHealth;
-		colors[0].set(1, color, color, 1);
+		super.color.set(1, color, color, 1);
 	}
 	
 	@Override
@@ -158,10 +158,10 @@ public class Player extends Entity implements Health, Knockback{
 	private static EntityDef getEntityDef(Vector2 pos, float rot){
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
-		entityDef.parts = new Part[]{
+		entityDef.part = new SplitPart(
 				new TrailPart(new PolygonPart(polygon, 0.1f), 1f, 0.65f),
 				new LinePart(new Vector2(0, 0), new Vector2(-0.3f, 0), 0.1f)
-		};
+		);
 		return entityDef;
 	}
 	
@@ -170,11 +170,10 @@ public class Player extends Entity implements Health, Knockback{
 	
 	static{
 		entityDef.polygon = polygon;
-		entityDef.parts = new Part[2];
 		entityDef.category = Category.ENTITY;
 		entityDef.team = Team.FRIENDLY;
 		entityDef.bullet = true;
-		entityDef.setColor(Color.WHITE.cpy());
+		entityDef.color = Color.WHITE.cpy();
 		entityDef.bodyType = BodyType.DynamicBody;
 	}
 }

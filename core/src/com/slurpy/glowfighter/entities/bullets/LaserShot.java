@@ -9,7 +9,6 @@ import com.slurpy.glowfighter.entities.EntityDef;
 import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.parts.LinePart;
-import com.slurpy.glowfighter.parts.Part;
 
 public class LaserShot extends Entity implements Damage{
 	
@@ -41,8 +40,8 @@ public class LaserShot extends Entity implements Damage{
 	private static EntityDef getEntityDef(Vector2 pos, float rot, Color color, Team team){
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
-		entityDef.parts = new Part[]{new LinePart(new Vector2(depth * 10, 0), new Vector2(height, 0), width)};
-		entityDef.setColor(color);
+		entityDef.part = new LinePart(new Vector2(depth * 10, 0), new Vector2(height, 0), width);
+		entityDef.color = color;
 		entityDef.team = team;
 		return entityDef;
 	}

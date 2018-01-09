@@ -44,6 +44,9 @@ public class Survival implements State, Gui, InputProcessor{
 	private static final float wallWidth = 5;
 	private static final float spawnRange = Math.min(length, height) - 5f;
 	
+	private static final int challengeLevel = 3;
+	private static final int bossLevel = 5;
+	
 	private Player player;
 	
 	private float timer;
@@ -113,7 +116,7 @@ public class Survival implements State, Gui, InputProcessor{
 		
 		accumulator += Gdx.graphics.getDeltaTime();
 		while(accumulator > timer){
-			if(level % 6 != 0){
+			if(level % challengeLevel != 0){
 				Core.entities.addEntity(new MissileEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
 				if(MathUtils.randomBoolean(0.04f))Core.entities.addEntity(new DiveStabber(Util.randomTriangularVector(spawnRange), player));
 				if(MathUtils.randomBoolean(ticks / 3000f))Core.entities.addEntity(new SneakEnemy(Util.randomTriangularVector(spawnRange), MathUtils.random(MathUtils.PI2), player));
@@ -290,13 +293,13 @@ public class Survival implements State, Gui, InputProcessor{
 				if(level % 5 == 0)Core.entities.addEntity(new TurretEnemy(new Vector2(), player));
 				
 				boolean specialLevel = false;
-				if(level % 5 == 0 && level % 6 == 0){
+				if(level % bossLevel == 0 && level % challengeLevel == 0){
 					specialLevelLabel.setText("            Wow! You made it pretty far!\nBut now you have to fight the boss with a challenge!", specialTextSize);
 					specialLevel = true;
-				}else if(level % 5 == 0){
+				}else if(level % bossLevel == 0){
 					specialLevelLabel.setText("Boss Level!", specialTextSize);
 					specialLevel = true;
-				}else if(level % 6 == 0){//TODO Add multiple challenge levels. (Pick challenge at random)
+				}else if(level % challengeLevel == 0){//TODO Add multiple challenge levels. (Pick challenge at random)
 					specialLevelLabel.setText("Challenge Level!", specialTextSize);
 					specialLevel = true;
 				}

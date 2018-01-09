@@ -14,7 +14,6 @@ import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
 import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
-import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 
 public class MissileEnemy extends Entity implements Damage, KnockbackMultiplier{
@@ -43,7 +42,6 @@ public class MissileEnemy extends Entity implements Damage, KnockbackMultiplier{
 		
 		//PlayerPos still equals diff
 		float dist = playerPos.len2();
-		Color color = colors[0];
 		color.set(Color.SCARLET).lerp(Color.CYAN, dist / 64);
 	}
 
@@ -68,7 +66,7 @@ public class MissileEnemy extends Entity implements Damage, KnockbackMultiplier{
 	private static EntityDef getEntityDef(Vector2 pos, float rot){
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
-		entityDef.setColor(Color.CYAN.cpy());
+		entityDef.color = Color.CYAN.cpy();
 		return entityDef;
 	}
 	
@@ -81,8 +79,6 @@ public class MissileEnemy extends Entity implements Damage, KnockbackMultiplier{
 		entityDef.team = Team.ENEMY;
 		entityDef.bullet = false;
 		entityDef.bodyType = BodyType.DynamicBody;
-		entityDef.parts = new Part[]{
-				new PolygonPart(polygon, 0.04f)
-		};
+		entityDef.part = new PolygonPart(polygon, 0.04f);
 	}
 }

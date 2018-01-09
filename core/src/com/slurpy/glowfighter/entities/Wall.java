@@ -3,7 +3,6 @@ package com.slurpy.glowfighter.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 
 public class Wall extends Entity {
@@ -33,8 +32,8 @@ public class Wall extends Entity {
 				new Vector2(size.x, size.y),
 				new Vector2(size.x, -size.y)
 		};
-		entityDef.parts = new Part[]{new PolygonPart(entityDef.polygon, 0.5f)};
-		entityDef.setColor(color);
+		entityDef.part = new PolygonPart(entityDef.polygon, 0.5f);
+		entityDef.color = color;
 		return entityDef;
 	}
 	

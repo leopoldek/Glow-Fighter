@@ -9,7 +9,6 @@ import com.slurpy.glowfighter.entities.EntityDef;
 import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.parts.CirclePart;
-import com.slurpy.glowfighter.parts.Part;
 
 public class BuckShot extends Entity implements Damage{
 	
@@ -41,7 +40,7 @@ public class BuckShot extends Entity implements Damage{
 	private static EntityDef getEntityDef(Vector2 pos, float rot, Color color, Team team){
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
-		entityDef.setColor(color);
+		entityDef.color = color;
 		entityDef.team = team;
 		return entityDef;
 	}
@@ -56,7 +55,7 @@ public class BuckShot extends Entity implements Damage{
 	
 	static{
 		entityDef.polygon = polygon;
-		entityDef.parts = new Part[]{new CirclePart(new Vector2(), size)};
+		entityDef.part = new CirclePart(new Vector2(), size);
 		entityDef.category = Category.BULLET;
 		entityDef.bullet = true;
 		//entityDef.sensor = true;

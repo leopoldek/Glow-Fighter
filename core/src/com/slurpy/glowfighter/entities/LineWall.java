@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
 import com.slurpy.glowfighter.parts.LinePart;
-import com.slurpy.glowfighter.parts.Part;
 
 public class LineWall extends Entity implements KnockbackMultiplier{
 	public LineWall(Vector2 pos, float length, float width, float rot, Color color) {
@@ -39,8 +38,8 @@ public class LineWall extends Entity implements KnockbackMultiplier{
 				new Vector2(length, halfWidth),
 				new Vector2(length, -halfWidth)
 		};
-		entityDef.parts = new Part[]{new LinePart(new Vector2(-length, 0), new Vector2(length, 0), width)};
-		entityDef.setColor(color);
+		entityDef.part = new LinePart(new Vector2(-length, 0), new Vector2(length, 0), width);
+		entityDef.color = color;
 		return entityDef;
 	}
 	

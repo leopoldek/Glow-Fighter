@@ -13,7 +13,6 @@ import com.slurpy.glowfighter.entities.Team;
 import com.slurpy.glowfighter.entities.bullets.LaserShot;
 import com.slurpy.glowfighter.entities.traits.Damage;
 import com.slurpy.glowfighter.entities.traits.Health;
-import com.slurpy.glowfighter.parts.Part;
 import com.slurpy.glowfighter.parts.PolygonPart;
 
 public class TurretEnemy extends Entity implements Damage, Health{
@@ -82,7 +81,6 @@ public class TurretEnemy extends Entity implements Damage, Health{
 	
 	private static EntityDef getEntityDef(Vector2 pos){
 		entityDef.pos.set(pos);
-		entityDef.setColor(Color.ORANGE.cpy());
 		return entityDef;
 	}
 	
@@ -95,9 +93,8 @@ public class TurretEnemy extends Entity implements Damage, Health{
 				new Vector2(-0.5f, 0.5f),
 				new Vector2(0.5f, 0.5f),
 		};
-		entityDef.parts = new Part[]{
-				new PolygonPart(entityDef.polygon, 0.2f)
-		};
+		entityDef.part = new PolygonPart(entityDef.polygon, 0.2f);
+		entityDef.color = Color.ORANGE;
 		entityDef.category = Category.ENTITY;
 		entityDef.team = Team.ENEMY;
 		entityDef.bullet = false;

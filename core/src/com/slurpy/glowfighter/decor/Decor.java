@@ -6,8 +6,8 @@ import com.slurpy.glowfighter.parts.Part;
 
 public abstract class Decor {
 	
-	protected Part[] parts;
-	protected Color[] colors;
+	protected Part part;
+	protected Color color;
 	
 	public final Vector2 pos;
 	public float rot;
@@ -17,18 +17,14 @@ public abstract class Decor {
 	public Decor(DecorDef def){
 		pos = new Vector2(def.pos);
 		rot = def.rot;
-		parts = def.parts;
-		colors = def.colors;
+		part = def.part;
+		color = def.color;
 	}
 	
 	public abstract void update();
 	
 	public void draw(){
-		for(int i = 0; i < parts.length; i++){
-			Part part = parts[i];
-			if(part.visible)
-				part.draw(pos, rot, colors[i]);
-		}
+		if(part.visible)part.draw(pos, rot, color);
 	}
 	
 	public void delete(){

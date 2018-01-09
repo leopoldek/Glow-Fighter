@@ -15,7 +15,6 @@ import com.slurpy.glowfighter.entities.traits.Health;
 import com.slurpy.glowfighter.managers.AssetManager.EffectAsset;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.parts.LinePart;
-import com.slurpy.glowfighter.parts.Part;
 
 public class Rocket extends Entity implements Damage{
 	
@@ -42,7 +41,7 @@ public class Rocket extends Entity implements Damage{
 		Vector2 vel = body.getLinearVelocity();
 		float len = vel.len();
 		if(acceleration > 0){
-			colors[0] = postColor;
+			color.set(postColor);
 			if(len > speed){
 				len = speed;
 				return;
@@ -83,8 +82,8 @@ public class Rocket extends Entity implements Damage{
 	private static EntityDef getEntityDef(Vector2 pos, float rot, Color color, Team team){
 		entityDef.pos.set(pos);
 		entityDef.rot = rot;
-		entityDef.parts = new Part[]{new LinePart(new Vector2(depth * 10, 0), new Vector2(height, 0), width)};
-		entityDef.setColor(color);
+		entityDef.part = new LinePart(new Vector2(depth * 10, 0), new Vector2(height, 0), width);
+		entityDef.color = color;
 		entityDef.team = team;
 		return entityDef;
 	}

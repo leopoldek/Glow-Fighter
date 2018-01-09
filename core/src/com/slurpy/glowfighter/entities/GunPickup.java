@@ -8,7 +8,6 @@ import com.slurpy.glowfighter.entities.traits.KnockbackMultiplier;
 import com.slurpy.glowfighter.guns.Gun;
 import com.slurpy.glowfighter.managers.AssetManager.SoundAsset;
 import com.slurpy.glowfighter.parts.CirclePart;
-import com.slurpy.glowfighter.parts.Part;
 
 public class GunPickup extends Entity implements KnockbackMultiplier{
 	
@@ -56,11 +55,11 @@ public class GunPickup extends Entity implements KnockbackMultiplier{
 	
 	static{
 		entityDef.polygon = polygon;
-		entityDef.parts = new Part[]{new CirclePart(new Vector2(), size)};
+		entityDef.part = new CirclePart(new Vector2(), size);
 		entityDef.category = Category.ENTITY;
 		entityDef.bullet = false;
 		entityDef.sensor = true;
-		entityDef.setColor(Color.GREEN);
+		entityDef.color = Color.GREEN;
 		entityDef.team = Team.NEUTRAL;
 		entityDef.bodyType = BodyType.StaticBody;
 	}
