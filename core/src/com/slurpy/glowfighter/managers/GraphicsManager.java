@@ -39,7 +39,9 @@ public class GraphicsManager implements Disposable{
 	//Another solution but not recommended is to draw to default buffer and then copy it to a texture and clear the buffer.
 	private FrameBuffer pingFBO;
 	private FrameBuffer pongFBO;
+	private FrameBuffer fxaaFBO;
 	private final ShaderProgram glowShader;
+	private final ShaderProgram fxaaShader;
 	
 	private final Vector2 cameraPos = new Vector2();
 	private Entity follow;
@@ -61,10 +63,15 @@ public class GraphicsManager implements Disposable{
 		viewport = new ScreenViewport();
 		viewport.setUnitsPerPixel(Constants.MPP);
 		
-		glowShader = new ShaderProgram(Gdx.files.internal("shaders/Vertex.glsl"), Gdx.files.internal("shaders/GlowFragment.glsl"));
 		//glowShader.pedantic = false;
-		if(glowShader.isCompiled())Gdx.app.log("Shader Log:\n", glowShader.getLog());
-		else Gdx.app.error("Shader Log:\n", glowShader.getLog());
+		
+		glowShader = new ShaderProgram(Gdx.files.internal("shaders/Vertex.glsl"), Gdx.files.internal("shaders/GlowFragment.glsl"));
+		if(glowShader.isCompiled())Gdx.app.log("Glow shader Log", '\n' + glowShader.getLog());
+		else Gdx.app.error("Glow shader Log", '\n' + glowShader.getLog());
+		
+		fxaaShader = new ShaderProgram(Gdx.files.internal("shaders/Vertex.glsl"), Gdx.files.internal("shaders/fxaaFragment.glsl"));
+		if(fxaaShader.isCompiled())Gdx.app.log("Fxaa shader Log", '\n' + fxaaShader.getLog());
+		else Gdx.app.error("Fxaa shader Log", '\n' + fxaaShader.getLog());
 		
 		//Create BitMapFont
 		font = Core.assets.getFont(FontAsset.CatV);
@@ -74,6 +81,7 @@ public class GraphicsManager implements Disposable{
 	
 	public void begin(){
 		screenFBO.begin();
+		Gdx.gl.glColorMask(true, true, true, true);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -204,6 +212,7 @@ public class GraphicsManager implements Disposable{
 	public void end(){
 		shapeBatch.end();
 		batch.setProjectionMatrix(viewport.getCamera().combined);
+		batch.setShader(null);
 		batch.begin();
 		flushQueues();
 		for(int i = effectArray.size - 1; i >= 0; i--){
@@ -244,11 +253,16 @@ public class GraphicsManager implements Disposable{
 			pongFBO.end();
 		}
 		
+		batch.setShader(null);
+		fxaaFBO.begin();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.setShader(null);
 		renderFBO(pongFBO);
 		renderFBO(screenFBO);
+		batch.flush();
+		fxaaFBO.end();
+		batch.setShader(fxaaShader);
+		renderFBO(fxaaFBO);
 		batch.end();
 	}
 	
@@ -317,7 +331,6 @@ public class GraphicsManager implements Disposable{
 	}
 	
 	public void resize(int width, int height){
-		//System.out.println("RESIZED");
 		Core.state.getGui().resize(width, height);
 		viewport.update(width, height);
 		fboProj = new Matrix4().setToOrtho2D(0, 0, width, height);
@@ -325,12 +338,14 @@ public class GraphicsManager implements Disposable{
 			screenFBO.dispose();
 			pingFBO.dispose();
 			pongFBO.dispose();
+			fxaaFBO.dispose();
 		}
 		float fboWidth = width / Constants.FBO_SIZE_RATIO;
 		float fboHeight = height / Constants.FBO_SIZE_RATIO;
 		screenFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, width, height, false, false);
 		pingFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
 		pongFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
+		fxaaFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, width, height, false, false);
 	}
 	
 	public void dispose(){
