@@ -348,6 +348,10 @@ public class GraphicsManager implements Disposable{
 		useFXAA = true;
 	}
 	
+	public boolean usingFXAA(){
+		return useFXAA;
+	}
+	
 	public void resize(int width, int height){
 		Core.state.getGui().resize(width, height);
 		viewport.update(width, height);

@@ -55,7 +55,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Button keyBindingsButton = new Button("KEY BINDINGS", new Position(right, 0.5f, -250, 160), 500, 60, Color.WHITE, 48f, 10f);
 	private final Button creditsButton = new Button("CREDITS", new Position(right, 0.5f, -250, 70), 500, 60, Color.WHITE, 48f, 10f);
 	private final Button resetPreferencesButton = new Button("RESET PREFERENCES", new Position(right, 0.5f, -250, -20), 500, 60, Color.WHITE, 48f, 10f);
-	private final Rectangle guiBox = new Rectangle(new Position(right, 0.5f, -250, -180) ,500, 130, Color.BLUE.cpy(), 10);
+	private final Rectangle guiBox = new Rectangle(new Position(right, 0.5f, -250, -180), 500, 130, Color.BLUE.cpy(), 10);
 	private final Button showGuiButton = new Button("SHOW GUI", new Position(right, 0.5f, -235, -105), 225, 40, Color.GRAY, 20f, 5f);
 	private final Button showPickupIndicatorButton = new Button("SHOW PICKUP INDICATOR", new Position(right, 0.5f, 10, -105), 225, 40, Color.GRAY, 20f, 5f);
 	private final Button showFPSButton = new Button("SHOW FPS", new Position(right, 0.5f, -235, -165), 225, 40, Color.GRAY, 20f, 5f);
@@ -77,8 +77,9 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 	private final Label[] displayLabels;
 	private final Button leftButton = new Button("<", new Position(right, 0.5f, -250, 0), 235, 60, Color.WHITE, 48f, 10f);
 	private final Button rightButton = new Button(">", new Position(right, 0.5f, 15, 0), 235, 60, Color.WHITE, 48f, 10f);
-	private final Button fullscreenButton = new Button("FULLSCREEN", new Position(right, 0.5f, -250, -90), 500, 60, Color.WHITE, 48f, 10f);
-	private final Button vsyncButton = new Button("VSYNC", new Position(right, 0.5f, -250, -180), 500, 60, Color.WHITE, 48f, 10f);
+	private final Button fullscreenButton = new Button("FULLSCREEN", new Position(right, 0.5f, -250, -90), 235, 60, Color.WHITE, 42f, 10f);
+	private final Button vsyncButton = new Button("VSYNC", new Position(right, 0.5f, 15, -90), 235, 60, Color.WHITE, 48f, 10f);
+	private final Button fxaaButton = new Button("FXAA", new Position(right, 0.5f, -250, -180), 500, 60, Color.WHITE, 48f, 10f);
 	private final Button graphicsBackButton = new Button("BACK", new Position(right, 0.5f, -250, -270), 500, 60, Color.WHITE, 48f, 10f);
 	private final Label graphicsInfoLabel;
 	private final DisplayMode[] displays;
@@ -314,6 +315,12 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		rightButton.animateColor(x, y, selected, normal);
 		fullscreenButton.animateColor(x, y, Constants.useFullscreen ? Color.CYAN : Color.RED, Constants.useFullscreen ? Color.GREEN : Color.GRAY);
 		vsyncButton.animateColor(x, y, Constants.useVsync ? Color.CYAN : Color.RED, Constants.useVsync ? Color.GREEN : Color.GRAY);
+		fxaaButton.animateColor(x, y, Core.graphics.usingFXAA() ? Color.CYAN : Color.RED, Core.graphics.usingFXAA() ? Color.GREEN : Color.GRAY);
+		if(fxaaButton.contains(x, y)){
+			fxaaButton.setText("Makes edges of shapes look smoother but may degrade the\nreadability of text.Turn this off if it is bothering\nyou or you'd like a slight performance boost.", 18);
+		}else{
+			fxaaButton.setText("FXAA", 48);
+		}
 		graphicsBackButton.animateColor(x, y, selected, normal);
 	}
 	
@@ -391,6 +398,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 		rightButton.draw();
 		fullscreenButton.draw();
 		vsyncButton.draw();
+		fxaaButton.draw();
 		graphicsBackButton.draw();
 		graphicsInfoLabel.draw();
 		
@@ -671,6 +679,14 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				}
 				if(vsyncButton.contains(screenX, screenY)){
 					Constants.useVsync = !Constants.useVsync;
+					return true;
+				}
+				if(fxaaButton.contains(screenX, screenY)){
+					if(Core.graphics.usingFXAA()){
+						Core.graphics.disableFXAA();
+					}else{
+						Core.graphics.enableFXAA();
+					}
 					return true;
 				}
 				if(graphicsBackButton.contains(screenX, screenY)){
@@ -1306,6 +1322,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				rightButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
 				fullscreenButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
 				vsyncButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
+				fxaaButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
 				graphicsBackButton.position.rx = Interpolation.sine.apply(right, center, frameProgress);
 				graphicsInfoLabel.position.rx = Interpolation.sine.apply(-1f, 0f, frameProgress);
 			}
@@ -1325,6 +1342,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				rightButton.position.rx = center;
 				fullscreenButton.position.rx = center;
 				vsyncButton.position.rx = center;
+				fxaaButton.position.rx = center;
 				graphicsBackButton.position.rx = center;
 				graphicsInfoLabel.position.rx = 0f;
 			}
@@ -1354,6 +1372,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				rightButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				fullscreenButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				vsyncButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
+				fxaaButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				graphicsBackButton.position.rx = Interpolation.sine.apply(center, right, frameProgress);
 				graphicsInfoLabel.position.rx = Interpolation.sine.apply(0f, -1f, frameProgress);
 			}
@@ -1373,6 +1392,7 @@ public class Menu implements Gui, State, InputProcessor{//TODO Refactor class in
 				rightButton.position.rx = right;
 				fullscreenButton.position.rx = right;
 				vsyncButton.position.rx = right;
+				fxaaButton.position.rx = right;
 				graphicsBackButton.position.rx = right;
 				graphicsInfoLabel.position.rx = -1;
 			}
