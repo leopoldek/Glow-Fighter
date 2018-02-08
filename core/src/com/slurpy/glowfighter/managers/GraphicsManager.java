@@ -43,6 +43,8 @@ public class GraphicsManager implements Disposable{
 	private final ShaderProgram glowShader;
 	private final ShaderProgram fxaaShader;
 	
+	private boolean useFXAA = true;
+	
 	private final Vector2 cameraPos = new Vector2();
 	private Entity follow;
 	private float shake = 0f;
@@ -254,15 +256,19 @@ public class GraphicsManager implements Disposable{
 		}
 		
 		batch.setShader(null);
-		fxaaFBO.begin();
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		renderFBO(pongFBO);
-		renderFBO(screenFBO);
-		batch.flush();
-		fxaaFBO.end();
-		batch.setShader(fxaaShader);
-		renderFBO(fxaaFBO);
+		
+		if(useFXAA){
+			fxaaFBO.begin();
+			renderFBO(pongFBO);
+			renderFBO(screenFBO);
+			batch.flush();
+			fxaaFBO.end();
+			batch.setShader(fxaaShader);
+			renderFBO(fxaaFBO);
+		}else{
+			renderFBO(pongFBO);
+			renderFBO(screenFBO);
+		}
 		batch.end();
 	}
 	
@@ -330,6 +336,18 @@ public class GraphicsManager implements Disposable{
 		((OrthographicCamera)viewport.getCamera()).zoom = zoom;
 	}
 	
+	public void disableFXAA(){
+		if(!useFXAA)return;
+		fxaaFBO.dispose();
+		useFXAA = false;
+	}
+	
+	public void enableFXAA(){
+		if(useFXAA)return;
+		fxaaFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, false);
+		useFXAA = true;
+	}
+	
 	public void resize(int width, int height){
 		Core.state.getGui().resize(width, height);
 		viewport.update(width, height);
@@ -338,14 +356,14 @@ public class GraphicsManager implements Disposable{
 			screenFBO.dispose();
 			pingFBO.dispose();
 			pongFBO.dispose();
-			fxaaFBO.dispose();
+			if(useFXAA)fxaaFBO.dispose();
 		}
 		float fboWidth = width / Constants.FBO_SIZE_RATIO;
 		float fboHeight = height / Constants.FBO_SIZE_RATIO;
 		screenFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, width, height, false, false);
 		pingFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
 		pongFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, (int)fboWidth, (int)fboHeight, false, false);
-		fxaaFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, width, height, false, false);
+		if(useFXAA)fxaaFBO = FrameBuffer.createFrameBuffer(Format.RGBA4444, width, height, false, false);
 	}
 	
 	public void dispose(){
