@@ -1,5 +1,4 @@
 # Glow Fighter
-![Main Menu Image](https://media.giphy.com/media/l4EoYA2EkVNy6IyZO/giphy.gif "Main Menu")
 
 Glow Fighter is an arcade shooter written in Java using LibGDX. It runs on desktop and on the web. [Play online here](https://mr-slurpy.github.io/projects/glow-fighter/).
 
